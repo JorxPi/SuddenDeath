@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{b47aef00-b9fc-4689-8cee-f9f92c78cdb9}</ProjectGuid>
+    <RootNamespace>VideogameProgramming</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\Libraries\libwin64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\Libraries\libwin64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\pimor\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\pimor\vcpkg\installed\x64-windows\lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\pimor\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\pimor\vcpkg\installed\x64-windows\lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ButtonManager.cpp" />
+    <ClCompile Include="ButtonScript.cpp" />
+    <ClCompile Include="CellConstants.cpp" />
+    <ClCompile Include="CellScript.cpp" />
+    <ClCompile Include="CoinScript.cpp" />
+    <ClCompile Include="Components.cpp" />
+    <ClCompile Include="DummyPassive.cpp" />
+    <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="InvocationScript.cpp" />
+    <ClCompile Include="InvocationSelectionScript.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuScreen.cpp" />
+    <ClCompile Include="OverlayManager.cpp" />
+    <ClCompile Include="PassiveDescriptions.cpp" />
+    <ClCompile Include="PassiveEight.cpp" />
+    <ClCompile Include="PassiveEleven.cpp" />
+    <ClCompile Include="PassiveFifteen.cpp" />
+    <ClCompile Include="PassiveFive.cpp" />
+    <ClCompile Include="PassiveFour.cpp" />
+    <ClCompile Include="PassiveFourteen.cpp" />
+    <ClCompile Include="PassiveNine.cpp" />
+    <ClCompile Include="PassiveOne.cpp" />
+    <ClCompile Include="PassiveSeven.cpp" />
+    <ClCompile Include="PassiveSix.cpp" />
+    <ClCompile Include="PassiveSixteen.cpp" />
+    <ClCompile Include="PassiveTen.cpp" />
+    <ClCompile Include="PassiveThirteen.cpp" />
+    <ClCompile Include="PassiveThree.cpp" />
+    <ClCompile Include="PassiveTwelve.cpp" />
+    <ClCompile Include="PassiveTwo.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Ruleta.cpp" />
+    <ClCompile Include="RuletaAttacks.cpp" />
+    <ClCompile Include="RuletaBatalla.cpp" />
+    <ClCompile Include="ScreenManager.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptAssigner.cpp" />
+    <ClCompile Include="ScriptManager.cpp" />
+    <ClCompile Include="ScriptSystem.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="StartGameScreen.cpp" />
+    <ClCompile Include="StartGameScreen.h" />
+    <ClCompile Include="stb.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="VAO.cpp" />
+    <ClCompile Include="VBO.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.frag" />
+    <None Include="default.vert" />
+    <None Include="inverted.frag" />
+    <None Include="repeating.frag" />
+    <None Include="ruleta.frag" />
+    <None Include="ruleta.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ButtonConstants.h" />
+    <ClInclude Include="ButtonManager.h" />
+    <ClInclude Include="ButtonScript.h" />
+    <ClInclude Include="CellConstants.h" />
+    <ClInclude Include="CellScript.h" />
+    <ClInclude Include="CoinScript.h" />
+    <ClInclude Include="DummyPassive.h" />
+    <ClInclude Include="EBO.h" />
+    <ClInclude Include="ECS.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InvocationConstants.h" />
+    <ClInclude Include="InvocationWithPassiveData.h" />
+    <ClInclude Include="InvocationScript.h" />
+    <ClInclude Include="InvocationSelectionScript.h" />
+    <ClInclude Include="MenuScreen.h" />
+    <ClInclude Include="OverlayManager.h" />
+    <ClInclude Include="PassiveAbilities.h" />
+    <ClInclude Include="PassiveDescriptions.h" />
+    <ClInclude Include="PassiveEight.h" />
+    <ClInclude Include="PassiveEleven.h" />
+    <ClInclude Include="PassiveFifteen.h" />
+    <ClInclude Include="PassiveFive.h" />
+    <ClInclude Include="PassiveFour.h" />
+    <ClInclude Include="PassiveFourteen.h" />
+    <ClInclude Include="PassiveNine.h" />
+    <ClInclude Include="PassiveOne.h" />
+    <ClInclude Include="PassiveSeven.h" />
+    <ClInclude Include="PassiveSix.h" />
+    <ClInclude Include="PassiveSixteen.h" />
+    <ClInclude Include="PassiveTen.h" />
+    <ClInclude Include="PassiveThirteen.h" />
+    <ClInclude Include="PassiveThree.h" />
+    <ClInclude Include="PassiveTwelve.h" />
+    <ClInclude Include="PassiveTwo.h" />
+    <ClInclude Include="Ruleta.h" />
+    <ClInclude Include="RuletaAttacks.h" />
+    <ClInclude Include="RuletaBatalla.h" />
+    <ClInclude Include="Screen.h" />
+    <ClInclude Include="ScreenManager.h" />
+    <ClInclude Include="ScriptAssigner.h" />
+    <ClInclude Include="ScriptManager.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptSystem.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="TextComponent.h" />
+    <ClInclude Include="TextRenderer.h" />
+    <ClInclude Include="TextSystem.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="VAO.h" />
+    <ClInclude Include="VBO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\1o3Blue.png" />
+    <Image Include="Textures\1o3Green.png" />
+    <Image Include="Textures\1o3Red.png" />
+    <Image Include="Textures\2o3Blue.png" />
+    <Image Include="Textures\2o3Green.png" />
+    <Image Include="Textures\2o3Red.png" />
+    <Image Include="Textures\3o3Blue.png" />
+    <Image Include="Textures\3o3Green.png" />
+    <Image Include="Textures\3o3Red.png" />
+    <Image Include="Textures\att1.png" />
+    <Image Include="Textures\att2.png" />
+    <Image Include="Textures\att3.png" />
+    <Image Include="Textures\att4.png" />
+    <Image Include="Textures\att5.png" />
+    <Image Include="Textures\att6.png" />
+    <Image Include="Textures\BlueHP.png" />
+    <Image Include="Textures\blue_back.png" />
+    <Image Include="Textures\coin.png" />
+    <Image Include="Textures\coin_heads.png" />
+    <Image Include="Textures\coin_tails.png" />
+    <Image Include="Textures\GameBack.png" />
+    <Image Include="Textures\GoodHighlight.png" />
+    <Image Include="Textures\GreenHP.png" />
+    <Image Include="Textures\green_back.png" />
+    <Image Include="Textures\Health1.png" />
+    <Image Include="Textures\Health2.png" />
+    <Image Include="Textures\Health3.png" />
+    <Image Include="Textures\HealthPoints.png" />
+    <Image Include="Textures\HealthSlash.png" />
+    <Image Include="Textures\hexagono_azul.png" />
+    <Image Include="Textures\hexagono_rojo.png" />
+    <Image Include="Textures\hexagono_verde.png" />
+    <Image Include="Textures\InvNotAv.png" />
+    <Image Include="Textures\inv_Champen.png" />
+    <Image Include="Textures\inv_Fall.png" />
+    <Image Include="Textures\inv_Gardol.png" />
+    <Image Include="Textures\inv_Gobobo.png" />
+    <Image Include="Textures\inv_Kin.png" />
+    <Image Include="Textures\inv_Munch.png" />
+    <Image Include="Textures\inv_Selly.png" />
+    <Image Include="Textures\inv_Slaim.png" />
+    <Image Include="Textures\inv_Torla.png" />
+    <Image Include="Textures\MenuBack.png" />
+    <Image Include="Textures\MenuDecor1.png" />
+    <Image Include="Textures\MenuDecor2.png" />
+    <Image Include="Textures\MenuDecor3.png" />
+    <Image Include="Textures\MenuPlay.png" />
+    <Image Include="Textures\MenuTitle.png" />
+    <Image Include="Textures\neutral_back1.png" />
+    <Image Include="Textures\neutral_back2.png" />
+    <Image Include="Textures\ovalo_normal.png" />
+    <Image Include="Textures\OverlayBlanket.png" />
+    <Image Include="Textures\puntero_ruleta.png" />
+    <Image Include="Textures\RedHP.png" />
+    <Image Include="Textures\red_back.png" />
+    <Image Include="Textures\resalto_ovalo.png" />
+    <Image Include="Textures\Ruleta_1.png" />
+    <Image Include="Textures\ScoreTab.png" />
+    <Image Include="Textures\SkipTurnButton.png" />
+    <Image Include="Textures\SpawnHighlight.png" />
+    <Image Include="Textures\SuddenPoint.png" />
+    <Image Include="Textures\triangulo_azul.png" />
+    <Image Include="Textures\triangulo_rojo.png" />
+    <Image Include="Textures\triangulo_verde.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\OpenSans.ttf" />
+    <Font Include="Fonts\OpenSansItalic.ttf" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

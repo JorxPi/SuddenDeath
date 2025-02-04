@@ -1,0 +1,615 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders">
+      <UniqueIdentifier>{e004d031-4dd4-4dd7-8321-ed0d0c725126}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Textures">
+      <UniqueIdentifier>{9b352467-9cd3-4be2-961b-c26aca6d6cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ECS">
+      <UniqueIdentifier>{36f76909-1556-4b8f-8cbc-103bef6decc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\ECS">
+      <UniqueIdentifier>{15b5fabf-efcd-4da5-8c8e-8776326b27b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scripts">
+      <UniqueIdentifier>{9fff57fe-4865-4572-a875-8b3c4d5a17bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts">
+      <UniqueIdentifier>{f3909bc2-36a0-4b4e-8b8a-9d5e2621a5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scripts\Screen">
+      <UniqueIdentifier>{354e90ea-951b-43b8-8ca2-178e3b16fe75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scripts\Managers">
+      <UniqueIdentifier>{a3ebf9f9-2b83-4b28-8b0d-23b699551e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scripts\Constants">
+      <UniqueIdentifier>{af5087b6-edd3-4b90-b13f-384bd04bba21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts\Managers">
+      <UniqueIdentifier>{e84601d2-e9fe-4383-b725-9111f9b6a995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts\Constants">
+      <UniqueIdentifier>{c05978de-251c-457f-aef7-b17f3a6d4c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts\Screens">
+      <UniqueIdentifier>{089738cc-25c7-410c-9bbb-66ea1efd4dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scripts\Passives">
+      <UniqueIdentifier>{f8edbf35-842d-404a-808b-e3d5f1103b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts\Passives">
+      <UniqueIdentifier>{13891d6f-c8a4-41dc-a79f-0ac3f6e92bb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Fonts">
+      <UniqueIdentifier>{7ebe87ad-2646-4eeb-80ab-832abc20032f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="glad.c">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="EBO.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Components.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptSystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Ruleta.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="InvocationScript.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="CellScript.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinScript.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="RuletaBatalla.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="RuletaAttacks.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonScript.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="StartGameScreen.h">
+      <Filter>Archivos de encabezado\Scripts\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptAssigner.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="CellConstants.cpp">
+      <Filter>Archivos de origen\Scripts\Constants</Filter>
+    </ClCompile>
+    <ClCompile Include="StartGameScreen.cpp">
+      <Filter>Archivos de origen\Scripts\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScreen.cpp">
+      <Filter>Archivos de origen\Scripts\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InvocationSelectionScript.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveOne.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveTwo.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveThree.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveFour.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveFive.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveSix.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveSeven.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveEight.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveNine.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveTen.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveEleven.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveTwelve.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveThirteen.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveFourteen.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveFifteen.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveSixteen.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyPassive.cpp">
+      <Filter>Archivos de origen\Scripts\Passives</Filter>
+    </ClCompile>
+    <ClCompile Include="PassiveDescriptions.cpp">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.vert">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="default.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="inverted.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="repeating.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="ruleta.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="ruleta.vert">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="EBO.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptSystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="InvocationScript.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Ruleta.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="CellScript.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="CoinScript.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="RuletaBatalla.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="RuletaAttacks.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonScript.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Archivos de encabezado\Scripts\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScreen.h">
+      <Filter>Archivos de encabezado\Scripts\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptAssigner.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CellConstants.h">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonConstants.h">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="InvocationSelectionScript.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="InvocationConstants.h">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveAbilities.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveDescriptions.h">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveOne.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveTwo.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveThree.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveFour.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveFive.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveSix.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveSeven.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveEight.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveNine.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveTen.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveEleven.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveTwelve.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveThirteen.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveFourteen.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveFifteen.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveSixteen.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyPassive.h">
+      <Filter>Archivos de encabezado\Scripts\Passives</Filter>
+    </ClInclude>
+    <ClInclude Include="InvocationWithPassiveData.h">
+      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="TextComponent.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="TextSystem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\hexagono_azul.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\hexagono_rojo.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\hexagono_verde.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\ovalo_normal.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\triangulo_azul.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\triangulo_rojo.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\triangulo_verde.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Gobobo.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\GoodHighlight.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\resalto_ovalo.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\SpawnHighlight.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\coin_heads.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\coin_tails.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\coin.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\Ruleta_1.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\puntero_ruleta.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att1.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att2.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att3.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att4.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att5.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\att6.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\blue_back.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\green_back.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\red_back.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\SkipTurnButton.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\BlueHP.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\GreenHP.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\Health1.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\Health2.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\Health3.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\HealthPoints.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\HealthSlash.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\RedHP.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\1o3Green.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\1o3Red.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\2o3Blue.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\2o3Green.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\2o3Red.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\3o3Blue.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\3o3Green.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\3o3Red.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\1o3Blue.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuBack.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuDecor1.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuDecor2.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuDecor3.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuPlay.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\MenuTitle.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\GameBack.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\neutral_back1.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\neutral_back2.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\OverlayBlanket.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Champen.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Fall.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Gardol.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Kin.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Munch.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Selly.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Slaim.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\inv_Torla.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\ScoreTab.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\SuddenPoint.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+    <Image Include="Textures\InvNotAv.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\OpenSans.ttf">
+      <Filter>Archivos de recursos\Fonts</Filter>
+    </Font>
+    <Font Include="Fonts\OpenSansItalic.ttf">
+      <Filter>Archivos de recursos\Fonts</Filter>
+    </Font>
+  </ItemGroup>
+</Project>
