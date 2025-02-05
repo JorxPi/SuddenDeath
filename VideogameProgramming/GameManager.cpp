@@ -221,8 +221,15 @@ void GameManager::update(float deltaTime) {
 
     skipButtonGameLogic();  
 
-    //renderSystem->RenderText("Player 1 Turn", 200.0f, 400.0f, 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    if (textRendererRef) {
+        textRendererRef->RenderText("Game Running...", 20.0f, 750.0f, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f));
+    }
+}
 
+void GameManager::RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
+    if (textRendererRef) {
+        textRendererRef->RenderText(text, x, y, scale, color);
+    }
 }
 
 
@@ -806,9 +813,9 @@ int GameManager::getInvocationIndex(InvocationScript* invocation) {
 
 
 
-/*void GameManager::setRenderSystem(RenderSystem* renderSystem) {
-    this->renderSystem = renderSystem;
-}*/
+void GameManager::setTextRenderer(TextRenderer* textRenderer) {
+    textRendererRef = textRenderer;
+}
 
 void GameManager::setButtonManagerRef(ButtonManager* bmr) {
     buttonRef = bmr;

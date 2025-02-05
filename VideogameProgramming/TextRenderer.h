@@ -1,30 +1,31 @@
-#pragma once
+#ifndef TEXT_RENDERER_H
+#define TEXT_RENDERER_H
 
 #include <map>
 #include <string>
-#include <glad/glad.h>
-#include <glm/glm.hpp>  
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <glad/glad.h>
 
-// Character struct to hold OpenGL texture and font metrics
 struct Character {
-    GLuint TextureID;  // Glyph texture
-    glm::ivec2 Size;   // Size of the glyph
-    glm::ivec2 Bearing; // Offset from baseline
-    GLuint Advance;    // Offset to next glyph
+    unsigned int TextureID;  // ID handle of the glyph texture
+    glm::ivec2 Size;         // Size of glyph
+    glm::ivec2 Bearing;      // Offset from baseline to left/top of glyph
+    unsigned int Advance;    // Offset to advance to next glyph
 };
 
-// Text rendering class
 class TextRenderer {
 public:
-    TextRenderer();  
-    void Init(const std::string& fontPath, int fontSize);  
-
-    void RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color);
-
-private:
     std::map<char, Character> Characters;
-    GLuint VAO, VBO;
-    GLuint shaderProgram;
+    unsigned int VAO, VBO;
+    unsigned int shaderProgram;
+    unsigned int projectionLocation;
+
+    TextRenderer(int width, int height);
+    void LoadFont(const std::string& fontPath, unsigned int fontSize);
+    void RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color);
 };
+
+#endif

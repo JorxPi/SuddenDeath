@@ -8,14 +8,6 @@ RenderSystem::RenderSystem(int width, int height) {
     
 }
 
-/*void RenderSystem::InitTextRenderer(const std::string& font, int size) {
-    textRenderer.Init(font, size);
-}
-
-void RenderSystem::RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
-    textRenderer.RenderText(text, x, y, scale, color);
-}*/
-
 double prevTime = glfwGetTime();
 
 void RenderSystem::tick(World* world, float deltaTime)
@@ -71,8 +63,4 @@ void RenderSystem::tick(World* world, float deltaTime)
             }
         }
     }
-
-    /*world->each<TextComponent>([&](Entity* ent, ComponentHandle<TextComponent> text) {
-        textRenderer.RenderText(text->text, text->position.x, text->position.y, text->scale, text->color);
-        });*/
 }

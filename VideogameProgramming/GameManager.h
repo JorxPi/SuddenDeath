@@ -17,8 +17,7 @@
 #include "PassiveFive.h"
 #include "PassiveTen.h"
 #include "PassiveEleven.h"
-//#include "TextRenderer.h"
-//#include "RenderSystem.h"
+#include "TextRenderer.h"
 #include <vector>
 
 using namespace std;
@@ -53,6 +52,8 @@ public:
 	void activate(bool state);
 
 	void update(float deltaTime);
+
+	void RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color);
 
 	//GENERAL LOGIC
 	void invocInvocation(int invocAttack, const char* filepath, PassiveAbility* passive);
@@ -111,7 +112,7 @@ public:
 	int getInvocationIndex(InvocationScript* invocation);
 
 	//SETTERS
-	//void setRenderSystem(RenderSystem* renderSystem);
+	void setTextRenderer(TextRenderer* textRenderer);
 	void setButtonManagerRef(ButtonManager* bmr);
 	void setScreenManagerRef(ScreenManager* smr);
 	void setRuletaAttacksRef(RuletaAttacks* rcr, Entity* rent, Entity* pointent);
@@ -126,6 +127,7 @@ private:
 	GLFWwindow* window;
 	ECS::World* world;
 	EntityManager* entityManager;
+	TextRenderer* textRendererRef;
 
 	bool isActive = false;
 

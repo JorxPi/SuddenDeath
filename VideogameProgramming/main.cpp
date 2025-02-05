@@ -18,7 +18,7 @@
 #include "RenderSystem.h"
 #include "ScriptSystem.h"
 #include "ScriptManager.h"
-#include "TextSystem.h"
+#include "TextRenderer.h"
 #include "Script.h"
 #include "GameManager.h"
 #include "ButtonManager.h"
@@ -59,6 +59,7 @@ EntityManager* entityManager;
 ScreenManager* screenManager;
 OverlayManager* overlayManager;
 InputManager* inputManager;
+TextRenderer* textRenderer;
 
 void SetupGLFW() {
 
@@ -141,8 +142,6 @@ void SetupRealWorld() {
 
 	world->registerSystem(new RenderSystem(width, height));
 
-	//renderSystem->InitTextRenderer("Fonts/OpenSans.ttf", 48);
-
 	ScriptSystem* scriptSystem = new ScriptSystem();
 	world->registerSystem(scriptSystem);
 
@@ -153,11 +152,10 @@ void SetupRealWorld() {
 	overlayManager = new OverlayManager(entityManager);
 	screenManager = new ScreenManager(window, world);
 	inputManager = new InputManager(window, overlayManager);
+	textRenderer = new TextRenderer(1200, 800);
+	textRenderer->LoadFont("Libraries/fonts/OpenSans.ttf", 48);
 
-	//TextSystem* textSystem = new TextSystem(&renderSystem->textRenderer);
-	//world->registerSystem(textSystem);
-
-	//gameManager->setRenderSystem(renderSystem);
+	gameManager->setTextRenderer(textRenderer);
 	gameManager->setButtonManagerRef(buttonManager);
 	gameManager->setScreenManagerRef(screenManager);
 	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager);
