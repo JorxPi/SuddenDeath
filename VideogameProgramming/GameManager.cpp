@@ -28,6 +28,7 @@ void GameManager::update(float deltaTime) {
         currentPlayerInvocationsListSetted = true;
     }
 
+    //Check to see if 2 invocations must battle
     if (!ruletaBatallaSpawned) {
         //checkingIfBattle = true;
         for (int i = 0; i < currentPlayerInvocationsListRef.size(); i++) {
@@ -40,12 +41,14 @@ void GameManager::update(float deltaTime) {
         }
     }
 
+    //Coin Spawn
     if (deferredCoinSpawn && !battleing && !checkingIfBattle) {
         movementBlocked = true;
         spawnCoin();
         deferredCoinSpawn = false;
     }
 
+    //Spin Battle Roulette finished, awarding points and elimination invoc
     if (ruletaBatallaDestroyed && !invocDestroyed) {
         if (ruletaBatallaWinner == 1) {
             invocationsListRef[posListInvoc1]->moveInvocation(invocationsListRef[posListInvoc1]->getInvocationEntity()->get<Transform>()->position.x + 40, invocationsListRef[posListInvoc1]->getInvocationEntity()->get<Transform>()->position.y);
@@ -82,9 +85,11 @@ void GameManager::update(float deltaTime) {
         ruletaBatallaSpawned = false;
     }
 
+    //Moving invocations
     if (!battleing) {
         if (!movementBlocked) {
             int movedInvocs = 0;
+            currentInstruction = "Select an invocation to move";
             for (int j = 0; j < currentPlayerInvocationsListRef.size(); j++) {
                 InvocationScript* currentPlayerInvocationScript = currentPlayerInvocationsListRef[j];
 
@@ -97,13 +102,16 @@ void GameManager::update(float deltaTime) {
                 }
             }
 
+            //All invocations were moved
             if (movedInvocs == currentPlayerInvocationsListRef.size()) {
                 allInvocsMoved = true;
                 deferredCoinSpawn = true;
+                currentInstruction = "Flip the coin";
             }
         }
     }
     
+    //Coin flip management
     if (coinScriptRef && invocDestroyed) {
         if (coinScriptRef->getCoinFlipped()) {
             auto flipTime = coinScriptRef->getFlipTime();
@@ -141,24 +149,29 @@ void GameManager::update(float deltaTime) {
 
                 // Normal coin flip resolution
                 if (headOrTails) {
+                    //Heads, so we start the invocation selection
                     startInvocationSelection();
                     selectingInvocation = true;
+                    currentInstruction = "Select an invocation to summon";
                 }
                 else {
+                    //Tails, so the next player turn will start
                     playerScores[currentPlayerTurn] += 3;
                     std::cout << "Tails coin points awarded to Player " << currentPlayerTurn
                         << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
                     updateScoreVisibility(currentPlayerTurn);
-                    changeTurnAndReset();
+                    changeTurnAndReset();   
                 }
             }
         }
     }
 
+    //Attack selection for spawned invocation ends, so turn changes
     if (ruletaAttacksDestroyed) {
         changeTurnAndReset();
     } 
 
+    //Attack Roulette has determined an attack for the invocation and we are ready to invocate
     if (ruletaAttacksSpawned && ruletaAttacksRef->getInvocated() && !invocInvocated) {
         /*if (invocationToSpawnPos != -1) {
             invocInvocation(ruletaAttacksRef->getSpinResult(), invocCardListRef[invocationToSpawnPos]->getSpriteFilepath());
@@ -182,6 +195,7 @@ void GameManager::update(float deltaTime) {
     //Selection invocation
 
     if (selectingInvocation) {
+        currentInstruction = "Select an invocation to summon";
         for (int i = 0; i < invocCardListRef.size(); i++) {
             if (invocCardListRef[i]->getCardSelected()) {
                 selectingInvocation = false;
@@ -194,6 +208,7 @@ void GameManager::update(float deltaTime) {
         }
     }
 
+    //Invocation Selection finished and the Attack Roulette is going to spawn.
     if (delayStarted) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - selectionTime);
@@ -204,6 +219,7 @@ void GameManager::update(float deltaTime) {
 
             spawnRuletaAttacks();
             ruletaAttacksSpawned = true;
+            currentInstruction = "Spin the roulette to determine the attack";
 
 
             delayStarted = false;
@@ -219,16 +235,12 @@ void GameManager::update(float deltaTime) {
         destroyRuletaBatalla();
     }
 
+    //Player pressed the Skip Turn button istead of moving to a cell
     skipButtonGameLogic();  
 
     if (textRendererRef) {
-        textRendererRef->RenderText("Game Running...", 20.0f, 750.0f, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f));
-    }
-}
-
-void GameManager::RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
-    if (textRendererRef) {
-        textRendererRef->RenderText(text, x, y, scale, color);
+        RenderPlayerTurn();
+        textRendererRef->RenderText(currentInstruction, screenWidth / 2 - 250, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
     }
 }
 
@@ -429,6 +441,8 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
         float atac2 = invocationsListRef[posListInvoc2]->getAttack();
 
         spawnRuletaBatalla(color1, color2, atac1, atac2);
+
+        currentInstruction = "Battle between Invocations! Spin the roulette to determine the winner";
 
         ruletaBatallaSpawned = true;
         invocDestroyed = false;
@@ -767,6 +781,46 @@ void GameManager::startInvocationSelection() {
 void GameManager::endInvocationSelection() {
     screenManagerRef->activateOverlay(false);
     //activate(true);
+}
+
+
+
+//TEXT
+
+
+
+void GameManager::RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
+    if (textRendererRef) {
+        textRendererRef->RenderText(text, x, y, scale, color);
+    }
+}
+
+void GameManager::RenderPlayerTurn() {
+    if (!textRendererRef) return;
+
+    std::string playerText = "Player Turn: ";
+    glm::vec3 playerColor;
+
+    switch (currentPlayerTurn) {
+    case 1:
+        playerText += "Blue";
+        playerColor = glm::vec3(0.0f, 0.0f, 1.0f); // Blue
+        break;
+    case 2:
+        playerText += "Red";
+        playerColor = glm::vec3(1.0f, 0.0f, 0.0f); // Red
+        break;
+    case 3:
+        playerText += "Green";
+        playerColor = glm::vec3(0.0f, 1.0f, 0.0f); // Green
+        break;
+    default:
+        playerText += "Unknown";
+        playerColor = glm::vec3(1.0f, 1.0f, 1.0f); // White (fallback)
+        break;
+    }
+
+    textRendererRef->RenderText(playerText, 20.0f, screenHeight - 30, 0.6f, playerColor);
 }
 
 

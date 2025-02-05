@@ -53,8 +53,6 @@ public:
 
 	void update(float deltaTime);
 
-	void RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color);
-
 	//GENERAL LOGIC
 	void invocInvocation(int invocAttack, const char* filepath, PassiveAbility* passive);
 	void highlightSprite(int cellPos);
@@ -102,6 +100,10 @@ public:
 	//INVOCATION SELECTION
 	void startInvocationSelection();
 	void endInvocationSelection();
+
+	//TEXT
+	void RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color);
+	void RenderPlayerTurn();
 
 	//GETTERS
 	int getCurrentPlayerTurn();
@@ -175,6 +177,11 @@ private:
 
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points
+
+	//TEXT
+	std::string currentInstruction;
+	int screenWidth = 1200;
+	int screenHeight = 800;
 
 	//OTHER
 	int currentPlayerTurn = 1;
