@@ -63,8 +63,8 @@ public:
 	void checkBattle(InvocationScript* invocScript);
 	void skipButtonGameLogic();
 	void addPlayerPoints(int playerIndex, int points);
-	void awardBattlePoints(int winnerIndex, int loserIndex);
-	void awardInvocationPoints(InvocationScript* invocScript);
+	int awardBattlePoints(int winnerIndex, int loserIndex);
+	int awardInvocationPoints(InvocationScript* invocScript);
 	void updateScoreVisibility(int playerScoring);
 
 	void addInvocationToBoard(const std::string& invocationId);
@@ -104,6 +104,10 @@ public:
 	//TEXT
 	void RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color);
 	void RenderPlayerTurn();
+	void ShowAnnouncement(const std::string& text, float duration);
+	void RenderAnnouncement();
+	void UpdateAnnouncement();
+
 
 	//GETTERS
 	int getCurrentPlayerTurn();
@@ -180,6 +184,9 @@ private:
 
 	//TEXT
 	std::string currentInstruction;
+	std::string announcementText = "";
+	float announcementTimer = 0.0f;
+	std::chrono::steady_clock::time_point announcementStartTime;
 	int screenWidth = 1200;
 	int screenHeight = 800;
 

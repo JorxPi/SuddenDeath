@@ -50,34 +50,24 @@ void GameManager::update(float deltaTime) {
 
     //Spin Battle Roulette finished, awarding points and elimination invoc
     if (ruletaBatallaDestroyed && !invocDestroyed) {
-        if (ruletaBatallaWinner == 1) {
-            invocationsListRef[posListInvoc1]->moveInvocation(invocationsListRef[posListInvoc1]->getInvocationEntity()->get<Transform>()->position.x + 40, invocationsListRef[posListInvoc1]->getInvocationEntity()->get<Transform>()->position.y);
-            awardBattlePoints(posListInvoc1, posListInvoc2);
+        int winningIndex = (ruletaBatallaWinner == 1) ? posListInvoc1 : posListInvoc2;
+        int losingIndex = (ruletaBatallaWinner == 1) ? posListInvoc2 : posListInvoc1;
 
-            handlePassiveEvent<PassiveNine>(invocationsListRef[posListInvoc1], [this, winner = invocationsListRef[posListInvoc1]](PassiveNine* passive) {
-                passive->OnEvent(this, winner);
-                });
+        int winnerPlayer = invocationsListRef[winningIndex]->getPlayerOwner();
+        int pointsAwarded = awardBattlePoints(winningIndex, losingIndex);
 
-            handlePassiveEvent<PassiveTen>(invocationsListRef[posListInvoc1], [this](PassiveTen* passive) {
-                passive->OnEvent(this, invocationsListRef[posListInvoc1]);
-                });
-            
-            eliminateInvocation(posListInvoc2);
-        }
-        else {
-            invocationsListRef[posListInvoc2]->moveInvocation(invocationsListRef[posListInvoc2]->getInvocationEntity()->get<Transform>()->position.x - 40, invocationsListRef[posListInvoc2]->getInvocationEntity()->get<Transform>()->position.y);
-            awardBattlePoints(posListInvoc2, posListInvoc1);
+        handlePassiveEvent<PassiveNine>(invocationsListRef[winningIndex], [this, winner = invocationsListRef[winningIndex]](PassiveNine* passive) {
+            passive->OnEvent(this, winner);
+            });
 
-            handlePassiveEvent<PassiveNine>(invocationsListRef[posListInvoc2], [this, winner = invocationsListRef[posListInvoc2]](PassiveNine* passive) {
-                passive->OnEvent(this, winner);
-                });
+        handlePassiveEvent<PassiveTen>(invocationsListRef[winningIndex], [this, winningIndex](PassiveTen* passive) {
+            passive->OnEvent(this, invocationsListRef[winningIndex]);
+            });
 
-            handlePassiveEvent<PassiveTen>(invocationsListRef[posListInvoc1], [this](PassiveTen* passive) {
-                passive->OnEvent(this, invocationsListRef[posListInvoc1]);
-                });
-            
-            eliminateInvocation(posListInvoc1);
-        }
+
+        eliminateInvocation(losingIndex);
+
+        ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f);
 
         battleing = false;
         ruletaBatallaDestroyed = false;
@@ -150,16 +140,22 @@ void GameManager::update(float deltaTime) {
                 // Normal coin flip resolution
                 if (headOrTails) {
                     //Heads, so we start the invocation selection
+                    ShowAnnouncement("Heads! Time to summon a new invocation.", 3.0f);
+
                     startInvocationSelection();
                     selectingInvocation = true;
                     currentInstruction = "Select an invocation to summon";
+
                 }
                 else {
                     //Tails, so the next player turn will start
                     playerScores[currentPlayerTurn] += 3;
+
                     std::cout << "Tails coin points awarded to Player " << currentPlayerTurn
                         << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
+
                     updateScoreVisibility(currentPlayerTurn);
+                    ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f);
                     changeTurnAndReset();   
                 }
             }
@@ -238,9 +234,17 @@ void GameManager::update(float deltaTime) {
     //Player pressed the Skip Turn button istead of moving to a cell
     skipButtonGameLogic();  
 
+    //Timer for the announcements
+    UpdateAnnouncement();
+
+    // Render UI elements
     if (textRendererRef) {
         RenderPlayerTurn();
-        textRendererRef->RenderText(currentInstruction, screenWidth / 2 - 250, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+        float instructionWidth = textRendererRef->CalculateTextWidth(currentInstruction, 0.5f);
+        float centeredInstructionX = (screenWidth - instructionWidth) / 2.0f;
+
+        textRendererRef->RenderText(currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+        RenderAnnouncement();
     }
 }
 
@@ -252,22 +256,6 @@ void GameManager::update(float deltaTime) {
 
 void GameManager::invocInvocation(int invocAttack, const char* filepath, PassiveAbility* passive) {
     switch (currentPlayerTurn) {
-    /*case 1:
-    {
-        //entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, invocAttack, "Textures/blue_back.png", "Textures/inv_Gobobo.png", returnAttackText(invocAttack));
-        entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, invocAttack, "Textures/blue_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn);
-    }
-    break;
-    case 2:
-    {
-        entityManager->createInvocation(glm::vec2(950.f, 600.f), 2, invocAttack, "Textures/red_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn);
-    }
-    break;
-    case 3:
-    {
-        entityManager->createInvocation(glm::vec2(300.f, 570.f), 3, invocAttack, "Textures/green_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn);
-    }
-    break;*/
     case 1:
         entityManager->createInvocationWithPassive(
             glm::vec2(670.f, 110.f), 1, invocAttack, "Textures/blue_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive);
@@ -286,8 +274,12 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
 
     addInvocationToBoard(filepath);
 
-    InvocationScript* invocScript = invocationsListRef.back(); // Assuming the last created invocation is added to the list
-    awardInvocationPoints(invocScript);
+
+    InvocationScript* invocScript = invocationsListRef.back();
+    int pointsAwarded = awardInvocationPoints(invocScript);
+
+    ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f);
+
 
     if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
         passiveFive->Activate(this, invocScript); // Activate PassiveFive
@@ -509,38 +501,38 @@ void GameManager::addPlayerPoints(int playerIndex, int points) {
         << " points. Total: " << playerScores[playerIndex] << " points." << std::endl;
 }
 
-void GameManager::awardBattlePoints(int winnerIndex, int loserIndex) {
+int GameManager::awardBattlePoints(int winnerIndex, int loserIndex) {
     int winnerPlayer = invocationsListRef[winnerIndex]->getPlayerOwner();
     int loserPlayer = invocationsListRef[loserIndex]->getPlayerOwner();
 
     int winnerAttack = invocationsListRef[winnerIndex]->getAttack();
     int loserAttack = invocationsListRef[loserIndex]->getAttack();
 
-    // Calculate attack difference
-    int attackDiff = loserAttack - winnerAttack;
+    int pointsAwarded = 2 + std::max(loserAttack - winnerAttack, 0);
 
     // Award points to the winning player
-    playerScores[winnerPlayer] += 2 + std::max(attackDiff, 0);
+    playerScores[winnerPlayer] += pointsAwarded;
 
     // Debugging output
     std::cout << "Battle points awarded! Player " << winnerPlayer
-        << " gains " << (2 + std::max(attackDiff, 0)) << " points." << std::endl;
+        << " gains " << pointsAwarded << " points." << std::endl;
     std::cout << "Updated scores: Player " << winnerPlayer
         << " -> " << playerScores[winnerPlayer] << std::endl;
 
     updateScoreVisibility(winnerPlayer);
+
+    return pointsAwarded;
 }
 
-void GameManager::awardInvocationPoints(InvocationScript* invocScript) {
-    // Get the current player
+int GameManager::awardInvocationPoints(InvocationScript* invocScript) {
     int player = invocScript->getPlayerOwner();
 
-    // Get the invocation's attack value
     int attack = invocScript->getAttack();
 
-    // Award points based on the attack
+    int previousScore = playerScores[player];
+
     switch (attack) {
-    case 1: 
+    case 1:
         playerScores[player] += 3;
         break;
     case 2:
@@ -550,7 +542,7 @@ void GameManager::awardInvocationPoints(InvocationScript* invocScript) {
         playerScores[player] += 1;
         break;
     case 4:
-        // No points for attack 4
+        // No se otorgan puntos para ataque 4
         break;
     case 5:
         playerScores[player] -= 1;
@@ -563,12 +555,17 @@ void GameManager::awardInvocationPoints(InvocationScript* invocScript) {
         break;
     }
 
-    // Debugging output
-    std::cout << "Invocation points awarded! Player " << player
-        << " now has " << playerScores[player] << " points." << std::endl;
+    int pointsAwarded = playerScores[player] - previousScore;
 
     updateScoreVisibility(player);
+
+    std::cout << "Invocation points awarded! Player " << player
+        << " gained " << pointsAwarded << " points. Total: "
+        << playerScores[player] << " points." << std::endl;
+
+    return pointsAwarded;
 }
+
 
 void GameManager::updateScoreVisibility(int playerScoring) {
     if (screenManagerRef && screenManagerRef->getOverlayManager()) {
@@ -822,6 +819,36 @@ void GameManager::RenderPlayerTurn() {
 
     textRendererRef->RenderText(playerText, 20.0f, screenHeight - 30, 0.6f, playerColor);
 }
+
+void GameManager::ShowAnnouncement(const std::string& text, float duration) {
+    announcementText = text;
+    announcementTimer = duration;
+    announcementStartTime = std::chrono::steady_clock::now();  // Start the timer
+
+}
+
+void GameManager::RenderAnnouncement() {
+    if (!textRendererRef || announcementTimer <= 0.0f) return;
+
+    float textWidth = textRendererRef->CalculateTextWidth(announcementText, 0.7f);
+    float centeredX = (screenWidth - textWidth) / 2.0f;
+
+    textRendererRef->RenderText(announcementText, centeredX, screenHeight / 2, 0.7f, glm::vec3(0.5f, 0.5f, 0.5f));
+
+}
+
+void GameManager::UpdateAnnouncement() {
+    if (!announcementText.empty()) {
+        auto now = std::chrono::steady_clock::now();
+        float elapsed = std::chrono::duration<float>(now - announcementStartTime).count();  // Elapsed time in seconds
+
+        if (elapsed >= announcementTimer) {
+            std::cout << "Announcement ended" << std::endl;
+            announcementText = "";  // Clear the announcement when time is up
+        }
+    }
+}
+
 
 
 

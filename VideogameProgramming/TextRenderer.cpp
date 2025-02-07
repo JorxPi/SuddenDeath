@@ -157,3 +157,13 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, float s
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+float TextRenderer::CalculateTextWidth(const std::string& text, float scale) {
+    float width = 0.0f;
+    for (char c : text) {
+        if (Characters.find(c) != Characters.end()) {
+            width += (Characters[c].Advance >> 6) * scale;  // Advance gives the spacing
+        }
+    }
+    return width;
+}
