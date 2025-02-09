@@ -20,6 +20,8 @@ void PassiveNine::OnEvent(GameManager* gameManager, InvocationScript* invocation
         gameManager->addPlayerPoints(playerOwner, 3);
         std::cout << "Player " << playerOwner << " gained 3 sudden points from PassiveNine!" << std::endl;
 
+        Reveal();
+
         combatWins = 0;
     }
 }

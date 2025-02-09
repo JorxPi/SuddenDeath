@@ -23,6 +23,8 @@ void GameManager::activate(bool status) {
 void GameManager::update(float deltaTime) {
     if (!isActive) return;
 
+    hoveredInvocationCount = 0;
+
     if (!currentPlayerInvocationsListSetted) {
         setCurrentPlayerInvocationsListRef();
         currentPlayerInvocationsListSetted = true;
@@ -56,6 +58,19 @@ void GameManager::update(float deltaTime) {
         int winnerPlayer = invocationsListRef[winningIndex]->getPlayerOwner();
         int pointsAwarded = awardBattlePoints(winningIndex, losingIndex);
 
+        if (ruletaBatallaWinner == 1) {
+            invocationsListRef[winningIndex]->moveInvocation(
+                invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.x + 40,
+                invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.y
+            );
+        }
+        else {
+            invocationsListRef[winningIndex]->moveInvocation(
+                invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.x - 40,
+                invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.y
+            );
+        }
+
         handlePassiveEvent<PassiveNine>(invocationsListRef[winningIndex], [this, winner = invocationsListRef[winningIndex]](PassiveNine* passive) {
             passive->OnEvent(this, winner);
             });
@@ -63,7 +78,6 @@ void GameManager::update(float deltaTime) {
         handlePassiveEvent<PassiveTen>(invocationsListRef[winningIndex], [this, winningIndex](PassiveTen* passive) {
             passive->OnEvent(this, invocationsListRef[winningIndex]);
             });
-
 
         eliminateInvocation(losingIndex);
 
@@ -74,6 +88,7 @@ void GameManager::update(float deltaTime) {
         invocDestroyed = true;
         ruletaBatallaSpawned = false;
     }
+
 
     //Moving invocations
     if (!battleing) {
@@ -131,10 +146,12 @@ void GameManager::update(float deltaTime) {
                     // Trigger PassiveEleven
                     handlePassiveEvent<PassiveEleven>(currentPlayerInvocationsListRef[0], [this](PassiveEleven* passive) {
                         passive->OnEvent(this, currentPlayerInvocationsListRef[0]);
+                        if (passive->HowManyFlipsHandled() != 2) {
+                            spawnCoin(); // Spawn the second coin
+                            return; // Stop execution to wait for second coin flip
+                        }
                         });
 
-                    spawnCoin(); // Spawn the second coin
-                    return; // Stop execution to wait for second coin flip
                 }
 
                 // Normal coin flip resolution
@@ -237,6 +254,10 @@ void GameManager::update(float deltaTime) {
     //Timer for the announcements
     UpdateAnnouncement();
 
+    if (!isAnyInvocationHovered()) {
+        setHoverText("");
+    }
+
     // Render UI elements
     if (textRendererRef) {
         RenderPlayerTurn();
@@ -245,6 +266,7 @@ void GameManager::update(float deltaTime) {
 
         textRendererRef->RenderText(currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
         RenderAnnouncement();
+        RenderHoverText();
     }
 }
 
@@ -314,6 +336,9 @@ void GameManager::changeTurnAndReset() {
             // Check if the passive is PassiveFive
             if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
                 passiveFive->OnEvent(this, invocation);
+            }
+            if (auto* passiveEleven = dynamic_cast<PassiveEleven*>(passive)) {
+                passiveEleven->ResetTurnState();
             }
         }
     }
@@ -849,6 +874,20 @@ void GameManager::UpdateAnnouncement() {
     }
 }
 
+void GameManager::setHoverText(const std::string& text) {
+    hoverText = text;
+}
+
+void GameManager::RenderHoverText() {
+    if (hoverText.empty() || !textRendererRef) return;
+
+    float textWidth = textRendererRef->CalculateTextWidth(hoverText, 0.5f);
+    float textX = screenWidth - textWidth - 20; 
+    float textY = screenHeight - 50; 
+
+    textRendererRef->RenderText(hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+}
+
 
 
 
@@ -886,6 +925,10 @@ int GameManager::getInvocationIndex(InvocationScript* invocation) {
         return std::distance(invocationsListRef.begin(), it);
     }
     return -1; 
+}
+
+InvocationSelectionScript* GameManager::getHoveredInvocation(){ 
+    return currentlyHoveredInvocation; 
 }
 
 
@@ -936,6 +979,21 @@ void GameManager::setCurrentPlayerInvocationsListRef() {
                 currentPlayerInvocationsListRef.push_back(invocationScript);
             }
         }
+    }
+}
+
+void GameManager::setHoveredInvocation(InvocationSelectionScript* script) {
+    currentlyHoveredInvocation = script;
+}
+
+bool GameManager::isAnyInvocationHovered() {
+    return currentlyHoveredInvocation != nullptr;
+}
+
+void GameManager::clearHoveredInvocation(InvocationSelectionScript* script) {
+    if (currentlyHoveredInvocation == script) {
+        currentlyHoveredInvocation = nullptr;
+        //setHoverText("");
     }
 }
 

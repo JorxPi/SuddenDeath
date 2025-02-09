@@ -30,6 +30,7 @@ public:
     void setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr);
 
     ButtonManager* getButtonManagerRef();
+    GameManager* getGameManagerRef();
 
     void settingCardsSelectionList(InvocationSelectionScript* invssc);
 

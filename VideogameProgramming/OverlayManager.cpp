@@ -109,3 +109,7 @@ void OverlayManager::updateScoreVisibility(int playerId, int score) {
         }
     }
 }
+
+EntityManager* OverlayManager::getEntityManager() {
+    return entityManager;
+}

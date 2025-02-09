@@ -52,6 +52,8 @@ void PassiveFive::OnEvent(GameManager* gameManager, InvocationScript* invocation
                     // Destroy the invocation if it remained stationary for 2 turns
                     std::cout << "PassiveFive: Destroying invocation at index " << index << "." << std::endl;
                     gameManager->eliminateInvocation(index);
+
+                    Reveal();
                 }
 
                 // Remove from tracking

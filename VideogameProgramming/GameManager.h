@@ -66,6 +66,8 @@ public:
 	int awardBattlePoints(int winnerIndex, int loserIndex);
 	int awardInvocationPoints(InvocationScript* invocScript);
 	void updateScoreVisibility(int playerScoring);
+	bool isAnyInvocationHovered();
+	void clearHoveredInvocation(InvocationSelectionScript* script);
 
 	void addInvocationToBoard(const std::string& invocationId);
 	void removeInvocationFromBoard(const std::string& invocationId);
@@ -107,6 +109,8 @@ public:
 	void ShowAnnouncement(const std::string& text, float duration);
 	void RenderAnnouncement();
 	void UpdateAnnouncement();
+	void setHoverText(const std::string& text);
+	void RenderHoverText();
 
 
 	//GETTERS
@@ -116,6 +120,7 @@ public:
 	std::vector<CellScript*> getAllCellScripts();
 	std::vector<InvocationScript*>& getInvocationScripts();
 	int getInvocationIndex(InvocationScript* invocation);
+	InvocationSelectionScript* getHoveredInvocation(); 
 
 	//SETTERS
 	void setTextRenderer(TextRenderer* textRenderer);
@@ -125,6 +130,7 @@ public:
 	void setRuletaBatallaRef(RuletaBatalla* rbcr, Entity* rbent, Entity* pointent);
 	void setCoinRef(CoinScript* ccr, Entity* cent);
 	void setCurrentPlayerInvocationsListRef();
+	void setHoveredInvocation(InvocationSelectionScript* script);
 
 
 
@@ -178,6 +184,7 @@ private:
 	bool selectingInvocation = false;
 	bool delayStarted = false;
 	bool extraCoinActive = false;
+	bool anyInvocationHovered = false;
 
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points
@@ -185,6 +192,7 @@ private:
 	//TEXT
 	std::string currentInstruction;
 	std::string announcementText = "";
+	std::string hoverText;
 	float announcementTimer = 0.0f;
 	std::chrono::steady_clock::time_point announcementStartTime;
 	int screenWidth = 1200;
@@ -196,6 +204,8 @@ private:
 	int posListInvoc1, posListInvoc2;
 	int currentInvocationMoving =  -1;
 	int invocationToSpawnPos = -1;
+	int hoveredInvocationCount = 0;
+	InvocationSelectionScript* currentlyHoveredInvocation = nullptr;
 
 	std::chrono::steady_clock::time_point battleTime;
 	std::chrono::steady_clock::time_point selectionTime;

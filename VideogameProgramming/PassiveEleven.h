@@ -8,7 +8,9 @@ public:
     void OnEvent(GameManager* gameManager, InvocationScript* invocation) override;
     void OnInvocationDeath() override;
     const std::string& GetDescription() const override;
+    void ResetTurnState();
+    int HowManyFlipsHandled();
 
 private:
-    bool firstFlipHandled = false; 
+    int flipsHandled = 0; 
 };

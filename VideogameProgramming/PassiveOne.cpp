@@ -23,6 +23,8 @@ void PassiveOne::OnEvent(GameManager* gameManager, InvocationScript* invocation)
         const char* attackTexture = gameManager->returnAttackText(newAttack);
         invocation->updateAttackSprite(attackTexture);
 
+        Reveal();
+
         std::cout << "PassiveOne activated: Attack increased to " << newAttack << std::endl;
     }
 }

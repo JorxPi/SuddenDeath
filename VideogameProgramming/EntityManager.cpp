@@ -122,6 +122,10 @@ ButtonManager* EntityManager::getButtonManagerRef() {
 	return buttonManagerRef;
 }
 
+GameManager* EntityManager::getGameManagerRef() {
+	return gameManagerRef;
+}
+
 void EntityManager::settingCardsSelectionList(InvocationSelectionScript* invssc) {
 	gameManagerRef->addInvocationSelectionScriptToList(invssc);
 }

@@ -2,46 +2,61 @@
 
 void InvocationSelectionScript::tickScript(float deltaTime) {
 	if (!overlayManager || overlayManager->isSelectionLocked()) {
-		return;  // Ignore clicks if global selection is locked
+		return;  // Ignore interactions if selection is locked
 	}
 
 	ComponentHandle<Transform> transform = entity->get<Transform>();
 	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
-	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
 
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS ) {
-		double mouseX, mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
 
-		if (mouseX >= transform->position.x - collider->width / 2.0f && mouseX <= transform->position.x + collider->width / 2.0f &&
-			mouseY >= transform->position.y - collider->height / 2.0f && mouseY <= transform->position.y + collider->height / 2.0f) {
+	bool isHovering = (mouseX >= transform->position.x - collider->width / 2.0f &&
+		mouseX <= transform->position.x + collider->width / 2.0f &&
+		mouseY >= transform->position.y - collider->height / 2.0f &&
+		mouseY <= transform->position.y + collider->height / 2.0f);
 
-			std::cout << "Clicked?" << std::endl;
+	GameManager* gameManager = nullptr;
+	if (overlayManager) {
+		EntityManager* entityManager = overlayManager->getEntityManager();
+		if (entityManager) {
+			gameManager = entityManager->getGameManagerRef();
+		}
+	}
 
-			if (isUnavailable) {
-				std::cout << "This invocation is already on the board!" << std::endl;
-				return;
-			}
+	if (isHovering) {
+		if (gameManager->isAnyInvocationHovered() && gameManager->getHoveredInvocation() != this) {
+			return;  
+		}
 
-			if (discovered) {
-				// invoc selected
-				card_selected = true;
-				setUnavailable(true);
+		if (!isHovered) {
+			isHovered = true;
+			gameManager->setHoveredInvocation(this);
+			updateHoverText();
+		}
+	}
+	else if (isHovered) {
+		isHovered = false;
+		gameManager->clearHoveredInvocation(this); 
+	}
 
-				overlayManager->lockSelection(true);
-			}
-			else {
-				// show the new invoc discovered
-				setInvocAsociatedVisible();
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && isHovering) {
+		if (isUnavailable) {
+			std::cout << "This invocation is already on the board!" << std::endl;
+			return;
+		}
 
-				// invoc selected
-				card_selected = true;
+		if (!discovered) {
+			setInvocAsociatedVisible();
+		}
 
-				setUnavailable(true);
+		card_selected = true;
+		setUnavailable(true);
+		overlayManager->lockSelection(true);
 
-				overlayManager->lockSelection(true);
-			}
-
+		if (gameManager) {
+			gameManager->setHoverText("");
+			gameManager->setHoveredInvocation(nullptr);
 		}
 	}
 }
@@ -119,5 +134,32 @@ ECS::Entity* InvocationSelectionScript::getUnavailableOverlay() {
 
 void InvocationSelectionScript::setOverlayManager(OverlayManager* manager) {
 	overlayManager = manager;
+}
+
+void InvocationSelectionScript::updateHoverText() {
+	if (!overlayManager) return;
+
+	EntityManager* entityManager = overlayManager->getEntityManager();
+	if (!entityManager) return;
+
+	GameManager* gameManager = entityManager->getGameManagerRef();
+	if (!gameManager) return;
+
+	std::string descriptionText;
+
+	if (!discovered) {
+		descriptionText = "This invocation has not been revealed yet.";
+	}
+	else if (passive && !passive->IsRevealed()) {
+		descriptionText = "This invocation's passive has not been revealed yet.";
+	}
+	else if (passive) {
+		descriptionText = passive->GetDescription();
+	}
+	else {
+		descriptionText = "This invocation has no passive.";
+	}
+
+	gameManager->setHoverText(descriptionText);
 }
 

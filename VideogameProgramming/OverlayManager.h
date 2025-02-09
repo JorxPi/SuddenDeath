@@ -24,6 +24,7 @@ public:
     void activateScoreOverlay(bool state); // Activate/Deactivate score overlay
     void updateScoreVisibility(int playerId, int score); // Update score visibility
 
+    EntityManager* getEntityManager();
 private:
     EntityManager* entityManager;
 

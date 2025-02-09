@@ -23,6 +23,8 @@ void PassiveTen::OnEvent(GameManager* gameManager, InvocationScript* invocation)
                 gameManager->addPlayerPoints(i, -3);
             }
         }
+
+        Reveal();
     }
 }
 

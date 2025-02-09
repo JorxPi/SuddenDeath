@@ -26,10 +26,13 @@ public:
     void setUnavailableOverlay(ECS::Entity* overlay);
     ECS::Entity* getUnavailableOverlay();
 
-    void setOverlayManager(OverlayManager* manager);  // New: Setter for OverlayManager
+    void setOverlayManager(OverlayManager* manager);
+
+    void updateHoverText();
 
 private:
     OverlayManager* overlayManager = nullptr;
+    GameManager* gameManagerRef = nullptr;
 
     Entity* invocAsociated;
     Entity* unavailableOverlay;  // New: Reference to "InvNotAv" overlay entity
@@ -39,6 +42,7 @@ private:
 
     bool discovered = false;
     bool card_selected = false;
-    bool isUnavailable = false;  // New: Mark if this card is unavailable
+    bool isUnavailable = false; 
+    bool isHovered = false;
 
 };
