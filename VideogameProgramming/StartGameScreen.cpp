@@ -41,11 +41,11 @@ void StartGameScreen::enter() {
 
 	entities.push_back(entityManager->createCell(CellPos::tg, "Textures/triangulo_verde.png", 73.f, 64.f));
 
-	entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, 1, "Textures/blue_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 1);
+	//entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, 1, "Textures/blue_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 1);
 
-	entityManager->createInvocation(glm::vec2(950.f, 600.f), 2, 1, "Textures/red_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 2);
+	//entityManager->createInvocation(glm::vec2(950.f, 600.f), 2, 1, "Textures/red_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 2);
 
-	entityManager->createInvocation(glm::vec2(300.f, 570.f), 3, 1, "Textures/green_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 3);
+	//entityManager->createInvocation(glm::vec2(300.f, 570.f), 3, 1, "Textures/green_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 3);
 
 
 	auto buttonSkip = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/SkipTurnButton.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");

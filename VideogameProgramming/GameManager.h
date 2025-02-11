@@ -76,11 +76,11 @@ public:
 	template <typename PassiveType>
 	void handlePassiveEvent(InvocationScript* invocation, std::function<void(PassiveType*)> eventHandler);
 
-	//SECOND COIN PASSIVE
-	bool isFirstFlipTails();
-	void spawnExtraCoin();
-	bool isExtraCoinActive();
-	void markExtraCoinUsed();
+	//COIN FLIPS
+	bool playerHasInvocations(int playerID);
+	int getConsecutiveTails(int player);
+	void incrementConsecutiveTails(int player);
+	void resetConsecutiveTails(int player);
 
 	//ENTITY CREATION
 	void spawnCoin();
@@ -111,7 +111,8 @@ public:
 	void UpdateAnnouncement();
 	void setHoverText(const std::string& text);
 	void RenderHoverText();
-
+	void setCoinProbabilityText(const std::string& text);
+	void RenderCoinProbabilityText();
 
 	//GETTERS
 	int getCurrentPlayerTurn();
@@ -189,12 +190,17 @@ private:
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points
 
+	//COINFLIPS
+	std::map<int, int> consecutiveTails;
+
+
 	//TEXT
 	std::string currentInstruction;
 	std::string announcementText = "";
 	std::string hoverText;
 	float announcementTimer = 0.0f;
 	std::chrono::steady_clock::time_point announcementStartTime;
+	std::string coinProbabilityText;
 	int screenWidth = 1200;
 	int screenHeight = 800;
 

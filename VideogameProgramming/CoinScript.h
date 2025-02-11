@@ -16,6 +16,7 @@ public:
 
     //GENERAL LOGIC
     void coinFlip();
+    int calculateSummonProbability();
 
     //GETTERS
     bool getCoinFlipped();

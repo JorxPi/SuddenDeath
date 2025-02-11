@@ -6,6 +6,10 @@
 
 GameManager::GameManager(GLFWwindow* window, ECS::World* world, EntityManager* entityManager)
     : window(window), world(world), entityManager(entityManager) {
+
+    playerScores[1] = 10;
+    playerScores[2] = 10;
+    playerScores[3] = 10;
 }
 
 ECS::Entity* GameManager::createEntity(glm::vec2 position, float rotation, float scale, const char* filepath, glm::vec3 color, bool autoSize, glm::vec2 size, const char* shaderName) {
@@ -18,6 +22,10 @@ ECS::Entity* GameManager::createEntity(glm::vec2 position, float rotation, float
 
 void GameManager::activate(bool status) {
     isActive = status;
+
+    updateScoreVisibility(1);
+    updateScoreVisibility(2);
+    updateScoreVisibility(3);
 }
 
 void GameManager::update(float deltaTime) {
@@ -126,6 +134,7 @@ void GameManager::update(float deltaTime) {
             if (elapsed.count() >= 3) {
                 bool headOrTails = coinScriptRef->getHeadOrTails();
                 world->destroy(coinEntRef);
+                setCoinProbabilityText("");
                 coinEntRef = nullptr;
                 coinScriptRef = nullptr;
 
@@ -158,6 +167,8 @@ void GameManager::update(float deltaTime) {
                 if (headOrTails) {
                     //Heads, so we start the invocation selection
                     ShowAnnouncement("Heads! Time to summon a new invocation.", 3.0f);
+                    //Reset consecutiveTails
+                    consecutiveTails[currentPlayerTurn] = 0;
 
                     startInvocationSelection();
                     selectingInvocation = true;
@@ -167,6 +178,8 @@ void GameManager::update(float deltaTime) {
                 else {
                     //Tails, so the next player turn will start
                     playerScores[currentPlayerTurn] += 3;
+                    //consecutiveTails +1
+                    consecutiveTails[currentPlayerTurn]++;
 
                     std::cout << "Tails coin points awarded to Player " << currentPlayerTurn
                         << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
@@ -267,6 +280,7 @@ void GameManager::update(float deltaTime) {
         textRendererRef->RenderText(currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
         RenderAnnouncement();
         RenderHoverText();
+        RenderCoinProbabilityText();
     }
 }
 
@@ -591,6 +605,16 @@ int GameManager::awardInvocationPoints(InvocationScript* invocScript) {
     return pointsAwarded;
 }
 
+bool GameManager::isAnyInvocationHovered() {
+    return currentlyHoveredInvocation != nullptr;
+}
+
+void GameManager::clearHoveredInvocation(InvocationSelectionScript* script) {
+    if (currentlyHoveredInvocation == script) {
+        currentlyHoveredInvocation = nullptr;
+        //setHoverText("");
+    }
+}
 
 void GameManager::updateScoreVisibility(int playerScoring) {
     if (screenManagerRef && screenManagerRef->getOverlayManager()) {
@@ -626,6 +650,33 @@ void GameManager::handlePassiveEvent(InvocationScript* invocation, std::function
     }
 }
 
+
+
+//COIN FLIP
+
+
+bool GameManager::playerHasInvocations(int playerID) {
+    for (auto* invocation : invocationsListRef) {
+        if (invocation->getPlayerOwner() == playerID) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int GameManager::getConsecutiveTails(int player) {
+    return consecutiveTails[player];
+}
+
+void GameManager::incrementConsecutiveTails(int player) {
+    consecutiveTails[player]++;
+}
+
+void GameManager::resetConsecutiveTails(int player) {
+    consecutiveTails[player] = 0;
+}
+
+
 //ENTITY CREATION
 
 
@@ -635,12 +686,14 @@ void GameManager::spawnCoin() {
     ECS::Entity* coin = result_coin.first;
 
     Script* generic_script = result_coin.second;
-
     CoinScript* coin_script = dynamic_cast<CoinScript*>(generic_script);
 
     coin->assign<BoxCollider>(208.f, 208.f, currentPlayerTurn);
     setCoinRef(coin_script, coin);
     coin_script->setGameManagerRef(this);
+
+    int summonChance = coin_script->calculateSummonProbability();
+    setCoinProbabilityText(std::to_string(summonChance) + "% chance of heads coin flip");
 }
 
 void GameManager::spawnRuletaAttacks() {
@@ -883,9 +936,23 @@ void GameManager::RenderHoverText() {
 
     float textWidth = textRendererRef->CalculateTextWidth(hoverText, 0.5f);
     float textX = screenWidth - textWidth - 20; 
-    float textY = screenHeight - 50; 
+    float textY = screenHeight - 100; 
 
     textRendererRef->RenderText(hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+}
+
+void GameManager::setCoinProbabilityText(const std::string& text) {
+    coinProbabilityText = text;
+}
+
+void GameManager::RenderCoinProbabilityText() {
+    if (!textRendererRef || coinProbabilityText.empty()) return;
+
+    float textWidth = textRendererRef->CalculateTextWidth(coinProbabilityText, 0.5f);
+    float centeredX = 1000.f - (textWidth / 2.0f);  // Centered above the coin
+    float textY = screenHeight - 50;  // Position above the coin
+
+    textRendererRef->RenderText(coinProbabilityText, centeredX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 
@@ -986,16 +1053,6 @@ void GameManager::setHoveredInvocation(InvocationSelectionScript* script) {
     currentlyHoveredInvocation = script;
 }
 
-bool GameManager::isAnyInvocationHovered() {
-    return currentlyHoveredInvocation != nullptr;
-}
-
-void GameManager::clearHoveredInvocation(InvocationSelectionScript* script) {
-    if (currentlyHoveredInvocation == script) {
-        currentlyHoveredInvocation = nullptr;
-        //setHoverText("");
-    }
-}
 
 
 
