@@ -370,6 +370,7 @@ void GameManager::changeTurnAndReset() {
         currentPlayerTurn = 1;
     }
     movementBlocked = false;
+    allInvocsMoved = false;
     currentPlayerInvocationsListRef.clear();
     currentPlayerInvocationsListSetted = false;
 }
@@ -502,6 +503,9 @@ void GameManager::skipButtonGameLogic() {
         invocation->setSkippedMovement(true);
 
         invocation->setMoved(true);
+        ComponentHandle<Transform> transform = invocation->getInvocationEntity()->get<Transform>();
+        invocation->setPreviousPos(transform->position.x, transform->position.y);
+
         buttonRef->setSkipTurnClicked(false);
         skipButtonIn = false;
         currentInvocationMoving = -1;
@@ -996,6 +1000,10 @@ int GameManager::getInvocationIndex(InvocationScript* invocation) {
 
 InvocationSelectionScript* GameManager::getHoveredInvocation(){ 
     return currentlyHoveredInvocation; 
+}
+
+bool GameManager::getAllInvocsMoved() {
+    return allInvocsMoved;
 }
 
 

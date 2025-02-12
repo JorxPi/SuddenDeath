@@ -21,12 +21,18 @@ public:
 	void moveSkipButtonIn();
 	void moveSkipButtonOut();
 
+	//BUTTON UNDO
+	void moveUndoButtonIn(InvocationScript* invoc);
+	void moveUndoButtonOut();
+	void handleUndoButtonClick();
+
 	//GETTERS
 	bool getSkipTurnClicked();
 
 	//SETTERS
 	void setSkipButtonRef(ButtonScript* buttonScript);
 	void setSkipTurnClicked(bool value);
+	void setUndoButtonRef(ButtonScript* button);
 
 
 private: 	
@@ -34,6 +40,9 @@ private:
 	ECS::World* world;
 
 	ButtonScript* skipButtonRef;
+	ButtonScript* undoButtonRef = nullptr;
+	InvocationScript* undoTarget = nullptr;
+	bool undoButtonIn = false;
 
 	bool skipTurnClicked = false;
 

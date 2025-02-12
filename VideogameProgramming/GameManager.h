@@ -122,6 +122,7 @@ public:
 	std::vector<InvocationScript*>& getInvocationScripts();
 	int getInvocationIndex(InvocationScript* invocation);
 	InvocationSelectionScript* getHoveredInvocation(); 
+	bool getAllInvocsMoved();
 
 	//SETTERS
 	void setTextRenderer(TextRenderer* textRenderer);

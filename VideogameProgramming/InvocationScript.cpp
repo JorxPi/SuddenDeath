@@ -21,17 +21,27 @@ void InvocationScript::tickScript(float deltaTime) {
 	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
 
 	if (collider->colliderId == gameRef->getCurrentPlayerTurn()) {
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !moved) {
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			double mouseX, mouseY;
 			glfwGetCursorPos(window, &mouseX, &mouseY);
 
 			if (mouseX >= transform->position.x - collider->width / 2.0f && mouseX <= transform->position.x + collider->width / 2.0f &&
 				mouseY >= transform->position.y - collider->height / 2.0f && mouseY <= transform->position.y + collider->height / 2.0f) {
 
-				gameRef->clearHighlightedList();
+				std::cout << "moveAllowed: " << moveAllowed << std::endl;
+				std::cout << "fullyMoved: " << fullyMoved << std::endl;
+				std::cout << "allInvocsMoved: " << !gameRef->getAllInvocsMoved() << std::endl;
 
-				highlightCells();
-				moveAllowed = true;
+				if (!moveAllowed && fullyMoved && !gameRef->getAllInvocsMoved()) {
+					buttonRef->moveUndoButtonIn(this); // Show Undo button when already moved
+				}
+
+				if (!moved) {
+					gameRef->clearHighlightedList();
+					highlightCells();
+					moveAllowed = true;
+				}
+
 			}
 		}
 	}
@@ -39,6 +49,7 @@ void InvocationScript::tickScript(float deltaTime) {
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS || (moved && moveAllowed)) {
 		clearHighlightedCells();
 		rightClickPressed = true;
+		buttonRef->moveUndoButtonOut();
 	}
 
 
@@ -75,9 +86,13 @@ void InvocationScript::tickScript(float deltaTime) {
 
 void InvocationScript::moveInvocation(int posX, int posY) {
 	ComponentHandle<Transform> transform = entity->get<Transform>();
+	previousPos = transform->position;
+	std::cout << "previousPos " << previousPos.x << " " << previousPos.y << std::endl;
 
 	lPos.x = posX;
 	lPos.y = posY;
+
+	canUndo = true;
 }
 
 void InvocationScript::highlightCells() {
@@ -130,6 +145,22 @@ void InvocationScript::updateAttackSprite(const char* newAttackTexture) {
 		if (sprite) {
 			sprite->filepath = newAttackTexture;
 		}
+	}
+}
+
+void InvocationScript::undoLastMove() {
+	if (moved) {
+		moveAllowed = false;  
+		fullyMoved = false;  
+		moved = false;     
+
+		// Update Transform
+		moveInvocation(previousPos.x, previousPos.y);
+
+		// Hide the Undo button after undoing
+		buttonRef->moveUndoButtonOut();
+
+		std::cout << "Undoing move, returning to (" << lPos.x << ", " << lPos.y << ")" << std::endl;
 	}
 }
 
@@ -260,6 +291,11 @@ void InvocationScript::setPassiveAbility(PassiveAbility* passive) {
 
 void InvocationScript::setSkippedMovement(bool value) {
 	skippedMovement = value;
+}
+
+void InvocationScript::setPreviousPos(int posX, int posY) {
+	previousPos.x = posX;
+	previousPos.y = posY;
 }
 
 

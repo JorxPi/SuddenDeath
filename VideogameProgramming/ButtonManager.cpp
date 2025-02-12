@@ -25,6 +25,36 @@ void ButtonManager::moveSkipButtonOut() {
 }
 
 
+//BUTTON UNDO
+
+
+void ButtonManager::moveUndoButtonIn(InvocationScript* invoc) {
+    if (undoButtonIn) return; // If already visible, do nothing
+
+    if (!undoButtonRef) return; // Safety check
+
+    undoTarget = invoc;
+    ComponentHandle<Transform> transform = undoButtonRef->getEntity()->get<Transform>();
+    transform->position = glm::vec2(200, 250); // Move to visible position
+    undoButtonIn = true;
+}
+
+void ButtonManager::moveUndoButtonOut() {
+    if (!undoButtonIn) return;
+
+    ComponentHandle<Transform> transform = undoButtonRef->getEntity()->get<Transform>();
+    transform->position = glm::vec2(-1000, -1000); // Move out of screen
+    undoButtonIn = false;
+}
+
+void ButtonManager::handleUndoButtonClick() {
+    if (undoTarget) {
+        undoTarget->undoLastMove();
+        moveUndoButtonOut();
+    }
+}
+
+
 
 //GETTERS
 
@@ -44,6 +74,10 @@ void ButtonManager::setSkipButtonRef(ButtonScript* buttonScript) {
 
 void ButtonManager::setSkipTurnClicked(bool value) {
     skipTurnClicked = value;
+}
+
+void ButtonManager::setUndoButtonRef(ButtonScript* button) {
+    undoButtonRef = button;
 }
 
 

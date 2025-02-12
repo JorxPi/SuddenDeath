@@ -26,6 +26,7 @@ public:
     void destroyInvocation();
     bool checkInvocInSpawnCells();
     void updateAttackSprite(const char* newAttackTexture);
+    void undoLastMove();
 
     void incrementSkippedTurns();   
     void resetSkippedTurns();
@@ -58,6 +59,7 @@ public:
     void setRightClickPressed(bool value);
     void setPlayerOwner(int owner);
     void setSkippedMovement(bool value);
+    void setPreviousPos(int posX, int posY);
 
     void setPassiveAbility(PassiveAbility* passive);
 
@@ -75,6 +77,7 @@ private:
     bool rightClickPressed = false;
     int skippedTurns = 0;
     bool skippedMovement = false;
+    bool canUndo = false;
 
     //real pos to move
     glm::vec2 lPos;
@@ -83,6 +86,8 @@ private:
 
     std::vector<Entity*> movableCells;
     std::vector<CellScript*> movableCellScripts;
+
+    glm::vec2 previousPos;
 
     Entity* invocationEnt;
     Entity* cardBackEnt;

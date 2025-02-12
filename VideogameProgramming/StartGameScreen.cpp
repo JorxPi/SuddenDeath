@@ -48,6 +48,7 @@ void StartGameScreen::enter() {
 	//entityManager->createInvocation(glm::vec2(300.f, 570.f), 3, 1, "Textures/green_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 3);
 
 
+	// === Skip Turn Button ===
 	auto buttonSkip = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/SkipTurnButton.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
 	ECS::Entity* buttonSkipEntity = buttonSkip.first;
 	buttonSkipEntity->assign<BoxCollider>(200.f, 85.f, 1);
@@ -64,6 +65,23 @@ void StartGameScreen::enter() {
 	}
 
 	entityManager->getButtonManagerRef()->setSkipButtonRef(buttonSkip_script);
+
+	// === Undo Move Button ===
+	auto buttonUndo = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/RedHP.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
+	ECS::Entity* buttonUndoEntity = buttonUndo.first;
+	buttonUndoEntity->assign<BoxCollider>(200.f, 85.f, 1);
+	entities.push_back(buttonUndoEntity);
+	Script* undoGenericScript = buttonUndo.second;
+
+	ButtonScript* buttonUndoScript = dynamic_cast<ButtonScript*>(undoGenericScript);
+
+	if (buttonUndoScript) {
+		buttonUndoScript->setOnClickAction([&]() {
+			entityManager->getButtonManagerRef()->handleUndoButtonClick();
+			});
+	}
+
+	entityManager->getButtonManagerRef()->setUndoButtonRef(buttonUndoScript);
 
 	setupOverlayScreen();
 	setupScoreScreen();
