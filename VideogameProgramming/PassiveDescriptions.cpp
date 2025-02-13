@@ -6,7 +6,7 @@ namespace PassiveDescriptions {
     const char* PassiveThree = "Summon a 3 attack goblin without passive if player has less than 3 invocations after a tails coinflip.";
     const char* PassiveFour = "If this summon loses a combat, it is treated as though it won. If it wins, it is treated as though it lost.";
     const char* PassiveFive = "Destroy any enemy summon that remains stationary for 2 consecutive turns.";
-    const char* PassiveSix = "If a rival summons an ally with exactly 6 attack, its attack is reduced to 4.";
+    const char* PassiveSix = "If a rival summons an invocation with more attack than this, its attack is reduced by 1.";
     const char* PassiveSeven = "When attacking another summon, reduce the opposing summon’s attack by 1.";
     const char* PassiveEight = "This summon can activate positive spaces belonging to rival players.";
     const char* PassiveNine = "If this summon wins 2 combats, the player gains 3 extra sudden points.";

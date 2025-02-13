@@ -372,6 +372,7 @@ void GameManager::changeTurnAndReset() {
 
     for (InvocationScript* invoc : invocationsListRef) {
         invoc->setRecentlySummoned(false);
+        invoc->setHasBattled(false);
     }
 
     ruletaAttacksDestroyed = false;
@@ -464,6 +465,10 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
 
     if (battleFound) {
         battleing = true;
+
+        //Only need to set hasBattled to the invoc triggering the battle, as this is just to prevent the use of Undo button
+        invocScript->setHasBattled(true);
+
         invocScript->moveInvocation(posXInvoc1 - 40, posYInvoc1);
         invocationsListRef[posListInvoc2]->moveInvocation(posXInvoc2 + 40, posYInvoc2);
 
@@ -1072,18 +1077,3 @@ void GameManager::setCurrentPlayerInvocationsListRef() {
 void GameManager::setHoveredInvocation(InvocationSelectionScript* script) {
     currentlyHoveredInvocation = script;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -36,7 +36,7 @@ void InvocationScript::tickScript(float deltaTime) {
 				std::cout << "fullyMoved: " << fullyMoved << std::endl;
 				std::cout << "allInvocsMoved: " << !gameRef->getAllInvocsMoved() << std::endl;
 
-				if (!moveAllowed && fullyMoved && !gameRef->getAllInvocsMoved()) {
+				if (!moveAllowed && fullyMoved && !gameRef->getAllInvocsMoved() && !hasBattled) {
 					buttonRef->moveUndoButtonIn(this); // Show Undo button when already moved
 				}
 
@@ -306,6 +306,9 @@ void InvocationScript::setRecentlySummoned(bool value) {
 	recentlySummoned = value; 
 }
 
+void InvocationScript::setHasBattled(bool value) { 
+	hasBattled = value; 
+}
 
 
 

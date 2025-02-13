@@ -61,6 +61,7 @@ public:
     void setSkippedMovement(bool value);
     void setPreviousPos(int posX, int posY);
     void setRecentlySummoned(bool value);
+    void setHasBattled(bool value);
 
     void setPassiveAbility(PassiveAbility* passive);
 
@@ -80,6 +81,7 @@ private:
     bool skippedMovement = false;
     bool canUndo = false;
     bool recentlySummoned = true;
+    bool hasBattled = false;
 
     //real pos to move
     glm::vec2 lPos;
