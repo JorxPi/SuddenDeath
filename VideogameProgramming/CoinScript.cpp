@@ -56,18 +56,22 @@ int CoinScript::calculateSummonProbability() {
     int currentPlayer = gameRef->getCurrentPlayerTurn();
 
     if (!gameRef->playerHasInvocations(currentPlayer)) {
-        return 100;
+        //return 100;
+        return 50;
     }
 
     int tailsCount = gameRef->getConsecutiveTails(currentPlayer);
     if (tailsCount >= 2) {
-        return 100;
+        //return 100;
+        return 50;
     }
     else if (tailsCount == 1) {
-        return 75;
+        //return 75;
+        return 25;
     }
 
-    return 50;  
+    //return 50;  
+    return 10;
 }
 
 

@@ -60,6 +60,7 @@ public:
     void setPlayerOwner(int owner);
     void setSkippedMovement(bool value);
     void setPreviousPos(int posX, int posY);
+    void setRecentlySummoned(bool value);
 
     void setPassiveAbility(PassiveAbility* passive);
 
@@ -78,6 +79,7 @@ private:
     int skippedTurns = 0;
     bool skippedMovement = false;
     bool canUndo = false;
+    bool recentlySummoned = true;
 
     //real pos to move
     glm::vec2 lPos;

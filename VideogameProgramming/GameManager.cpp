@@ -126,6 +126,7 @@ void GameManager::update(float deltaTime) {
     
     //Coin flip management
     if (coinScriptRef && invocDestroyed) {
+        coinRespawned = false;
         if (coinScriptRef->getCoinFlipped()) {
             auto flipTime = coinScriptRef->getFlipTime();
             auto now = std::chrono::steady_clock::now();
@@ -156,13 +157,19 @@ void GameManager::update(float deltaTime) {
                     handlePassiveEvent<PassiveEleven>(currentPlayerInvocationsListRef[0], [this](PassiveEleven* passive) {
                         passive->OnEvent(this, currentPlayerInvocationsListRef[0]);
                         if (passive->HowManyFlipsHandled() != 2) {
-                            spawnCoin(); // Spawn the second coin
-                            return; // Stop execution to wait for second coin flip
+                            std::cout << "Respawning coin." << std::endl;
+                            spawnCoin(); 
+                            coinRespawned = true;
                         }
                         });
 
+                    if (coinRespawned) {
+                        return;
+                    }
+
                 }
 
+                std::cout << "im here." << std::endl;
                 // Normal coin flip resolution
                 if (headOrTails) {
                     //Heads, so we start the invocation selection
@@ -312,6 +319,7 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
 
 
     InvocationScript* invocScript = invocationsListRef.back();
+    invocScript->setRecentlySummoned(true);
     int pointsAwarded = awardInvocationPoints(invocScript);
 
     ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f);
@@ -360,6 +368,10 @@ void GameManager::changeTurnAndReset() {
     // Reset skipped movement for the current player’s invocations
     for (auto* invocation : currentPlayerInvocationsListRef) {
         invocation->setSkippedMovement(false);
+    }
+
+    for (InvocationScript* invoc : invocationsListRef) {
+        invoc->setRecentlySummoned(false);
     }
 
     ruletaAttacksDestroyed = false;

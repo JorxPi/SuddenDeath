@@ -187,6 +187,7 @@ private:
 	bool delayStarted = false;
 	bool extraCoinActive = false;
 	bool anyInvocationHovered = false;
+	bool coinRespawned = false;
 
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points

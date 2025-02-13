@@ -20,6 +20,10 @@ void InvocationScript::tickScript(float deltaTime) {
 	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
 	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
 
+	if (recentlySummoned) {
+		return;
+	}
+
 	if (collider->colliderId == gameRef->getCurrentPlayerTurn()) {
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			double mouseX, mouseY;
@@ -296,6 +300,10 @@ void InvocationScript::setSkippedMovement(bool value) {
 void InvocationScript::setPreviousPos(int posX, int posY) {
 	previousPos.x = posX;
 	previousPos.y = posY;
+}
+
+void InvocationScript::setRecentlySummoned(bool value) { 
+	recentlySummoned = value; 
 }
 
 
