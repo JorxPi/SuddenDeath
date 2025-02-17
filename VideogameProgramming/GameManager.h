@@ -174,7 +174,6 @@ private:
 	bool currentPlayerInvocationsListSetted = false;
 	bool ruletaAttacksDestroyed = false;
 	bool ruletaBatallaDestroyed = false;
-	bool allInvocs = false;
 	bool battleing = false;
 	bool ruletaAttacksSpawned = false;
 	bool ruletaBatallaSpawned = false;
@@ -190,6 +189,7 @@ private:
 	bool anyInvocationHovered = false;
 	bool coinRespawned = false;
 	bool posSwapped = false;
+	bool startInvocSelection = false;
 
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points
@@ -215,6 +215,7 @@ private:
 	int currentInvocationMoving =  -1;
 	int invocationToSpawnPos = -1;
 	int hoveredInvocationCount = 0;
+	int spinResult = -1;
 	InvocationSelectionScript* currentlyHoveredInvocation = nullptr;
 
 	std::chrono::steady_clock::time_point battleTime;

@@ -14,7 +14,6 @@ public:
     void tickCont() override;
     void determineSpinResult(float finalRotation) override;
 
-    bool getInvocated();
     double getSpinResult();
 
 private:

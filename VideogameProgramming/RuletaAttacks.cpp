@@ -17,7 +17,6 @@
 void RuletaAttacks::tickCont() {
     if (rotationEnded && !invocated && !isSpinning) {
         roulTime = std::chrono::steady_clock::now();
-        //gameRef->invocInvocation(spinResult);
         invocated = true;
         checkingDuration = true;
     }
@@ -28,7 +27,6 @@ void RuletaAttacks::tickCont() {
 
         if (duration >= 3) {
             readyToDestroy = true;
-            //gameRef->destroyRuletaAttacks();
         }
     }
 }
@@ -39,10 +37,6 @@ void RuletaAttacks::determineSpinResult(float finalRotation) {
     rotationEnded = true;
     std::cout << "Rotation: " << finalRotation << std::endl;
     std::cout << "Spin Complete. Landing Result: " << spinResult << std::endl;
-}
-
-bool RuletaAttacks::getInvocated() {
-    return invocated;
 }
 
 double RuletaAttacks::getSpinResult() {

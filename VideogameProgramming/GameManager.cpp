@@ -182,18 +182,14 @@ void GameManager::update(float deltaTime) {
 
                 }
 
-                std::cout << "im here." << std::endl;
                 // Normal coin flip resolution
                 if (headOrTails) {
-                    //Heads, so we start the invocation selection
-                    ShowAnnouncement("Heads! Time to summon a new invocation.", 3.0f);
-                    //Reset consecutiveTails
+                    ShowAnnouncement("Heads! Spin the roulette to determine the attack.", 3.0f);
                     consecutiveTails[currentPlayerTurn] = 0;
 
-                    startInvocationSelection();
-                    selectingInvocation = true;
-                    currentInstruction = "Select an invocation to summon";
-
+                    spawnRuletaAttacks();
+                    ruletaAttacksSpawned = true;
+                    currentInstruction = "Spin the attack roulette";
                 }
                 else {
                     //Tails, so the next player turn will start
@@ -212,34 +208,20 @@ void GameManager::update(float deltaTime) {
         }
     }
 
-    //Attack selection for spawned invocation ends, so turn changes
-    if (ruletaAttacksDestroyed) {
+    //Invocation chosen, so turn changes
+    if (invocInvocated) {
         changeTurnAndReset();
     } 
 
-    //Attack Roulette has determined an attack for the invocation and we are ready to invocate
-    if (ruletaAttacksSpawned && ruletaAttacksRef->getInvocated() && !invocInvocated) {
-        /*if (invocationToSpawnPos != -1) {
-            invocInvocation(ruletaAttacksRef->getSpinResult(), invocCardListRef[invocationToSpawnPos]->getSpriteFilepath());
-            invocInvocated = true;
-            invocationToSpawnPos = -1;
-        }*/
-
-        if (invocationToSpawnPos != -1) {
-            InvocationSelectionScript* selectedScript = invocCardListRef[invocationToSpawnPos];
-
-            const char* filepath = selectedScript->getSpriteFilepath(); // Get filepath
-            PassiveAbility* passive = selectedScript->getPassiveAbility(); // Get passive
-
-            invocInvocation(ruletaAttacksRef->getSpinResult(), filepath, passive); // Pass both
-
-            invocInvocated = true;
-            invocationToSpawnPos = -1;
-        }
+    //Attack Roulette has determined an attack, we are ready to choose invocation
+    if (startInvocSelection && !selectingInvocation && ruletaAttacksDestroyed) {
+            ShowAnnouncement("Now select the invocation to summon.", 3.0f);
+            startInvocationSelection();
+            selectingInvocation = true;  
+            startInvocSelection = false;
     }
 
     //Selection invocation
-
     if (selectingInvocation) {
         currentInstruction = "Select an invocation to summon";
         for (int i = 0; i < invocCardListRef.size(); i++) {
@@ -249,6 +231,7 @@ void GameManager::update(float deltaTime) {
 
                 selectionTime = std::chrono::steady_clock::now();
                 delayStarted = true;
+                std::cout << "step3 " << std::endl;
                 break;
             }
         }
@@ -263,16 +246,19 @@ void GameManager::update(float deltaTime) {
             invocCardListRef[invocationToSpawnPos]->setCardSelected(false);
             endInvocationSelection();
 
-            spawnRuletaAttacks();
-            ruletaAttacksSpawned = true;
-            currentInstruction = "Spin the roulette to determine the attack";
-
-
             delayStarted = false;
+
+            invocInvocation(spinResult, invocCardListRef[invocationToSpawnPos]->getSpriteFilepath(), invocCardListRef[invocationToSpawnPos]->getPassiveAbility());
+
+            invocInvocated = true;
+            invocationToSpawnPos = -1;
+            spinResult = -1;
         }
     }
 
     if (ruletaAttacksSpawned && ruletaAttacksRef->getReadyToDestroy() && ruletaAttacksEntRef) {
+        spinResult = ruletaAttacksRef->getSpinResult();
+        startInvocSelection = true;
         destroyRuletaAttacks();
         invocInvocated = false;
     }
@@ -365,6 +351,7 @@ void GameManager::highlightSprite(int cellPos) {
 }
 
 void GameManager::changeTurnAndReset() {
+    invocInvocated = false;
 
     for (auto* invocation : invocationsListRef) {
         if (auto* passive = invocation->getPassiveAbility()) {
