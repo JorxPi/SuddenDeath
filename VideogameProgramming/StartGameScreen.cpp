@@ -67,7 +67,7 @@ void StartGameScreen::enter() {
 	entityManager->getButtonManagerRef()->setSkipButtonRef(buttonSkip_script);
 
 	// === Undo Move Button ===
-	auto buttonUndo = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/RedHP.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
+	auto buttonUndo = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/UndoMoveButton.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
 	ECS::Entity* buttonUndoEntity = buttonUndo.first;
 	buttonUndoEntity->assign<BoxCollider>(200.f, 85.f, 1);
 	entities.push_back(buttonUndoEntity);
@@ -164,12 +164,15 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 	//cinquena passiveEleven
 	passives.emplace_back(std::make_unique<PassiveEleven>());
 
+	//sisena passiveFour
+	passives.emplace_back(std::make_unique<PassiveFour>());
+
 	// La resta DummyPassive
-	for (size_t i = 5; i < invocations.size(); i++) {
+	for (size_t i = 6; i < invocations.size(); i++) {
 		passives.emplace_back(std::make_unique<DummyPassive>());
 	}
 
-	std::shuffle(passives.begin() + 5, passives.end(), g);
+	std::shuffle(passives.begin() + 6, passives.end(), g);
 
 	for (size_t i = 0; i < invocations.size() && i < passives.size(); i++) {
 		InvocationWithPassiveData data;

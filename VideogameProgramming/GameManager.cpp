@@ -63,10 +63,22 @@ void GameManager::update(float deltaTime) {
         int winningIndex = (ruletaBatallaWinner == 1) ? posListInvoc1 : posListInvoc2;
         int losingIndex = (ruletaBatallaWinner == 1) ? posListInvoc2 : posListInvoc1;
 
+        posSwapped = false;
+        handlePassiveEvent<PassiveFour>(invocationsListRef[winningIndex], [this, &winningIndex, &losingIndex](PassiveFour* passive) {
+            passive->CheckAndSwapWinner(this, winningIndex, losingIndex);
+            posSwapped = true;
+            });
+
+        if (!posSwapped) {
+            handlePassiveEvent<PassiveFour>(invocationsListRef[losingIndex], [this, &winningIndex, &losingIndex](PassiveFour* passive) {
+                passive->CheckAndSwapWinner(this, winningIndex, losingIndex);
+                });
+        }
+
         int winnerPlayer = invocationsListRef[winningIndex]->getPlayerOwner();
         int pointsAwarded = awardBattlePoints(winningIndex, losingIndex);
 
-        if (ruletaBatallaWinner == 1) {
+        if (winningIndex == posListInvoc1) {
             invocationsListRef[winningIndex]->moveInvocation(
                 invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.x + 40,
                 invocationsListRef[winningIndex]->getInvocationEntity()->get<Transform>()->position.y
@@ -81,6 +93,7 @@ void GameManager::update(float deltaTime) {
 
         handlePassiveEvent<PassiveNine>(invocationsListRef[winningIndex], [this, winner = invocationsListRef[winningIndex]](PassiveNine* passive) {
             passive->OnEvent(this, winner);
+            posSwapped = true;
             });
 
         handlePassiveEvent<PassiveTen>(invocationsListRef[winningIndex], [this, winningIndex](PassiveTen* passive) {

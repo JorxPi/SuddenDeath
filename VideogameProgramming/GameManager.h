@@ -17,6 +17,7 @@
 #include "PassiveFive.h"
 #include "PassiveTen.h"
 #include "PassiveEleven.h"
+#include "PassiveFour.h"
 #include "TextRenderer.h"
 #include <vector>
 
@@ -188,6 +189,7 @@ private:
 	bool extraCoinActive = false;
 	bool anyInvocationHovered = false;
 	bool coinRespawned = false;
+	bool posSwapped = false;
 
 	//SCORE
 	std::map<int, int> playerScores; // Player ID -> Points

@@ -17,7 +17,10 @@ namespace Invocations {
         { "Textures/inv_Slaim.png", glm::vec2(79., 45.) },
         { "Textures/inv_Torla.png", glm::vec2(79., 99.) },
         { "Textures/inv_Champen.png", glm::vec2(76., 86.) },
-        { "Textures/inv_Gobobo.png", glm::vec2(61., 92.) }
+        { "Textures/inv_Gobobo.png", glm::vec2(61., 92.) },
+        { "Textures/inv_Kiut.png", glm::vec2(75., 92.) },
+        { "Textures/inv_Greg.png", glm::vec2(61., 92.) },
+        { "Textures/inv_Wagol.png", glm::vec2(61., 92.) }
     };
 
     const int numInvocations = sizeof(data) / sizeof(data[0]);

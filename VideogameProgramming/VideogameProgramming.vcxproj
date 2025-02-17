@@ -305,11 +305,14 @@
     <Image Include="Textures\inv_Fall.png" />
     <Image Include="Textures\inv_Gardol.png" />
     <Image Include="Textures\inv_Gobobo.png" />
+    <Image Include="Textures\inv_Greg.png" />
     <Image Include="Textures\inv_Kin.png" />
+    <Image Include="Textures\inv_Kiut.png" />
     <Image Include="Textures\inv_Munch.png" />
     <Image Include="Textures\inv_Selly.png" />
     <Image Include="Textures\inv_Slaim.png" />
     <Image Include="Textures\inv_Torla.png" />
+    <Image Include="Textures\inv_Wagol.png" />
     <Image Include="Textures\MenuBack.png" />
     <Image Include="Textures\MenuDecor1.png" />
     <Image Include="Textures\MenuDecor2.png" />
@@ -332,6 +335,7 @@
     <Image Include="Textures\triangulo_azul.png" />
     <Image Include="Textures\triangulo_rojo.png" />
     <Image Include="Textures\triangulo_verde.png" />
+    <Image Include="Textures\UndoMoveButton.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\OpenSans.ttf" />
