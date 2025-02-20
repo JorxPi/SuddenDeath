@@ -325,7 +325,19 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
 
 
     if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
-        passiveFive->Activate(this, invocScript); // Activate PassiveFive
+        passiveFive->Activate(this, invocScript); 
+    }
+
+    if (auto* passiveSix = dynamic_cast<PassiveSix*>(passive)) {
+        passiveSix->Activate(this, invocScript); 
+    }
+
+    for (auto* invocation : invocationsListRef) {
+        if (invocation->getPlayerOwner() != currentPlayerTurn) {  // Check only rival players
+            handlePassiveEvent<PassiveSix>(invocation, [this, invocScript](PassiveSix* passive) {
+                passive->OnEvent(this, invocScript);
+                });
+        }
     }
 }
 
@@ -465,6 +477,16 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
 
     if (battleFound) {
         battleing = true;
+
+        // Check if posListInvoc1 has PassiveSeven
+        handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc1], [this](PassiveSeven* passive) {
+            passive->OnEvent(this, invocationsListRef[posListInvoc2]);  // Reduce posListInvoc2's attack
+            });
+
+        // Check if posListInvoc2 has PassiveSeven
+        handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc2], [this](PassiveSeven* passive) {
+            passive->OnEvent(this, invocationsListRef[posListInvoc1]);  // Reduce posListInvoc1's attack
+            });
 
         //Only need to set hasBattled to the invoc triggering the battle, as this is just to prevent the use of Undo button
         invocScript->setHasBattled(true);

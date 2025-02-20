@@ -167,12 +167,18 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 	//sisena passiveFour
 	passives.emplace_back(std::make_unique<PassiveFour>());
 
+	//setena passiveSix
+	passives.emplace_back(std::make_unique<PassiveSix>());
+
+	//vuitena passiveSeven
+	passives.emplace_back(std::make_unique<PassiveSeven>());
+
 	// La resta DummyPassive
-	for (size_t i = 6; i < invocations.size(); i++) {
+	for (size_t i = 8; i < invocations.size(); i++) {
 		passives.emplace_back(std::make_unique<DummyPassive>());
 	}
 
-	std::shuffle(passives.begin() + 6, passives.end(), g);
+	std::shuffle(passives.begin() + 8, passives.end(), g);
 
 	for (size_t i = 0; i < invocations.size() && i < passives.size(); i++) {
 		InvocationWithPassiveData data;

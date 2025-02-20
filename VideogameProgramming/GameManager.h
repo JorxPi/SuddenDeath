@@ -18,6 +18,8 @@
 #include "PassiveTen.h"
 #include "PassiveEleven.h"
 #include "PassiveFour.h"
+#include "PassiveSix.h"
+#include "PassiveSeven.h"
 #include "TextRenderer.h"
 #include <vector>
 
