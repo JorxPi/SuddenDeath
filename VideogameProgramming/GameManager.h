@@ -71,6 +71,7 @@ public:
 	void updateScoreVisibility(int playerScoring);
 	bool isAnyInvocationHovered();
 	void clearHoveredInvocation(InvocationSelectionScript* script);
+	void updateConquerableCells();
 
 	void addInvocationToBoard(const std::string& invocationId);
 	void removeInvocationFromBoard(const std::string& invocationId);

@@ -89,20 +89,21 @@ void EntityManager::createInvocationWithPassive(glm::vec2 position, int coliderI
 	}
 }
 
-ECS::Entity* EntityManager::createCell(glm::vec2 position, const char* text_cell_type, float col_w, float col_h) {
+ECS::Entity* EntityManager::createCell(glm::vec2 position, const char* text_cell_type, float col_w, float col_h, bool conquerable) {
 	auto result_cell = createEntity(position, 0.f, 1.f, text_cell_type, glm::vec3(1., 1., 1.), true, glm::vec2(1.0F, 1.0F), "default", "CellScript");
 	ECS::Entity* cell = result_cell.first;
 	Script* generic_script = result_cell.second;
 
 	CellScript* cell_script = dynamic_cast<CellScript*>(generic_script);
+	if (!cell_script) {
+		std::cerr << "Error: Failed to assign CellScript!" << std::endl;
+		return nullptr;
+	}
 
 	cell->assign<BoxCollider>(col_w, col_h, 1);
-
-	//CellScript* cell_script = new CellScript(window, world, cell);
-	//cell->assign<ScriptComponent>(scriptManagerRef->AddScript(cell_script));
 	gameManagerRef->addCellToList(cell_script);
-
 	cell_script->setCellRef(cell);
+	cell_script->setConquerable(conquerable);
 
 	return cell;
 }

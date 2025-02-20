@@ -333,6 +333,7 @@
     <Image Include="Textures\SpawnHighlight.png" />
     <Image Include="Textures\SuddenPoint.png" />
     <Image Include="Textures\triangulo_azul.png" />
+    <Image Include="Textures\triangulo_blanco.png" />
     <Image Include="Textures\triangulo_rojo.png" />
     <Image Include="Textures\triangulo_verde.png" />
     <Image Include="Textures\UndoMoveButton.png" />

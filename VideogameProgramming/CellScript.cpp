@@ -56,6 +56,14 @@ Entity* CellScript::getCellEntity() {
 	return cellEnt;
 }
 
+bool CellScript::getIsConquerable() {
+	return isConquerable;
+}
+
+int CellScript::getOwner() {
+	return owner;
+}
+
 
 
 //SETTERS
@@ -64,6 +72,23 @@ Entity* CellScript::getCellEntity() {
 
 void CellScript::setCellRef(Entity* cellr) {
 	cellEnt = cellr;
+}
+
+void CellScript::setOwner(int newOwner) {
+	if (!isConquerable || owner == newOwner) return; // Only change if conquerable
+
+	owner = newOwner;
+
+	// Change texture based on player color
+	switch (owner) {
+	case 1: getCellEntity()->get<Sprite>()->filepath = "Textures/triangulo_azul.png"; break;
+	case 2: getCellEntity()->get<Sprite>()->filepath = "Textures/triangulo_rojo.png"; break;
+	case 3: getCellEntity()->get<Sprite>()->filepath = "Textures/triangulo_verde.png"; break;
+	}
+}
+
+void CellScript::setConquerable(bool conquerable) {
+	isConquerable = conquerable;
 }
 
 

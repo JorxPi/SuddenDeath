@@ -609,6 +609,9 @@
     <Image Include="Textures\UndoMoveButton.png">
       <Filter>Archivos de recursos\Textures</Filter>
     </Image>
+    <Image Include="Textures\triangulo_blanco.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\OpenSans.ttf">

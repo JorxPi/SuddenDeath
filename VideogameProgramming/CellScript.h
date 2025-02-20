@@ -20,10 +20,19 @@ public:
     float getPosY();
     Entity* getCellEntity();
 
+    bool getIsConquerable();
+    int getOwner();
+
     //SETTERS   
     void setCellRef(Entity* cellr);
+
+    void setOwner(int newOwner);
+    void setConquerable(bool conquerable);
     
 
 private:
     Entity* cellEnt;
+
+    bool isConquerable = false;  // Default: not conquerable
+    int owner = 0;  // 0 = Neutral, 1 = Blue, 2 = Red, 3 = Green
 };

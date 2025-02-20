@@ -387,6 +387,8 @@ void GameManager::changeTurnAndReset() {
         invoc->setHasBattled(false);
     }
 
+    updateConquerableCells();
+
     ruletaAttacksDestroyed = false;
     if (currentPlayerTurn != 3) {
         currentPlayerTurn = currentPlayerTurn++;
@@ -656,6 +658,42 @@ void GameManager::clearHoveredInvocation(InvocationSelectionScript* script) {
     if (currentlyHoveredInvocation == script) {
         currentlyHoveredInvocation = nullptr;
         //setHoverText("");
+    }
+}
+
+void GameManager::updateConquerableCells() {
+    int pointsAwarded = 0;
+
+    // Loop through all cells and check if an invocation is on top
+    for (auto* cell : getAllCellScripts()) {
+        if (!cell->getIsConquerable()) continue; // Skip non-conquerable cells
+
+        int owner = 0; // No invocation detected yet
+
+        // Check if an invocation is on this cell
+        for (auto* invocation : getInvocationScripts()) {
+            if (invocation->getInvocationEntity()->get<Transform>()->position == cell->getCellEntity()->get<Transform>()->position) {
+                owner = invocation->getPlayerOwner();
+                break; // Found an invocation, no need to check further
+            }
+        }
+
+        // If there's an invocation, update ownership
+        if (owner != 0) {
+            cell->setOwner(owner);
+        }
+
+        // Award points if the cell is owned by the current player
+        if (cell->getOwner() == currentPlayerTurn) {
+            pointsAwarded += 2;
+        }
+    }
+
+    // Award points if applicable
+    if (pointsAwarded > 0) {
+        addPlayerPoints(currentPlayerTurn, pointsAwarded);
+        ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " +
+            std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f);
     }
 }
 

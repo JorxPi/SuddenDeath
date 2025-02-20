@@ -15,31 +15,31 @@ StartGameScreen::StartGameScreen(EntityManager* entityManager, OverlayManager* o
 void StartGameScreen::enter() {
 	entities.push_back(entityManager->createEntityWithoutScript(glm::vec2(600., 400.), 0.f, 1.f, "Textures/GameBack.png", glm::vec3(1., 1., 1.)));
 
-	entities.push_back(entityManager->createCell(CellPos::c1, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c1, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::c2, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c2, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::c3, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c3, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::c4, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c4, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 	
-	entities.push_back(entityManager->createCell(CellPos::c5, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c5, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::c6, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c6, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::c7, "Textures/ovalo_normal.png", 74.f, 60.f));
+	entities.push_back(entityManager->createCell(CellPos::c7, "Textures/ovalo_normal.png", 74.f, 60.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::ha, "Textures/hexagono_azul.png", 115.f, 100.f));
+	entities.push_back(entityManager->createCell(CellPos::ha, "Textures/hexagono_azul.png", 115.f, 100.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::ta, "Textures/triangulo_azul.png", 73.f, 64.f));
+	entities.push_back(entityManager->createCell(CellPos::ta, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
 
-	entities.push_back(entityManager->createCell(CellPos::hr, "Textures/hexagono_rojo.png", 115.f, 100.f));
+	entities.push_back(entityManager->createCell(CellPos::hr, "Textures/hexagono_rojo.png", 115.f, 100.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::tr, "Textures/triangulo_rojo.png", 73.f, 64.f));
+	entities.push_back(entityManager->createCell(CellPos::tr, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
 
-	entities.push_back(entityManager->createCell(CellPos::hg, "Textures/hexagono_verde.png", 115.f, 100.f));
+	entities.push_back(entityManager->createCell(CellPos::hg, "Textures/hexagono_verde.png", 115.f, 100.f, false));
 
-	entities.push_back(entityManager->createCell(CellPos::tg, "Textures/triangulo_verde.png", 73.f, 64.f));
+	entities.push_back(entityManager->createCell(CellPos::tg, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
 
 	//entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, 1, "Textures/blue_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 1);
 
