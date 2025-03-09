@@ -23,6 +23,9 @@ void PassiveSix::OnEvent(GameManager* gameManager, InvocationScript* summonedInv
         //summonedInvocation->updateAttackSprite(attackTexture);
 
         std::cout << "PassiveSix: Summoned invocation had more attack, reducing attack by 1. New attack: " << newAttack << std::endl;
+
+        AnnouncePassiveUsage(gameManager, ownerInvocation);
+
         Reveal();
     }
 }

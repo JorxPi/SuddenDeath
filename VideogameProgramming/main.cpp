@@ -153,7 +153,11 @@ void SetupRealWorld() {
 	screenManager = new ScreenManager(window, world);
 	inputManager = new InputManager(window, overlayManager);
 	textRenderer = new TextRenderer(1200, 800);
-	textRenderer->LoadFont("Libraries/fonts/OpenSans.ttf", 48);
+	textRenderer->LoadFont("Libraries/fonts/OpenSans.ttf", 48, "OpenSans");
+	textRenderer->LoadFont("Libraries/fonts/PinkChicken-Regular.ttf", 48, "PinkChicken");
+	textRenderer->LoadFont("Libraries/fonts/Super Squad.ttf", 48, "SuperSquad");
+	textRenderer->LoadFont("Libraries/fonts/Action Man.ttf", 48, "ActionMan");
+	textRenderer->LoadFont("Libraries/fonts/KOMTXTTI.ttf", 48, "KOMTXTTI");
 
 	gameManager->setTextRenderer(textRenderer);
 	gameManager->setButtonManagerRef(buttonManager);

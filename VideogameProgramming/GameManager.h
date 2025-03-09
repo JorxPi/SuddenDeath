@@ -45,6 +45,11 @@ class EntityManager;
 
 class ScreenManager;
 
+enum class AnnouncementType {
+	General,
+	PassiveTrigger
+};
+
 class GameManager {
 
 public:
@@ -110,9 +115,9 @@ public:
 	//TEXT
 	void RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color);
 	void RenderPlayerTurn();
-	void ShowAnnouncement(const std::string& text, float duration);
-	void RenderAnnouncement();
-	void UpdateAnnouncement();
+	void ShowAnnouncement(const std::string& text, float duration, AnnouncementType type);
+	void RenderAnnouncement(AnnouncementType type);
+	void UpdateAnnouncement(AnnouncementType type);
 	void setHoverText(const std::string& text);
 	void RenderHoverText();
 	void setCoinProbabilityText(const std::string& text);
@@ -120,6 +125,7 @@ public:
 
 	//GETTERS
 	int getCurrentPlayerTurn();
+	std::string getPlayerColor();
 	std::vector<Entity*> getHighlightedEntities();
 	std::vector<Entity*> getAllCellEntities();
 	std::vector<CellScript*> getAllCellScripts();
@@ -203,10 +209,10 @@ private:
 
 	//TEXT
 	std::string currentInstruction;
-	std::string announcementText = "";
+	std::string announcementText, passiveTriggerText;
 	std::string hoverText;
-	float announcementTimer = 0.0f;
-	std::chrono::steady_clock::time_point announcementStartTime;
+	float announcementTimer = 0.0f, passiveTriggerTimer = 0.0f;
+	std::chrono::steady_clock::time_point announcementStartTime, passiveTriggerStartTime;
 	std::string coinProbabilityText;
 	int screenWidth = 1200;
 	int screenHeight = 800;

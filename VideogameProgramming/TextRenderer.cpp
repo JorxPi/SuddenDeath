@@ -72,7 +72,7 @@ TextRenderer::TextRenderer(int width, int height) {
 }
 
 // Load a font and create glyph textures
-void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize) {
+void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize, const std::string& fontName) {
     FT_Library ft;
     if (FT_Init_FreeType(&ft)) {
         std::cerr << "Failed to initialize FreeType\n";
@@ -81,16 +81,18 @@ void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize) 
 
     FT_Face face;
     if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-        std::cerr << "Failed to load font\n";
+        std::cerr << "Failed to load font: " << fontPath << std::endl;
         return;
     }
 
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+    std::map<char, Character> characterMap;
+
     for (unsigned char c = 0; c < 128; c++) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cerr << "Failed to load glyph: " << c << std::endl;
+            std::cerr << "Failed to load glyph: " << c << " for font: " << fontName << std::endl;
             continue;
         }
 
@@ -108,12 +110,19 @@ void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize) 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        Characters[c] = {
+        Character character = {
             texture,
             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<unsigned int>(face->glyph->advance.x)
         };
+
+        characterMap[c] = character;
+    }
+
+    Fonts[fontName] = characterMap;
+    if (defaultFont.empty()) {
+        defaultFont = fontName; // Set the first loaded font as the default
     }
 
     FT_Done_Face(face);
@@ -121,13 +130,22 @@ void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize) 
 }
 
 // Render text on the screen
-void TextRenderer::RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
+void TextRenderer::RenderText(const std::string& fontName, const std::string& text, float x, float y, float scale, glm::vec3 color) {
+    if (Fonts.find(fontName) == Fonts.end()) {
+        std::cerr << "Font not found: " << fontName << ". Using default font.\n";
+        return;
+    }
+
+    std::map<char, Character>& Characters = Fonts[fontName];
+
     glUseProgram(shaderProgram);
     glUniform3f(glGetUniformLocation(shaderProgram, "textColor"), color.x, color.y, color.z);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
     for (char c : text) {
+        if (Characters.find(c) == Characters.end()) continue;
+
         Character ch = Characters[c];
 
         float xpos = x + ch.Bearing.x * scale;
@@ -158,12 +176,20 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, float s
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-float TextRenderer::CalculateTextWidth(const std::string& text, float scale) {
+float TextRenderer::CalculateTextWidth(const std::string& fontName, const std::string& text, float scale) {
+    if (Fonts.find(fontName) == Fonts.end()) {
+        std::cerr << "Font not found: " << fontName << ". Using default font.\n";
+        return 0.0f;
+    }
+
+    std::map<char, Character>& Characters = Fonts[fontName];
     float width = 0.0f;
+
     for (char c : text) {
         if (Characters.find(c) != Characters.end()) {
-            width += (Characters[c].Advance >> 6) * scale;  // Advance gives the spacing
+            width += (Characters[c].Advance >> 6) * scale;
         }
     }
+
     return width;
 }

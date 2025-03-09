@@ -65,13 +65,13 @@ void GameManager::update(float deltaTime) {
 
         posSwapped = false;
         handlePassiveEvent<PassiveFour>(invocationsListRef[winningIndex], [this, &winningIndex, &losingIndex](PassiveFour* passive) {
-            passive->CheckAndSwapWinner(this, winningIndex, losingIndex);
+            passive->CheckAndSwapWinner(this, invocationsListRef[winningIndex], winningIndex, losingIndex);
             posSwapped = true;
             });
 
         if (!posSwapped) {
             handlePassiveEvent<PassiveFour>(invocationsListRef[losingIndex], [this, &winningIndex, &losingIndex](PassiveFour* passive) {
-                passive->CheckAndSwapWinner(this, winningIndex, losingIndex);
+                passive->CheckAndSwapWinner(this, invocationsListRef[losingIndex], winningIndex, losingIndex);
                 });
         }
 
@@ -102,7 +102,7 @@ void GameManager::update(float deltaTime) {
 
         eliminateInvocation(losingIndex);
 
-        ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f);
+        ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
 
         battleing = false;
         ruletaBatallaDestroyed = false;
@@ -184,7 +184,7 @@ void GameManager::update(float deltaTime) {
 
                 // Normal coin flip resolution
                 if (headOrTails) {
-                    ShowAnnouncement("Heads! Spin the roulette to determine the attack.", 3.0f);
+                    ShowAnnouncement("Heads! Spin the roulette to determine the attack.", 3.0f, AnnouncementType::General);
                     consecutiveTails[currentPlayerTurn] = 0;
 
                     spawnRuletaAttacks();
@@ -201,7 +201,7 @@ void GameManager::update(float deltaTime) {
                         << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
 
                     updateScoreVisibility(currentPlayerTurn);
-                    ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f);
+                    ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f, AnnouncementType::General);
                     changeTurnAndReset();   
                 }
             }
@@ -215,7 +215,7 @@ void GameManager::update(float deltaTime) {
 
     //Attack Roulette has determined an attack, we are ready to choose invocation
     if (startInvocSelection && !selectingInvocation && ruletaAttacksDestroyed) {
-            ShowAnnouncement("Now select the invocation to summon.", 3.0f);
+            ShowAnnouncement("Now select the invocation to summon.", 3.0f, AnnouncementType::General);
             startInvocationSelection();
             selectingInvocation = true;  
             startInvocSelection = false;
@@ -271,7 +271,8 @@ void GameManager::update(float deltaTime) {
     skipButtonGameLogic();  
 
     //Timer for the announcements
-    UpdateAnnouncement();
+    UpdateAnnouncement(AnnouncementType::General);
+    UpdateAnnouncement(AnnouncementType::PassiveTrigger);
 
     if (!isAnyInvocationHovered()) {
         setHoverText("");
@@ -280,11 +281,12 @@ void GameManager::update(float deltaTime) {
     // Render UI elements
     if (textRendererRef) {
         RenderPlayerTurn();
-        float instructionWidth = textRendererRef->CalculateTextWidth(currentInstruction, 0.5f);
+        float instructionWidth = textRendererRef->CalculateTextWidth("ActionMan", currentInstruction, 0.5f);
         float centeredInstructionX = (screenWidth - instructionWidth) / 2.0f;
 
-        textRendererRef->RenderText(currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-        RenderAnnouncement();
+        textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+        RenderAnnouncement(AnnouncementType::General);
+        RenderAnnouncement(AnnouncementType::PassiveTrigger);
         RenderHoverText();
         RenderCoinProbabilityText();
     }
@@ -321,7 +323,7 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     invocScript->setRecentlySummoned(true);
     int pointsAwarded = awardInvocationPoints(invocScript);
 
-    ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f);
+    ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
 
 
     if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
@@ -482,12 +484,12 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
 
         // Check if posListInvoc1 has PassiveSeven
         handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc1], [this](PassiveSeven* passive) {
-            passive->OnEvent(this, invocationsListRef[posListInvoc2]);  // Reduce posListInvoc2's attack
+            passive->ReduceOpponentAttack(this, invocationsListRef[posListInvoc1], invocationsListRef[posListInvoc2]);  // Reduce posListInvoc2's attack
             });
 
         // Check if posListInvoc2 has PassiveSeven
         handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc2], [this](PassiveSeven* passive) {
-            passive->OnEvent(this, invocationsListRef[posListInvoc1]);  // Reduce posListInvoc1's attack
+            passive->ReduceOpponentAttack(this, invocationsListRef[posListInvoc2], invocationsListRef[posListInvoc1]);  // Reduce posListInvoc1's attack
             });
 
         //Only need to set hasBattled to the invoc triggering the battle, as this is just to prevent the use of Undo button
@@ -693,7 +695,7 @@ void GameManager::updateConquerableCells() {
     if (pointsAwarded > 0) {
         addPlayerPoints(currentPlayerTurn, pointsAwarded);
         ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " +
-            std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f);
+            std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f, AnnouncementType::General);
     }
 }
 
@@ -947,7 +949,7 @@ void GameManager::endInvocationSelection() {
 
 void GameManager::RenderGameText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
     if (textRendererRef) {
-        textRendererRef->RenderText(text, x, y, scale, color);
+        textRendererRef->RenderText("SuperSquad", text, x, y, scale, color);
     }
 }
 
@@ -956,6 +958,7 @@ void GameManager::RenderPlayerTurn() {
 
     std::string playerText = "Player Turn: ";
     glm::vec3 playerColor;
+    std::string fontToUse = "SuperSquad";
 
     switch (currentPlayerTurn) {
     case 1:
@@ -976,34 +979,70 @@ void GameManager::RenderPlayerTurn() {
         break;
     }
 
-    textRendererRef->RenderText(playerText, 20.0f, screenHeight - 30, 0.6f, playerColor);
+    textRendererRef->RenderText(fontToUse, playerText, 20.0f, screenHeight - 50, 0.6f, playerColor);
 }
 
-void GameManager::ShowAnnouncement(const std::string& text, float duration) {
-    announcementText = text;
-    announcementTimer = duration;
-    announcementStartTime = std::chrono::steady_clock::now();  // Start the timer
+void GameManager::ShowAnnouncement(const std::string& text, float duration, AnnouncementType type) {
+    if (type == AnnouncementType::General) {
+        announcementText = text;
+        announcementTimer = duration;
+        announcementStartTime = std::chrono::steady_clock::now();
+    }
+    else if (type == AnnouncementType::PassiveTrigger) {
+        passiveTriggerText = text;
+        passiveTriggerTimer = duration;
+        passiveTriggerStartTime = std::chrono::steady_clock::now();
+    }
 
 }
 
-void GameManager::RenderAnnouncement() {
-    if (!textRendererRef || announcementTimer <= 0.0f) return;
+void GameManager::RenderAnnouncement(AnnouncementType type) {
+    if (!textRendererRef) return;
 
-    float textWidth = textRendererRef->CalculateTextWidth(announcementText, 0.7f);
+    std::string text;
+    float timer;
+    float positionY;
+    glm::vec3 color;
+    float textSize;
+
+    if (type == AnnouncementType::General) {
+        if (announcementTimer <= 0.0f) return;
+        text = announcementText;
+        timer = announcementTimer;
+        positionY = screenHeight / 2.0f;  // Middle of the screen
+        color = glm::vec3(0.5f, 0.5f, 0.5f);  // Gray
+        textSize = 0.6f;
+    }
+    else if (type == AnnouncementType::PassiveTrigger) {
+        if (passiveTriggerTimer <= 0.0f) return;
+        text = passiveTriggerText;
+        timer = passiveTriggerTimer;
+        positionY = 50.0f;  // Lower on the screen
+        color = glm::vec3(0.8f, 0.6f, 0.2f);  // Golden color
+        textSize = 0.4f;
+    }
+
+    float textWidth = textRendererRef->CalculateTextWidth("PinkChicken", text, textSize);
     float centeredX = (screenWidth - textWidth) / 2.0f;
 
-    textRendererRef->RenderText(announcementText, centeredX, screenHeight / 2, 0.7f, glm::vec3(0.5f, 0.5f, 0.5f));
-
+    textRendererRef->RenderText("PinkChicken", text, centeredX, positionY, textSize, color);
 }
 
-void GameManager::UpdateAnnouncement() {
-    if (!announcementText.empty()) {
-        auto now = std::chrono::steady_clock::now();
-        float elapsed = std::chrono::duration<float>(now - announcementStartTime).count();  // Elapsed time in seconds
+void GameManager::UpdateAnnouncement(AnnouncementType type) {
+    auto now = std::chrono::steady_clock::now();
 
+    if (type == AnnouncementType::General && !announcementText.empty()) {
+        float elapsed = std::chrono::duration<float>(now - announcementStartTime).count();
         if (elapsed >= announcementTimer) {
             std::cout << "Announcement ended" << std::endl;
-            announcementText = "";  // Clear the announcement when time is up
+            announcementText = "";  // Clear announcement
+        }
+    }
+    else if (type == AnnouncementType::PassiveTrigger && !passiveTriggerText.empty()) {
+        float elapsed = std::chrono::duration<float>(now - passiveTriggerStartTime).count();
+        if (elapsed >= passiveTriggerTimer) {
+            std::cout << "Passive trigger text ended" << std::endl;
+            passiveTriggerText = "";  // Clear passive trigger
         }
     }
 }
@@ -1015,11 +1054,11 @@ void GameManager::setHoverText(const std::string& text) {
 void GameManager::RenderHoverText() {
     if (hoverText.empty() || !textRendererRef) return;
 
-    float textWidth = textRendererRef->CalculateTextWidth(hoverText, 0.5f);
+    float textWidth = textRendererRef->CalculateTextWidth("KOMTXTTI", hoverText, 0.5f);
     float textX = screenWidth - textWidth - 20; 
     float textY = screenHeight - 100; 
 
-    textRendererRef->RenderText(hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    textRendererRef->RenderText("KOMTXTTI", hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void GameManager::setCoinProbabilityText(const std::string& text) {
@@ -1029,11 +1068,11 @@ void GameManager::setCoinProbabilityText(const std::string& text) {
 void GameManager::RenderCoinProbabilityText() {
     if (!textRendererRef || coinProbabilityText.empty()) return;
 
-    float textWidth = textRendererRef->CalculateTextWidth(coinProbabilityText, 0.5f);
+    float textWidth = textRendererRef->CalculateTextWidth("KOMTXTTI", coinProbabilityText, 0.7f);
     float centeredX = 1000.f - (textWidth / 2.0f);  // Centered above the coin
     float textY = screenHeight - 50;  // Position above the coin
 
-    textRendererRef->RenderText(coinProbabilityText, centeredX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+    textRendererRef->RenderText("KOMTXTTI", coinProbabilityText, centeredX, textY, 0.7f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 
@@ -1045,6 +1084,15 @@ void GameManager::RenderCoinProbabilityText() {
 
 int GameManager::getCurrentPlayerTurn() {
     return currentPlayerTurn;
+}
+
+std::string GameManager::getPlayerColor() {
+    switch (currentPlayerTurn) {
+    case 1: return "Blue";
+    case 2: return "Red";
+    case 3: return "Green";
+    default: return "Unknown";
+    }
 }
 
 std::vector<Entity*> GameManager::getHighlightedEntities() {

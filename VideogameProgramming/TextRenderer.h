@@ -18,15 +18,16 @@ struct Character {
 
 class TextRenderer {
 public:
-    std::map<char, Character> Characters;
+    std::map<std::string, std::map<char, Character>> Fonts;
     unsigned int VAO, VBO;
     unsigned int shaderProgram;
     unsigned int projectionLocation;
+    std::string defaultFont;
 
     TextRenderer(int width, int height);
-    void LoadFont(const std::string& fontPath, unsigned int fontSize);
-    void RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color);
-    float CalculateTextWidth(const std::string& text, float scale);
+    void LoadFont(const std::string& fontPath, unsigned int fontSize, const std::string& fontName);
+    void RenderText(const std::string& fontName, const std::string& text, float x, float y, float scale, glm::vec3 color);
+    float CalculateTextWidth(const std::string& fontName, const std::string& text, float scale);
 
 };
 

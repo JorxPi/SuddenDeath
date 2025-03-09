@@ -10,7 +10,9 @@ void PassiveEleven::Activate(GameManager* gameManager, InvocationScript* invocat
 void PassiveEleven::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
     if (!gameManager) return;
 
-    flipsHandled++; 
+    flipsHandled++;
+
+    AnnouncePassiveUsage(gameManager, invocation);
 
     Reveal();
 

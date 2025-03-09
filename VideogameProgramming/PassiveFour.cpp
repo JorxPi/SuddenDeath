@@ -20,10 +20,12 @@ const std::string& PassiveFour::GetDescription() const {
     return description;
 }
 
-void PassiveFour::CheckAndSwapWinner(GameManager* gameManager, int& winningIndex, int& losingIndex) {
-    if (!gameManager) return;
+void PassiveFour::CheckAndSwapWinner(GameManager* gameManager, InvocationScript* invocation, int& winningIndex, int& losingIndex) {
+    if (!gameManager || !invocation) return;
 
     std::swap(winningIndex, losingIndex);
+
+    AnnouncePassiveUsage(gameManager, invocation);
 
     Reveal();
 }

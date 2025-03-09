@@ -53,6 +53,8 @@ void PassiveFive::OnEvent(GameManager* gameManager, InvocationScript* invocation
                     std::cout << "PassiveFive: Destroying invocation at index " << index << "." << std::endl;
                     gameManager->eliminateInvocation(index);
 
+                    AnnouncePassiveUsage(gameManager, invocation);
+
                     Reveal();
                 }
 

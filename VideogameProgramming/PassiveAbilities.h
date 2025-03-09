@@ -20,11 +20,15 @@ public:
     virtual void OnInvocationDeath() {}
 
     // Description for debugging and revealing
-    virtual const std::string& GetDescription() const = 0;
+    virtual const std::string& GetDescription() const;
 
     // Reveal logic for the hidden state
     void Reveal() { revealed = true; }
     bool IsRevealed() const { return revealed; }
+
+protected:
+    // Announce the passive ability usage
+    void AnnouncePassiveUsage(GameManager* gameManager, InvocationScript* invocation);
 
 private:
     bool revealed = false;

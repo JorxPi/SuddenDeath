@@ -166,6 +166,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="OverlayManager.cpp" />
+    <ClCompile Include="PassiveAbilities.cpp" />
     <ClCompile Include="PassiveDescriptions.cpp" />
     <ClCompile Include="PassiveEight.cpp" />
     <ClCompile Include="PassiveEleven.cpp" />

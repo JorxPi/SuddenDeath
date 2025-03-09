@@ -8,5 +8,5 @@ public:
     void OnInvocationDeath() override;
     const std::string& GetDescription() const override;
 
-    void CheckAndSwapWinner(GameManager* gameManager, int& winningIndex, int& losingIndex);
+    void CheckAndSwapWinner(GameManager* gameManager, InvocationScript* invocation, int& winningIndex, int& losingIndex);
 };

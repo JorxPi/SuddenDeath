@@ -8,21 +8,8 @@ void PassiveSeven::Activate(GameManager* gameManager, InvocationScript* invocati
     // No activation needed at summon time.
 }
 
-void PassiveSeven::OnEvent(GameManager* gameManager, InvocationScript* opponentInvocation) {
-    if (!gameManager || !opponentInvocation) return;
-
-    // Reduce opponent's attack by 1 (permanently)
-    int newAttack = opponentInvocation->getAttack() - 1;
-    if (newAttack < 0) newAttack = 0;  // Ensure attack doesn't go below 0
-    opponentInvocation->setInvocAttack(newAttack);
-
-    // Update attack sprite
-    //const char* attackTexture = gameManager->returnAttackText(newAttack);
-    //opponentInvocation->updateAttackSprite(attackTexture);
-
-    std::cout << "PassiveSeven: Reduced opponent's attack by 1 before battle. New attack: " << newAttack << std::endl;
-
-    Reveal();
+void PassiveSeven::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
+    // Nothing
 }
 
 void PassiveSeven::OnInvocationDeath() {
@@ -32,4 +19,20 @@ void PassiveSeven::OnInvocationDeath() {
 const std::string& PassiveSeven::GetDescription() const {
     static const std::string description = PassiveDescriptions::PassiveSeven;
     return description;
+}
+
+void PassiveSeven::ReduceOpponentAttack(GameManager* gameManager, InvocationScript* invocationWithPassive, InvocationScript* opponentInvocation) {
+    if (!gameManager || !invocationWithPassive || !opponentInvocation) return;
+
+    // Reduce opponent's attack by 1 (permanently)
+    int newAttack = opponentInvocation->getAttack() - 1;
+    if (newAttack < 0) newAttack = 0;  // Ensure attack doesn't go below 0
+    opponentInvocation->setInvocAttack(newAttack);
+
+    std::cout << "PassiveSeven: Reduced opponent's attack by 1 before battle. New attack: " << newAttack << std::endl;
+
+    // **Trigger the announcement**
+    AnnouncePassiveUsage(gameManager, invocationWithPassive);
+
+    Reveal();
 }

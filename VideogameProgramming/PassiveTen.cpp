@@ -24,6 +24,8 @@ void PassiveTen::OnEvent(GameManager* gameManager, InvocationScript* invocation)
             }
         }
 
+        AnnouncePassiveUsage(gameManager, invocation);
+
         Reveal();
     }
 }
