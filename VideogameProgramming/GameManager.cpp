@@ -334,6 +334,10 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
         passiveSix->Activate(this, invocScript);
         });
 
+    handlePassiveEvent<PassiveFifteen>(invocScript, [this, invocScript](PassiveFifteen* passiveFifteen) {
+        passiveFifteen->Activate(this, invocScript);
+        });
+
     for (auto* invocation : invocationsListRef) {
         if (invocation->getPlayerOwner() != currentPlayerTurn) {  // Check only rival players
             handlePassiveEvent<PassiveSix>(invocation, [this, invocScript](PassiveSix* passive) {
@@ -374,7 +378,13 @@ void GameManager::changeTurnAndReset() {
 
         handlePassiveEvent<PassiveEleven>(invocation, [](PassiveEleven* passiveEleven) {
             passiveEleven->ResetTurnState();
-            });      
+            });
+
+        if (invocation->getPlayerOwner() == currentPlayerTurn) {
+            handlePassiveEvent<PassiveFifteen>(invocation, [this, invocation](PassiveFifteen* passiveFifteen) {
+                passiveFifteen->OnTurnEnd(this, invocation);
+                });
+        }
     }
 
     // Reset skipped movement for the current player’s invocations

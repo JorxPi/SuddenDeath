@@ -108,16 +108,20 @@ void InvocationScript::highlightCells() {
 
 	auto cellPosInMap = highlightMap.find(pos);
 	//checks if the position was found or not
-	if (cellPosInMap != highlightMap.end()) {
-		//->second = is the value inside each element in the map, ->first would be the name (ex CellPos::c1))
-		for (int index : cellPosInMap->second) {
-			if (!gameRef->checkIfAllyInvocInCell(index)) {
-				gameRef->highlightSprite(index);
-				movableCells.push_back(allCellEntities[index]);
-				movableCellScripts.push_back(allCellScripts[index]);
+		if (cellPosInMap != highlightMap.end()) {
+			//->second = is the value inside each element in the map, ->first would be the name (ex CellPos::c1))
+			for (int index : cellPosInMap->second) {
+				if (!gameRef->checkIfAllyInvocInCell(index)) {
+					gameRef->highlightSprite(index);
+					movableCells.push_back(allCellEntities[index]);
+					movableCellScripts.push_back(allCellScripts[index]);
+				}
 			}
 		}
-	}
+
+	gameRef->handlePassiveEvent<PassiveFifteen>(this, [this](PassiveFifteen* passiveFifteen) {
+		passiveFifteen->ModifyMovableCells(gameRef, this, movableCellScripts, movableCells);
+		});
 }
 
 void InvocationScript::clearHighlightedCells() {

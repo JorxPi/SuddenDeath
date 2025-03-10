@@ -5,6 +5,7 @@
 #include "GameManager.h"
 #include "ButtonManager.h"
 #include "PassiveAbilities.h"
+#include "PassiveFifteen.h"
 
 class GameManager;
 

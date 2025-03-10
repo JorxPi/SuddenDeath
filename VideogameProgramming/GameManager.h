@@ -21,6 +21,7 @@
 #include "PassiveSix.h"
 #include "PassiveSeven.h"
 #include "PassiveTwo.h"
+#include "PassiveFifteen.h"
 #include "TextRenderer.h"
 #include <vector>
 

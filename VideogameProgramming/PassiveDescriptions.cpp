@@ -15,6 +15,6 @@ namespace PassiveDescriptions {
     const char* PassiveTwelve = "If this summon loses a combat, it repeats the combat, but the enemy summon gains 3 attack for the second round.";
     const char* PassiveThirteen = "Get a positive effect after a tails coinflip. ";
     const char* PassiveFourteen = "This summon can battle an enemy summon with exactly 2 less attack points regardless of positioning.";
-    const char* PassiveFifteen = "If this summon survives 3 turns, it can teleport directly in a conquerable cell.";
+    const char* PassiveFifteen = "On this summon third turn alive, it can teleport directly in a conquerable cell.";
     const char* PassiveSixteen = "This summon can remove the passive ability of an enemy summon and dispel all effects it has generated for itself due to its passive, returning it to its original state (limited to once).";
 }
