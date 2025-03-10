@@ -7,7 +7,7 @@ void PassiveAbility::AnnouncePassiveUsage(GameManager* gameManager, InvocationSc
     if (!gameManager || !invocation) return;
 
     int playerOwner = invocation->getPlayerOwner();
-    std::string playerColor = gameManager->getPlayerColor();
+    std::string playerColor = gameManager->getPlayerColor(playerOwner);
     std::string passiveDescription = GetDescription();
 
     std::string announcement = playerColor + " player invocation passive used: " + passiveDescription;

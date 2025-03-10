@@ -20,6 +20,7 @@
 #include "PassiveFour.h"
 #include "PassiveSix.h"
 #include "PassiveSeven.h"
+#include "PassiveTwo.h"
 #include "TextRenderer.h"
 #include <vector>
 
@@ -125,7 +126,7 @@ public:
 
 	//GETTERS
 	int getCurrentPlayerTurn();
-	std::string getPlayerColor();
+	std::string getPlayerColor(int player);
 	std::vector<Entity*> getHighlightedEntities();
 	std::vector<Entity*> getAllCellEntities();
 	std::vector<CellScript*> getAllCellScripts();

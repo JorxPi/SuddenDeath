@@ -326,13 +326,13 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
 
 
-    if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
-        passiveFive->Activate(this, invocScript); 
-    }
+    handlePassiveEvent<PassiveFive>(invocScript, [this, invocScript](PassiveFive* passiveFive) {
+        passiveFive->Activate(this, invocScript);
+        });
 
-    if (auto* passiveSix = dynamic_cast<PassiveSix*>(passive)) {
-        passiveSix->Activate(this, invocScript); 
-    }
+    handlePassiveEvent<PassiveSix>(invocScript, [this, invocScript](PassiveSix* passiveSix) {
+        passiveSix->Activate(this, invocScript);
+        });
 
     for (auto* invocation : invocationsListRef) {
         if (invocation->getPlayerOwner() != currentPlayerTurn) {  // Check only rival players
@@ -368,15 +368,13 @@ void GameManager::changeTurnAndReset() {
     invocInvocated = false;
 
     for (auto* invocation : invocationsListRef) {
-        if (auto* passive = invocation->getPassiveAbility()) {
-            // Check if the passive is PassiveFive
-            if (auto* passiveFive = dynamic_cast<PassiveFive*>(passive)) {
-                passiveFive->OnEvent(this, invocation);
-            }
-            if (auto* passiveEleven = dynamic_cast<PassiveEleven*>(passive)) {
-                passiveEleven->ResetTurnState();
-            }
-        }
+        handlePassiveEvent<PassiveFive>(invocation, [this, invocation](PassiveFive* passiveFive) {
+            passiveFive->OnEvent(this, invocation);
+            });
+
+        handlePassiveEvent<PassiveEleven>(invocation, [](PassiveEleven* passiveEleven) {
+            passiveEleven->ResetTurnState();
+            });      
     }
 
     // Reset skipped movement for the current player’s invocations
@@ -670,19 +668,51 @@ void GameManager::updateConquerableCells() {
     for (auto* cell : getAllCellScripts()) {
         if (!cell->getIsConquerable()) continue; // Skip non-conquerable cells
 
-        int owner = 0; // No invocation detected yet
+        int previousOwner = cell->getOwner(); // Store previous owner
+        int newOwner = 0; // No invocation detected yet
+        InvocationScript* conqueringInvocation = nullptr;
 
         // Check if an invocation is on this cell
         for (auto* invocation : getInvocationScripts()) {
             if (invocation->getInvocationEntity()->get<Transform>()->position == cell->getCellEntity()->get<Transform>()->position) {
-                owner = invocation->getPlayerOwner();
+                newOwner = invocation->getPlayerOwner();
+                conqueringInvocation = invocation;
                 break; // Found an invocation, no need to check further
             }
         }
 
         // If there's an invocation, update ownership
-        if (owner != 0) {
-            cell->setOwner(owner);
+        if (newOwner != 0) {
+            cell->setOwner(newOwner);
+        }
+
+        // **Check if an enemy conquers a positive cell**
+        if (previousOwner != newOwner) {
+            // **Step 1: Check if any invocation has PassiveTwo**
+            bool hasPassiveTwo = false;
+            for (auto* invocation : getInvocationScripts()) {
+                if (auto* passive = invocation->getPassiveAbility()) {
+                    if (dynamic_cast<PassiveTwo*>(passive)) {
+                        hasPassiveTwo = true;
+                        break;  // No need to continue checking
+                    }
+                }
+            }
+
+            // **Step 2: If no one has PassiveTwo, skip the logic**
+            if (hasPassiveTwo) {
+                // **Step 3: The cell changed ownership, meaning it was conquered**
+                for (auto* invocation : getInvocationScripts()) {
+                    int passiveHolderOwner = invocation->getPlayerOwner();
+
+                    // **Step 4: Make sure PassiveTwo belongs to a different player than the conqueror**
+                    if (passiveHolderOwner != newOwner) {
+                        handlePassiveEvent<PassiveTwo>(invocation, [this, invocation, conqueringInvocation](PassiveTwo* passiveTwo) {
+                            passiveTwo->TriggerPassiveEffect(this, invocation, conqueringInvocation);
+                            });
+                    }
+                }
+            }
         }
 
         // Award points if the cell is owned by the current player
@@ -1086,8 +1116,8 @@ int GameManager::getCurrentPlayerTurn() {
     return currentPlayerTurn;
 }
 
-std::string GameManager::getPlayerColor() {
-    switch (currentPlayerTurn) {
+std::string GameManager::getPlayerColor(int player) {
+    switch (player) {
     case 1: return "Blue";
     case 2: return "Red";
     case 3: return "Green";
