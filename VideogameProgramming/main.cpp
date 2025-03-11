@@ -33,6 +33,7 @@
 #include "StartGameScreen.h"
 #include "OverlayManager.h"
 #include "InputManager.h"
+#include "GameLogManager.h"
 
 
 #include "ECS.h"
@@ -60,6 +61,7 @@ ScreenManager* screenManager;
 OverlayManager* overlayManager;
 InputManager* inputManager;
 TextRenderer* textRenderer;
+GameLogManager* gameLogManager;
 
 void SetupGLFW() {
 
@@ -152,6 +154,7 @@ void SetupRealWorld() {
 	overlayManager = new OverlayManager(entityManager);
 	screenManager = new ScreenManager(window, world);
 	inputManager = new InputManager(window, overlayManager);
+	gameLogManager = new GameLogManager();
 	textRenderer = new TextRenderer(1200, 800);
 	textRenderer->LoadFont("Libraries/fonts/OpenSans.ttf", 48, "OpenSans");
 	textRenderer->LoadFont("Libraries/fonts/PinkChicken-Regular.ttf", 48, "PinkChicken");
@@ -162,6 +165,7 @@ void SetupRealWorld() {
 	gameManager->setTextRenderer(textRenderer);
 	gameManager->setButtonManagerRef(buttonManager);
 	gameManager->setScreenManagerRef(screenManager);
+	gameManager->setGameLogManager(gameLogManager);
 	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager);
 	screenManager->setManagerRefs(gameManager, overlayManager);
 

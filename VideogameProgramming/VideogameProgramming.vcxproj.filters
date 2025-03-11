@@ -222,6 +222,9 @@
     <ClCompile Include="PassiveAbilities.cpp">
       <Filter>Archivos de origen\Scripts\Passives</Filter>
     </ClCompile>
+    <ClCompile Include="GameLogManager.cpp">
+      <Filter>Archivos de origen\Scripts\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -405,6 +408,9 @@
     </ClInclude>
     <ClInclude Include="TextRenderer.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogManager.h">
+      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

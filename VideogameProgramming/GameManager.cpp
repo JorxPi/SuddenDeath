@@ -103,6 +103,7 @@ void GameManager::update(float deltaTime) {
         eliminateInvocation(losingIndex);
 
         ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
+        LogPlayerScore(winnerPlayer, pointsAwarded, "winning a battle");
 
         battleing = false;
         ruletaBatallaDestroyed = false;
@@ -202,6 +203,7 @@ void GameManager::update(float deltaTime) {
 
                     updateScoreVisibility(currentPlayerTurn);
                     ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f, AnnouncementType::General);
+                    LogPlayerScore(currentPlayerTurn, 3, "coin flippling tails");
                     changeTurnAndReset();   
                 }
             }
@@ -287,6 +289,7 @@ void GameManager::update(float deltaTime) {
         textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
         RenderAnnouncement(AnnouncementType::General);
         RenderAnnouncement(AnnouncementType::PassiveTrigger);
+        RenderGameLog();
         RenderHoverText();
         RenderCoinProbabilityText();
     }
@@ -324,7 +327,7 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     int pointsAwarded = awardInvocationPoints(invocScript);
 
     ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
-
+    LogPlayerScore(currentPlayerTurn, pointsAwarded, "invocation summoned");
 
     handlePassiveEvent<PassiveFive>(invocScript, [this, invocScript](PassiveFive* passiveFive) {
         passiveFive->Activate(this, invocScript);
@@ -734,8 +737,8 @@ void GameManager::updateConquerableCells() {
     // Award points if applicable
     if (pointsAwarded > 0) {
         addPlayerPoints(currentPlayerTurn, pointsAwarded);
-        ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " +
-            std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f, AnnouncementType::General);
+        ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " + std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f, AnnouncementType::General);
+        LogPlayerScore(currentPlayerTurn, pointsAwarded, "controlled triangles");
     }
 }
 
@@ -1057,7 +1060,7 @@ void GameManager::RenderAnnouncement(AnnouncementType type) {
         if (passiveTriggerTimer <= 0.0f) return;
         text = passiveTriggerText;
         timer = passiveTriggerTimer;
-        positionY = 50.0f;  // Lower on the screen
+        positionY = screenHeight - 100.0f;  // Lower on the screen
         color = glm::vec3(0.8f, 0.6f, 0.2f);  // Golden color
         textSize = 0.4f;
     }
@@ -1113,6 +1116,55 @@ void GameManager::RenderCoinProbabilityText() {
     float textY = screenHeight - 50;  // Position above the coin
 
     textRendererRef->RenderText("KOMTXTTI", coinProbabilityText, centeredX, textY, 0.7f, glm::vec3(1.0f, 1.0f, 1.0f));
+}
+
+
+
+
+//LOG
+
+
+void GameManager::LogPlayerScore(int player, int points, const std::string& reason) {
+    std::string playerColorText;
+    glm::vec3 playerColor;
+
+    switch (player) {
+    case 1: playerColorText = "Blue";  playerColor = glm::vec3(0.3f, 0.5f, 1.0f); break;
+    case 2: playerColorText = "Red";   playerColor = glm::vec3(1.0f, 0.0f, 0.0f); break;
+    case 3: playerColorText = "Green"; playerColor = glm::vec3(0.0f, 1.0f, 0.0f); break;
+    default: playerColorText = "Unknown"; playerColor = glm::vec3(1.0f, 1.0f, 1.0f); break;
+    }
+
+    std::string message = playerColorText + " player scored " + std::to_string(points) + " SP due to " + reason;
+    gameLogRef->AddMessage(message, playerColor);
+}
+
+void GameManager::LogPassiveUsage(InvocationScript* invocation) {
+    if (!invocation) return;
+    PassiveAbility* passive = invocation->getPassiveAbility();
+    if (!passive) return;
+
+    int playerOwner = invocation->getPlayerOwner();
+    glm::vec3 playerColor;
+    std::string playerColorText;
+
+    switch (playerOwner) {
+    case 1: playerColorText = "Blue";  playerColor = glm::vec3(0.3f, 0.5f, 1.0f); break;
+    case 2: playerColorText = "Red";   playerColor = glm::vec3(1.0f, 0.0f, 0.0f); break;
+    case 3: playerColorText = "Green"; playerColor = glm::vec3(0.0f, 1.0f, 0.0f); break;
+    default: playerColorText = "Unknown"; playerColor = glm::vec3(1.0f, 1.0f, 1.0f); break;
+    }
+
+    std::string message = playerColorText + " player invocation passive used: " + passive->GetDescription();
+    gameLogRef->AddMessage(message, playerColor);
+}
+
+void GameManager::RenderGameLog() {
+    float logX = 30.0f;   // Adjust to fit the red rectangle
+    float logY = 120.0f;  // Adjust to fit inside the UI
+    float logScale = 0.35f;  // Small font for fitting more text
+
+    gameLogRef->RenderLog(textRendererRef, logX, logY, logScale);
 }
 
 
@@ -1224,4 +1276,8 @@ void GameManager::setCurrentPlayerInvocationsListRef() {
 
 void GameManager::setHoveredInvocation(InvocationSelectionScript* script) {
     currentlyHoveredInvocation = script;
+}
+
+void GameManager::setGameLogManager(GameLogManager* glr) {
+    gameLogRef = glr;
 }

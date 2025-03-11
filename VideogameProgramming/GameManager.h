@@ -11,6 +11,7 @@
 #include "ButtonManager.h"
 #include "EntityManager.h"
 #include "ScreenManager.h"
+#include "GameLogManager.h"
 #include "PassiveAbilities.h"
 #include "PassiveNine.h"
 #include "PassiveOne.h"
@@ -46,6 +47,8 @@ class ButtonManager;
 class EntityManager;
 
 class ScreenManager;
+
+class GameLogManager;
 
 enum class AnnouncementType {
 	General,
@@ -125,6 +128,11 @@ public:
 	void setCoinProbabilityText(const std::string& text);
 	void RenderCoinProbabilityText();
 
+	//LOG
+	void LogPlayerScore(int player, int points, const std::string& reason);
+	void LogPassiveUsage(InvocationScript* invocation);
+	void RenderGameLog();
+
 	//GETTERS
 	int getCurrentPlayerTurn();
 	std::string getPlayerColor(int player);
@@ -145,6 +153,7 @@ public:
 	void setCoinRef(CoinScript* ccr, Entity* cent);
 	void setCurrentPlayerInvocationsListRef();
 	void setHoveredInvocation(InvocationSelectionScript* script);
+	void setGameLogManager(GameLogManager* gameLogRef);
 
 
 
@@ -169,6 +178,7 @@ private:
 	RuletaAttacks* ruletaAttacksRef;
 	RuletaBatalla* ruletaBatallaRef;
 	CoinScript* coinScriptRef;
+	GameLogManager* gameLogRef;
 
 	//SCRIPTS LISTS
 	std::vector<InvocationScript*> invocationsListRef;

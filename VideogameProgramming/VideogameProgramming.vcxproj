@@ -158,6 +158,7 @@
     <ClCompile Include="DummyPassive.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="GameLogManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InputManager.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="GameLogManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InvocationConstants.h" />

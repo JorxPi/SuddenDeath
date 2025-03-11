@@ -12,6 +12,7 @@ void PassiveAbility::AnnouncePassiveUsage(GameManager* gameManager, InvocationSc
 
     std::string announcement = playerColor + " player invocation passive used: " + passiveDescription;
     gameManager->ShowAnnouncement(announcement, 12.0f, AnnouncementType::PassiveTrigger);
+    gameManager->LogPassiveUsage(invocation);
 }
 
 // Get passive ability description
