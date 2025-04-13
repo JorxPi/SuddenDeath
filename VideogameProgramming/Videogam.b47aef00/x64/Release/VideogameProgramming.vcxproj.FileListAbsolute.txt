@@ -1,0 +1,7 @@
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\freetype.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\zlib1.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\bz2.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\libpng16.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\brotlidec.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\brotlicommon.dll
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\Videogam.b47aef00\x64\Release\Videogam.14A98BEA.Up2Date

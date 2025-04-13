@@ -1,0 +1,20 @@
+﻿  StartGameScreen.cpp
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\ECS.h(1080,24): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+  (compilando archivo de origen "StartGameScreen.cpp")
+      D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\ECS.h(1080,24):
+      el contexto de creación de instancias de la plantilla (el más antiguo primero) es
+          D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\StartGameScreen.cpp(115,13):
+          Vea la referencia a la creación de una instancia de la función plantilla "ECS::ComponentHandle<BoxCollider> ECS::Entity::assign<BoxCollider,double,double>(double &&,double &&)" que se está compilando
+  
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\ECS.h(1091,77): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+  (compilando archivo de origen "StartGameScreen.cpp")
+  
+Videogam.b47aef00\x64\Release\StartGameScreen.obj : warning LNK4042: objeto especificado más de una vez; omitidos los sobrantes
+  Generando código
+  Previous IPDB not found, fall back to full compilation.
+D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\GameManager.cpp(876): warning C4715: 'GameManager::returnAttackText': no todas las rutas de acceso de control devuelven un valor
+  All 4285 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  VideogameProgramming.vcxproj -> D:\Users\pimor\OneDrive\Escriptori\Proyecto SuddenDeath\VideogameProgramming\x64\Release\VideogameProgramming.exe
+  "pwsh.exe" no se reconoce como un comando interno o externo,
+  programa o archivo por lotes ejecutable.
