@@ -9,7 +9,7 @@ void ScreenManager::addScreen(const std::string& name, Screen* screen) {
     screens[name] = std::unique_ptr<Screen>(screen);
 }
 
-void ScreenManager::switchToScreen(const std::string& name) {
+void ScreenManager::switchToScreen(std::string name) {
     if (currentScreen)
         currentScreen->exit();
     auto new_screen = screens.find(name);
@@ -17,14 +17,14 @@ void ScreenManager::switchToScreen(const std::string& name) {
         currentScreen = new_screen->second.get();
         currentScreen->enter();
 
-        swappingScreen = false;
-
         if (name == "StartGame") {
             gameManager->activate(true);
         }
         else {
             gameManager->activate(false);
         }
+    } else {
+        std::cerr << "ScreenManager::switchToScreen(): no existe la pantalla '" << name << "'\n";
     }
 }
 
@@ -38,11 +38,12 @@ Screen* ScreenManager::getCurrentScreen() {
     return currentScreen;
 }
 
-//Probably not needed
 void ScreenManager::update(float dt) {
-    if (currentScreen->getSwapToStartGame()) {
-        swappingScreen = true;
-        switchToScreen("StartGame");
+    if (!currentScreen) return;
+    // Comprobamos si la pantalla actual solicitó cambiar a otra (getRequestedSwap() != "")
+    const std::string& next = currentScreen->getRequestedSwap();
+    if (!next.empty()) {
+        switchToScreen(next);
     }
 }
 

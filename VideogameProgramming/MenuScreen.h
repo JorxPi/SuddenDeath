@@ -5,11 +5,10 @@
 class MenuScreen : public Screen 
 {
 public:
-	MenuScreen(EntityManager* entityManager);
+	MenuScreen(EntityManager* entityManager, OverlayManager* overlayManager);
 
 	void enter() override;
-	void exit() override;
 
 private:
-	std::vector<ECS::Entity*> entities;
+
 };

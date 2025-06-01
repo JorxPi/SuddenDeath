@@ -24,7 +24,7 @@ public:
     void moveInvocation(int posX, int posY);
     void highlightCells();
     void clearHighlightedCells();
-    void destroyInvocation();
+    //void destroyInvocation();
     bool checkInvocInSpawnCells();
     void updateAttackSprite(const char* newAttackTexture);
     void undoLastMove();
@@ -37,6 +37,8 @@ public:
     int getAttack();
     bool getBattleChecked();
     Entity* getInvocationEntity();
+    ECS::Entity* getCardBackEntity();
+    ECS::Entity* getAttackNumberEntity();
     bool getMoveAllowed();
     bool getMoved();
     bool getRightClickPressed();

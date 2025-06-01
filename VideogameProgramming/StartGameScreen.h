@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Screen.h"
-#include "OverlayManager.h"
 #include "InvocationWithPassiveData.h"
 #include <vector>
 #include <string>
@@ -12,7 +11,7 @@ public:
 	StartGameScreen(EntityManager* entityManager, OverlayManager* overlayManager);
 
 	void enter() override;
-	void exit() override;
+
 	void setupOverlayScreen();
 	void setupScoreScreen();
 	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> setupCardBacks();
@@ -20,8 +19,5 @@ public:
 	void randomizeInvocations(std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>>& cardBacks, std::vector<ECS::Entity*>& invocations);
 
 private:
-	OverlayManager* overlayManager;
-
-	std::vector<ECS::Entity*> entities;
 	std::vector<InvocationWithPassiveData> invocationPool;
 };

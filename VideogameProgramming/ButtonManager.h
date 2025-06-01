@@ -26,6 +26,9 @@ public:
 	void moveUndoButtonOut();
 	void handleUndoButtonClick();
 
+	//BUTTON GAME OVER	
+	void moveGameOverButtonIn();
+
 	//GETTERS
 	bool getSkipTurnClicked();
 
@@ -33,6 +36,7 @@ public:
 	void setSkipButtonRef(ButtonScript* buttonScript);
 	void setSkipTurnClicked(bool value);
 	void setUndoButtonRef(ButtonScript* button);
+	void setGameOverButtonRef(ButtonScript* button);
 
 
 private: 	
@@ -41,9 +45,9 @@ private:
 
 	ButtonScript* skipButtonRef;
 	ButtonScript* undoButtonRef = nullptr;
+	ButtonScript* gameOverButtonRef = nullptr;
 	InvocationScript* undoTarget = nullptr;
 	bool undoButtonIn = false;
 
 	bool skipTurnClicked = false;
-
 };

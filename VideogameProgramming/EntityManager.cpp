@@ -19,6 +19,13 @@ std::pair<ECS::Entity*, Script*> EntityManager::createEntity(glm::vec2 position,
 		entity->assign<ScriptComponent>(scriptManagerRef->AddScript(script));
 	}
 
+	if (screenManagerRef) {
+		Screen* s = screenManagerRef->getCurrentScreen();
+		if (s) {
+			s->registerEntity(entity);
+		}
+	}
+
 	return { entity, script };
 }
 
@@ -26,6 +33,13 @@ ECS::Entity* EntityManager::createEntityWithoutScript(glm::vec2 position, float 
 	ECS::Entity* entity = world->create();
 	entity->assign<Transform>(position, rotation, scale);
 	entity->assign<Sprite>(filepath, color, autoSize, size, shaderName);
+
+	if (screenManagerRef) {
+		Screen* s = screenManagerRef->getCurrentScreen();
+		if (s) {
+			s->registerEntity(entity);
+		}
+	}
 
 	return entity;
 }
@@ -108,14 +122,46 @@ ECS::Entity* EntityManager::createCell(glm::vec2 position, const char* text_cell
 	return cell;
 }
 
-void EntityManager::destroyEntity(Entity* entity) {
+void EntityManager::destroyEntity(ECS::Entity* entity) {
+	if (!entity) return;
+
+	std::cout << "[EntityManager] Destroying entity at address: " << entity << std::endl;
+
+	// 1) Localizar el Transform que estamos a punto de destruir (si existe)
+	Transform* rawTransformPtr = nullptr;
+	if (auto t = entity->get<Transform>()) {
+		// Sacamos la dirección cruda
+		rawTransformPtr = &t.get();
+	}
+
+	// 2) Para cada Transform en el mundo, si parent == rawTransformPtr, anularlo:
+	if (rawTransformPtr) {
+		world->each<Transform>([&](ECS::Entity* otherEnt, ComponentHandle<Transform> otherT) {
+			if (otherT->parent == rawTransformPtr) {
+				otherT->parent = nullptr;
+			}
+			});
+	}
+
+	// 3) Desregistrar de la pantalla activa (si correspondiese)
+	if (screenManagerRef) {
+		Screen* s = screenManagerRef->getCurrentScreen();
+		if (s) {
+			s->unregisterEntity(entity);
+			s->unregisterOverlayEntity(entity);
+		}
+	}
+
+	// 4) Destruir la entidad en el world
 	world->destroy(entity);
 }
 
-void EntityManager::setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr) {
+
+void EntityManager::setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr, ScreenManager* smrRef) {
 	gameManagerRef = gmr;
 	buttonManagerRef = bmr;
 	scriptManagerRef = smr;
+	screenManagerRef = smrRef;
 
 }
 

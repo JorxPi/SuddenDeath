@@ -32,10 +32,6 @@ void InvocationScript::tickScript(float deltaTime) {
 			if (mouseX >= transform->position.x - collider->width / 2.0f && mouseX <= transform->position.x + collider->width / 2.0f &&
 				mouseY >= transform->position.y - collider->height / 2.0f && mouseY <= transform->position.y + collider->height / 2.0f) {
 
-				std::cout << "moveAllowed: " << moveAllowed << std::endl;
-				std::cout << "fullyMoved: " << fullyMoved << std::endl;
-				std::cout << "allInvocsMoved: " << !gameRef->getAllInvocsMoved() << std::endl;
-
 				if (!moveAllowed && fullyMoved && !gameRef->getAllInvocsMoved() && !hasBattled) {
 					buttonRef->moveUndoButtonIn(this); // Show Undo button when already moved
 				}
@@ -131,11 +127,11 @@ void InvocationScript::clearHighlightedCells() {
 	movableCellScripts.clear();
 }
 
-void InvocationScript::destroyInvocation() {
-	world->destroy(cardBackEnt);
-	world->destroy(attackNumberEnt);
-	world->destroy(invocationEnt);
-}
+/*void InvocationScript::destroyInvocation() {
+	entityManager->destroyEntity(cardBackEnt);
+	entityManager->destroyEntity(attackNumberEnt);
+	entityManager->destroyEntity(invocationEnt);
+}*/
 
 bool InvocationScript::checkInvocInSpawnCells() {
 	ComponentHandle<Transform> transform = entity->get<Transform>();
@@ -200,6 +196,14 @@ bool InvocationScript::getBattleChecked() {
 
 Entity* InvocationScript::getInvocationEntity() {
 	return invocationEnt;
+}
+
+Entity* InvocationScript::getCardBackEntity() {
+	return cardBackEnt;
+}
+
+Entity* InvocationScript::getAttackNumberEntity() {
+	return attackNumberEnt;
 }
 
 bool InvocationScript::getMoveAllowed() {

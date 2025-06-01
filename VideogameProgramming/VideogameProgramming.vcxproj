@@ -192,6 +192,7 @@
     <ClCompile Include="Ruleta.cpp" />
     <ClCompile Include="RuletaAttacks.cpp" />
     <ClCompile Include="RuletaBatalla.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenManager.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="ScriptAssigner.cpp" />

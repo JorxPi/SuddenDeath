@@ -56,6 +56,18 @@ void ButtonManager::handleUndoButtonClick() {
 
 
 
+//BUTTON GAME OVER
+
+void ButtonManager::moveGameOverButtonIn() {
+    if (!gameOverButtonRef) return;
+    Entity* e = gameOverButtonRef->getEntity();
+    if (!e) return;
+    ComponentHandle<Transform> t = e->get<Transform>();
+    t->position = ButtonPos::gameOverButtonIn;
+}
+
+
+
 //GETTERS
 
 
@@ -78,6 +90,10 @@ void ButtonManager::setSkipTurnClicked(bool value) {
 
 void ButtonManager::setUndoButtonRef(ButtonScript* button) {
     undoButtonRef = button;
+}
+
+void ButtonManager::setGameOverButtonRef(ButtonScript* button) {
+    gameOverButtonRef = button;
 }
 
 

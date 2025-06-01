@@ -7,4 +7,5 @@
 namespace ButtonPos {
     constexpr glm::vec2 generalButtonOut = { 2000.f, 2000.f };
     constexpr glm::vec2 skipButtonIn = { 1050.f, 450.f };
+    constexpr glm::vec2 gameOverButtonIn = { 1050.f, 450.f };
 }

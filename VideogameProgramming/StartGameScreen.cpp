@@ -7,39 +7,32 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <glm/glm.hpp>
+#include <iostream>
 
 StartGameScreen::StartGameScreen(EntityManager* entityManager, OverlayManager* overlayManager)
-	: Screen(entityManager), overlayManager(overlayManager) {
+	: Screen(entityManager, overlayManager) {
 }
 
 void StartGameScreen::enter() {
-	entities.push_back(entityManager->createEntityWithoutScript(glm::vec2(600., 400.), 0.f, 1.f, "Textures/GameBack.png", glm::vec3(1., 1., 1.)));
+	auto back = entityManager->createEntityWithoutScript(
+		glm::vec2(600.f, 400.f), 0.f, 1.f,
+		"Textures/GameBack.png", glm::vec3(1.f)
+	);
 
-	entities.push_back(entityManager->createCell(CellPos::c1, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::c2, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::c3, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::c4, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-	
-	entities.push_back(entityManager->createCell(CellPos::c5, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::c6, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::c7, "Textures/ovalo_normal.png", 74.f, 60.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::ha, "Textures/hexagono_azul.png", 115.f, 100.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::ta, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
-
-	entities.push_back(entityManager->createCell(CellPos::hr, "Textures/hexagono_rojo.png", 115.f, 100.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::tr, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
-
-	entities.push_back(entityManager->createCell(CellPos::hg, "Textures/hexagono_verde.png", 115.f, 100.f, false));
-
-	entities.push_back(entityManager->createCell(CellPos::tg, "Textures/triangulo_blanco.png", 73.f, 64.f, true));
+	auto c1 = entityManager->createCell(CellPos::c1, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c2 = entityManager->createCell(CellPos::c2, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c3 = entityManager->createCell(CellPos::c3, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c4 = entityManager->createCell(CellPos::c4, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c5 = entityManager->createCell(CellPos::c5, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c6 = entityManager->createCell(CellPos::c6, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto c7 = entityManager->createCell(CellPos::c7, "Textures/ovalo_normal.png", 74.f, 60.f, false);
+	auto ha = entityManager->createCell(CellPos::ha, "Textures/hexagono_azul.png", 115.f, 100.f, false);
+	auto ta = entityManager->createCell(CellPos::ta, "Textures/triangulo_blanco.png", 73.f, 64.f, true);
+	auto hr = entityManager->createCell(CellPos::hr, "Textures/hexagono_rojo.png", 115.f, 100.f, false);
+	auto tr = entityManager->createCell(CellPos::tr, "Textures/triangulo_blanco.png", 73.f, 64.f, true);
+	auto hg = entityManager->createCell(CellPos::hg, "Textures/hexagono_verde.png", 115.f, 100.f, false);
+	auto tg = entityManager->createCell(CellPos::tg, "Textures/triangulo_blanco.png", 73.f, 64.f, true);
 
 	//entityManager->createInvocation(glm::vec2(670.f, 110.f), 1, 1, "Textures/blue_back.png", "Textures/inv_Gobobo.png", "Textures/att1.png", 1);
 
@@ -49,39 +42,66 @@ void StartGameScreen::enter() {
 
 
 	// === Skip Turn Button ===
-	auto buttonSkip = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/SkipTurnButton.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
+	auto buttonSkip = entityManager->createEntity(
+		ButtonPos::generalButtonOut, 0.f, 1.f,
+		"Textures/SkipTurnButton.png", glm::vec3(1.f),
+		false, glm::vec2(200.f, 85.f),
+		"default", "ButtonScript"
+	);	
 	ECS::Entity* buttonSkipEntity = buttonSkip.first;
 	buttonSkipEntity->assign<BoxCollider>(200.f, 85.f, 1);
-	entities.push_back(buttonSkipEntity);
-	Script* generic_script = buttonSkip.second;
 
-	ButtonScript* buttonSkip_script = dynamic_cast<ButtonScript*>(generic_script);
-
-	if (buttonSkip_script) {
-		buttonSkip_script->setOnClickAction([&]() {
+	auto skipScriptGeneric = buttonSkip.second;
+	ButtonScript* buttonSkipScript = dynamic_cast<ButtonScript*>(skipScriptGeneric);
+	if (buttonSkipScript) {
+		buttonSkipScript->setOnClickAction([&]() {
 			entityManager->getButtonManagerRef()->setSkipTurnClicked(true);
 			entityManager->getButtonManagerRef()->moveSkipButtonOut();
-		});
+			});
 	}
-
-	entityManager->getButtonManagerRef()->setSkipButtonRef(buttonSkip_script);
+	entityManager->getButtonManagerRef()->setSkipButtonRef(buttonSkipScript);
 
 	// === Undo Move Button ===
-	auto buttonUndo = entityManager->createEntity(ButtonPos::generalButtonOut, 0.f, 1.f, "Textures/UndoMoveButton.png", glm::vec3(1., 1., 1.), false, glm::vec2(200., 85.), "default", "ButtonScript");
+	auto buttonUndo = entityManager->createEntity(
+		ButtonPos::generalButtonOut, 0.f, 1.f,
+		"Textures/UndoMoveButton.png", glm::vec3(1.f),
+		false, glm::vec2(200.f, 85.f),
+		"default", "ButtonScript"
+	);
 	ECS::Entity* buttonUndoEntity = buttonUndo.first;
 	buttonUndoEntity->assign<BoxCollider>(200.f, 85.f, 1);
-	entities.push_back(buttonUndoEntity);
-	Script* undoGenericScript = buttonUndo.second;
 
+	auto undoGenericScript = buttonUndo.second;
 	ButtonScript* buttonUndoScript = dynamic_cast<ButtonScript*>(undoGenericScript);
-
 	if (buttonUndoScript) {
 		buttonUndoScript->setOnClickAction([&]() {
 			entityManager->getButtonManagerRef()->handleUndoButtonClick();
 			});
 	}
-
 	entityManager->getButtonManagerRef()->setUndoButtonRef(buttonUndoScript);
+
+	// === Game Over Button === 
+	// NEED TO CHANGE THE TEXTURE
+
+	auto buttonGameOver = entityManager->createEntity(
+		ButtonPos::generalButtonOut, 0.f, 1.f,
+		"Textures/SkipTurnButton.png", glm::vec3(1.f),
+		false, glm::vec2(200.f, 85.f),
+		"default", "ButtonScript"
+	);
+	ECS::Entity* buttonGameOverEntity = buttonGameOver.first;
+	buttonGameOverEntity->assign<BoxCollider>(200.f, 85.f, 1);
+
+	auto gameOverScriptGeneric = buttonGameOver.second;
+	ButtonScript* buttonGameOverScript = dynamic_cast<ButtonScript*>(gameOverScriptGeneric);
+	if (buttonGameOverScript) {
+		buttonGameOverScript->setOnClickAction([&]() {
+			requestScreenSwap("Menu");
+
+			});
+	}
+
+	entityManager->getButtonManagerRef()->setGameOverButtonRef(buttonGameOverScript);
 
 	setupOverlayScreen();
 	setupScoreScreen();
@@ -89,12 +109,6 @@ void StartGameScreen::enter() {
 		
 }
 
-void StartGameScreen::exit() {
-	for (auto entity : entities) {
-		entityManager->destroyEntity(entity);
-	}
-	entities.clear();
-}
 
 std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen::setupCardBacks() {
 	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> cardBacks;
@@ -109,15 +123,29 @@ std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen
 	int numPositions = sizeof(positions) / sizeof(positions[0]);
 
 	for (int i = 0; i < numPositions; i++) {
-		auto result = entityManager->createEntity(positions[i], 0.f, 1.f, "Textures/neutral_back1.png", glm::vec3(1., 1., 1.), false, glm::vec2(119., 159.), "default", "InvocationSelectionScript");
+		auto result = entityManager->createEntity(
+			positions[i], 0.f, 1.f,
+			"Textures/neutral_back1.png", glm::vec3(1.f),
+			false, glm::vec2(119.f, 159.f),
+			"default", "InvocationSelectionScript"
+		);
 		ECS::Entity* cardBack = result.first;
-		InvocationSelectionScript* script = dynamic_cast<InvocationSelectionScript*>(result.second);
-		cardBack->assign<BoxCollider>(119., 159.);
-		cardBack->get<Transform>()->layer = 10;
 
-		ECS::Entity* overlay = entityManager->createEntityWithoutScript(positions[i], 0.f, 1.f, "Textures/InvNotAv.png", glm::vec3(1., 1., 1.), false, glm::vec2(119., 159.));
+		InvocationSelectionScript* script = dynamic_cast<InvocationSelectionScript*>(result.second);
+		cardBack->assign<BoxCollider>(119.f, 159.f);
+		cardBack->get<Transform>()->layer = 10;
+		registerOverlayEntity(cardBack);
+
+
+		ECS::Entity* overlay = entityManager->createEntityWithoutScript(
+			positions[i], 0.f, 1.f,
+			"Textures/InvNotAv.png", glm::vec3(1.f),
+			false, glm::vec2(119.f, 159.f)
+		);
 		overlay->get<Sprite>()->visible = false;
 		overlay->get<Transform>()->layer = 11;  
+
+		registerOverlayEntity(overlay);
 
 		script->setUnavailableOverlay(overlay);
 
@@ -131,9 +159,16 @@ std::vector<ECS::Entity*> StartGameScreen::setupInvocations() {
 	std::vector<ECS::Entity*> invocations;
 
 	for (int i = 0; i < Invocations::numInvocations; i++) {
-		ECS::Entity* invocation = entityManager->createEntityWithoutScript(glm::vec2(0.f, 0.f), 0.f, 1.f, Invocations::data[i].texturePath, glm::vec3(1., 1., 1.), false, Invocations::data[i].size);
+		ECS::Entity* invocation = entityManager->createEntityWithoutScript(
+			glm::vec2(0.f, 0.f), 0.f, 1.f,
+			Invocations::data[i].texturePath, glm::vec3(1.f),
+			false, Invocations::data[i].size
+		);
 		invocation->get<Sprite>()->visible = false;
 		invocation->get<Transform>()->layer = 10;
+
+		registerOverlayEntity(invocation);
+
 		invocations.push_back(invocation);
 	}
 
@@ -186,6 +221,7 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 
 	std::shuffle(passives.begin() + 10, passives.end(), g);
 
+	invocationPool.clear();
 	for (size_t i = 0; i < invocations.size() && i < passives.size(); i++) {
 		InvocationWithPassiveData data;
 		data.filepath = invocations[i]->get<Sprite>()->filepath; // Assign filepath
@@ -208,36 +244,45 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 }
 
 void StartGameScreen::setupOverlayScreen() {
-	ECS::Entity* blanket = entityManager->createEntityWithoutScript(glm::vec2(2200.f, 400.f), 0.f, 1.f, "Textures/OverlayBlanket.png", glm::vec3(1., 1., 1.));
+	ECS::Entity* blanket = entityManager->createEntityWithoutScript(
+		glm::vec2(2200.f, 400.f), 0.f, 1.f,
+		"Textures/OverlayBlanket.png", glm::vec3(1.f)
+	);
 	blanket->get<Transform>()->layer = 10;
 
-	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> cardBacks = setupCardBacks();
-	std::vector<ECS::Entity*> invocations = setupInvocations();
+	registerOverlayEntity(blanket);
 
+	auto cardBacks = setupCardBacks();
+	auto invocations = setupInvocations();
 	randomizeInvocations(cardBacks, invocations);
 
-	overlayManager->addOverlayEntity(blanket);
+	//overlayManager->addOverlayEntity(blanket);
 	for (int i = 0; i < cardBacks.size(); i++) {
-		overlayManager->addOverlayEntity(cardBacks[i].first);
-
-		ECS::Entity* overlay = cardBacks[i].second->getUnavailableOverlay(); // Getter for overlay
-		if (overlay) {
-			overlayManager->addOverlayEntity(overlay); // Add overlay
+		InvocationSelectionScript* script = cardBacks[i].second;
+		if (script) {
+			ECS::Entity* overlay = script->getUnavailableOverlay();
+			if (overlay) {
+				registerOverlayEntity(overlay);
+			}
+			script->setOverlayManager(overlayManager);
 		}
-
-		cardBacks[i].second->setOverlayManager(overlayManager);
 	}
 	for (int i = 0; i < invocations.size(); i++) {
-		overlayManager->addOverlayEntity(invocations[i]);
+		registerOverlayEntity(invocations[i]);
 	}
 }
 
 void StartGameScreen::setupScoreScreen() {
-	ECS::Entity* scoreBackground = entityManager->createEntityWithoutScript(glm::vec2(600.f, 400.f),0.f,1.f,"Textures/ScoreTab.png",glm::vec3(1., 1., 1.));
-	scoreBackground->get<Sprite>()->visible = false; 
+	ECS::Entity* scoreBackground = entityManager->createEntityWithoutScript(
+		glm::vec2(600.f, 400.f), 0.f, 1.f,
+		"Textures/ScoreTab.png", glm::vec3(1.f)
+	);
+	scoreBackground->get<Sprite>()->visible = false;
 	scoreBackground->get<Transform>()->layer = 20;
 
+	registerOverlayEntity(scoreBackground);
 	overlayManager->addScoreEntity(-1, scoreBackground);
+
 
 	glm::vec2 playerColumnStartPositions[] = {
 		glm::vec2(459.f, 241.f), 
@@ -261,10 +306,14 @@ void StartGameScreen::setupScoreScreen() {
 				);
 
 
-				ECS::Entity* playerPoint = entityManager->createEntityWithoutScript(position, 0.f, 1.f, "Textures/SuddenPoint.png", glm::vec3(1., 1., 1.));
+				ECS::Entity* playerPoint = entityManager->createEntityWithoutScript(
+					position, 0.f, 1.f,
+					"Textures/SuddenPoint.png", glm::vec3(1.f)
+				);
 				playerPoint->get<Sprite>()->visible = false; // Initially invisible
 				playerPoint->get<Transform>()->layer = 21;   // Above the background layer
 
+				registerOverlayEntity(playerPoint);
 				// Add it to the overlay manager under the correct player ID
 				overlayManager->addScoreEntity(playerIndex + 1, playerPoint); // Player ID: 1, 2, 3
 			}

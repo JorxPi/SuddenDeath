@@ -14,6 +14,8 @@ class ButtonManager;
 
 class InvocationSelectionScript;
 
+class ScreenManager;
+
 class EntityManager {
 
 public:
@@ -27,7 +29,7 @@ public:
 
     void destroyEntity(Entity* entity);
 
-    void setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr);
+    void setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr, ScreenManager* smrRef);
 
     ButtonManager* getButtonManagerRef();
     GameManager* getGameManagerRef();
@@ -42,4 +44,5 @@ private:
     GameManager* gameManagerRef;
     ButtonManager* buttonManagerRef;
     ScriptManager* scriptManagerRef;
+    ScreenManager* screenManagerRef = nullptr;
 };

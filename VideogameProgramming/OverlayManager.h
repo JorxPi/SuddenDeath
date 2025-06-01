@@ -2,6 +2,10 @@
 
 #include <vector>
 #include <map>
+#include <algorithm>
+#include <chrono>   
+#include <glm/glm.hpp>
+
 #include "EntityManager.h"
 
 class EntityManager;
@@ -15,12 +19,16 @@ public:
     void enter();
     void exit();
     void addOverlayEntity(ECS::Entity* entity);
+    void removeOverlayEntity(ECS::Entity* entity);
+
     void activate(bool state);
     bool isActive() const;
     void lockSelection(bool status);  // Lock or unlock selection globally
     bool isSelectionLocked();  // Check if selection is locked
 
     void addScoreEntity(int playerId, ECS::Entity* entity); // Add score entities
+    void removeScoreEntity(int playerId, ECS::Entity* entity);
+
     void activateScoreOverlay(bool state); // Activate/Deactivate score overlay
     void updateScoreVisibility(int playerId, int score); // Update score visibility
 

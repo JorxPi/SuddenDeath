@@ -29,7 +29,6 @@ struct Transform
 
 public:
     glm::vec2 getPosition() {
-        //std::cout << parent << std::endl;
         if (!parent) {
             return position;
         }

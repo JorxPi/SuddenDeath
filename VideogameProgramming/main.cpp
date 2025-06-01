@@ -166,10 +166,10 @@ void SetupRealWorld() {
 	gameManager->setButtonManagerRef(buttonManager);
 	gameManager->setScreenManagerRef(screenManager);
 	gameManager->setGameLogManager(gameLogManager);
-	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager);
+	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager, screenManager);
 	screenManager->setManagerRefs(gameManager, overlayManager);
 
-	screenManager->addScreen("Menu", new MenuScreen(entityManager));
+	screenManager->addScreen("Menu", new MenuScreen(entityManager, overlayManager));
 	screenManager->addScreen("StartGame", new StartGameScreen(entityManager, overlayManager));
 
 	screenManager->switchToScreen("Menu");

@@ -66,6 +66,13 @@ void OverlayManager::activate(bool state) {
     }
 }
 
+void OverlayManager::removeOverlayEntity(ECS::Entity* entity) {
+    auto it = std::remove(overlayEntities.begin(), overlayEntities.end(), entity);
+    if (it != overlayEntities.end()) {
+        overlayEntities.erase(it, overlayEntities.end());
+    }
+}
+
 bool OverlayManager::isActive() const {
     return active;
 }
@@ -86,16 +93,35 @@ void OverlayManager::addScoreEntity(int playerId, ECS::Entity* entity) {
     scoreEntities[playerId].emplace_back(entity, false); // Add entity with `false` visibility
 }
 
+void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
+    auto mapIt = scoreEntities.find(playerId);
+    if (mapIt == scoreEntities.end()) {
+        return;
+    }
+
+    // Para el vector de pares (Entity*, bool), eliminamos el par cuya primera == entity
+    auto& vec = mapIt->second;
+    vec.erase(std::remove_if(
+        vec.begin(),
+        vec.end(),
+        [&](const std::pair<ECS::Entity*, bool>& p) {
+            return p.first == entity;
+        }),
+        vec.end());
+
+    // Si tras eliminarlo la lista de ese jugador queda vacía, podemos borrar la clave completa (opcional)
+    if (vec.empty()) {
+        scoreEntities.erase(mapIt);
+    }
+}
+
 void OverlayManager::activateScoreOverlay(bool state) {
-    std::cout << "in 0" << std::endl;
     for (auto& playerEntry : scoreEntities) { // Loop through all players
-        std::cout << "in 1" << std::endl;
         for (auto& point : playerEntry.second) { // Loop through each player's points
             auto sprite = point.first->get<Sprite>();
-            std::cout << "in 2" << std::endl;
             if (sprite) {
                 sprite->visible = (state && (playerEntry.first == -1 || point.second)); // Show if `state` is true and `point.second` is true
-                std::cout << "in 3" << std::endl;
+
             }
         }
     }

@@ -90,6 +90,9 @@ public:
 	template <typename PassiveType>
 	void handlePassiveEvent(InvocationScript* invocation, std::function<void(PassiveType*)> eventHandler);
 
+	void checkGameEnd();
+	void endGame(int winningPlayer);
+
 	//COIN FLIPS
 	bool playerHasInvocations(int playerID);
 	int getConsecutiveTails(int player);
@@ -127,6 +130,8 @@ public:
 	void RenderHoverText();
 	void setCoinProbabilityText(const std::string& text);
 	void RenderCoinProbabilityText();
+	void RenderGameOverMessage();
+
 
 	//LOG
 	void LogPlayerScore(int player, int points, const std::string& reason);
@@ -165,6 +170,7 @@ private:
 	TextRenderer* textRendererRef;
 
 	bool isActive = false;
+	bool gameEnded = false;
 
 	//ENTITIESS
 	Entity* ruletaAttacksEntRef;
@@ -228,6 +234,8 @@ private:
 	std::string coinProbabilityText;
 	int screenWidth = 1200;
 	int screenHeight = 800;
+	std::string gameOverMessage = "";
+
 
 	//OTHER
 	int currentPlayerTurn = 1;

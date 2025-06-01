@@ -18,7 +18,7 @@ public:
 	ScreenManager(GLFWwindow* window, ECS::World* world);
 
 	void addScreen(const std::string& name, Screen* screen);
-	void switchToScreen(const std::string& name);
+	void switchToScreen(std::string name);
 	void activateOverlay(bool state);
 
 	Screen* getCurrentScreen();
@@ -37,8 +37,6 @@ private:
 	OverlayManager* overlayManager;
 
 	std::map<std::string, std::unique_ptr<Screen>> screens;
-	Screen* currentScreen;
-
-	bool swappingScreen = false;
+	Screen* currentScreen = nullptr;
 
 };

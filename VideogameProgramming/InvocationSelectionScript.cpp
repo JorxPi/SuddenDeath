@@ -119,7 +119,6 @@ void InvocationSelectionScript::setUnavailable(bool unavailable) {
 		auto sprite = unavailableOverlay->get<Sprite>();
 		if (sprite) {
 			sprite->visible = unavailable;  // Show/hide "InvNotAv" overlay
-			std::cout << "Sprite is " << unavailable << std::endl;
 		}
 	}
 }

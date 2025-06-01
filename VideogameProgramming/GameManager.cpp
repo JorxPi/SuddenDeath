@@ -31,6 +31,33 @@ void GameManager::activate(bool status) {
 void GameManager::update(float deltaTime) {
     if (!isActive) return;
 
+    // Render UI elements
+    if (textRendererRef) {
+        RenderPlayerTurn();
+        float instructionWidth = textRendererRef->CalculateTextWidth("ActionMan", currentInstruction, 0.5f);
+        float centeredInstructionX = (screenWidth - instructionWidth) / 2.0f;
+
+        textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+        RenderAnnouncement(AnnouncementType::General);
+        RenderAnnouncement(AnnouncementType::PassiveTrigger);
+        RenderGameLog();
+        RenderHoverText();
+        RenderCoinProbabilityText();
+    }
+
+    if (!isAnyInvocationHovered()) {
+        setHoverText("");
+    }
+
+    //Timer for the announcements
+    UpdateAnnouncement(AnnouncementType::General);
+    UpdateAnnouncement(AnnouncementType::PassiveTrigger);
+
+    if (gameEnded) {
+        RenderGameOverMessage();
+        return;
+    }
+
     hoveredInvocationCount = 0;
 
     if (!currentPlayerInvocationsListSetted) {
@@ -44,7 +71,6 @@ void GameManager::update(float deltaTime) {
         for (int i = 0; i < currentPlayerInvocationsListRef.size(); i++) {
             if (currentPlayerInvocationsListRef[i]->getFullyMoved() && !currentPlayerInvocationsListRef[i]->getBattleChecked()) {
                 currentPlayerInvocationsListRef[i]->setBattleCheckedToTrue();
-                std::cout << "1. " << std::endl;
                 checkingIfBattle = true;
                 checkBattle(currentPlayerInvocationsListRef[i]);
             }
@@ -148,7 +174,7 @@ void GameManager::update(float deltaTime) {
 
             if (elapsed.count() >= 3) {
                 bool headOrTails = coinScriptRef->getHeadOrTails();
-                world->destroy(coinEntRef);
+                entityManager->destroyEntity(coinEntRef);
                 setCoinProbabilityText("");
                 coinEntRef = nullptr;
                 coinScriptRef = nullptr;
@@ -197,6 +223,8 @@ void GameManager::update(float deltaTime) {
                     playerScores[currentPlayerTurn] += 3;
                     //consecutiveTails +1
                     consecutiveTails[currentPlayerTurn]++;
+
+                    checkGameEnd();
 
                     std::cout << "Tails coin points awarded to Player " << currentPlayerTurn
                         << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
@@ -271,28 +299,6 @@ void GameManager::update(float deltaTime) {
 
     //Player pressed the Skip Turn button istead of moving to a cell
     skipButtonGameLogic();  
-
-    //Timer for the announcements
-    UpdateAnnouncement(AnnouncementType::General);
-    UpdateAnnouncement(AnnouncementType::PassiveTrigger);
-
-    if (!isAnyInvocationHovered()) {
-        setHoverText("");
-    }
-
-    // Render UI elements
-    if (textRendererRef) {
-        RenderPlayerTurn();
-        float instructionWidth = textRendererRef->CalculateTextWidth("ActionMan", currentInstruction, 0.5f);
-        float centeredInstructionX = (screenWidth - instructionWidth) / 2.0f;
-
-        textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-        RenderAnnouncement(AnnouncementType::General);
-        RenderAnnouncement(AnnouncementType::PassiveTrigger);
-        RenderGameLog();
-        RenderHoverText();
-        RenderCoinProbabilityText();
-    }
 }
 
 
@@ -596,6 +602,9 @@ void GameManager::addPlayerPoints(int playerIndex, int points) {
     // Debugging output
     std::cout << "Player " << playerIndex << " gained " << points
         << " points. Total: " << playerScores[playerIndex] << " points." << std::endl;
+
+    checkGameEnd();
+
 }
 
 int GameManager::awardBattlePoints(int winnerIndex, int loserIndex) {
@@ -617,6 +626,8 @@ int GameManager::awardBattlePoints(int winnerIndex, int loserIndex) {
         << " -> " << playerScores[winnerPlayer] << std::endl;
 
     updateScoreVisibility(winnerPlayer);
+
+    checkGameEnd();
 
     return pointsAwarded;
 }
@@ -659,6 +670,8 @@ int GameManager::awardInvocationPoints(InvocationScript* invocScript) {
     std::cout << "Invocation points awarded! Player " << player
         << " gained " << pointsAwarded << " points. Total: "
         << playerScores[player] << " points." << std::endl;
+
+    checkGameEnd();
 
     return pointsAwarded;
 }
@@ -776,6 +789,34 @@ void GameManager::handlePassiveEvent(InvocationScript* invocation, std::function
     }
 }
 
+void GameManager::checkGameEnd() {
+    // Loop through all player scores and check if any player reached 60 points.
+    for (const auto& entry : playerScores) {
+        int playerID = entry.first;
+        int score = entry.second;
+        if (score >= 11) {
+            // If game not already ended, end the game.
+            if (!gameEnded) {
+                endGame(playerID);
+            }
+            break;
+        }
+    }
+}
+
+    void GameManager::endGame(int winningPlayer) {
+        gameEnded = true;             // Prevent further game updates.
+        gameOverMessage = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
+
+        // Display a "Game Over" announcement on screen.
+        std::string message = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
+        ShowAnnouncement(message, 10.0f, AnnouncementType::General);
+
+        std::cout << message << std::endl;
+
+        entityManager->getButtonManagerRef()->moveGameOverButtonIn();
+    }
+
 
 
 //COIN FLIP
@@ -882,8 +923,8 @@ const char* GameManager::returnAttackText(int invocAttack) {
 
 
 void GameManager::destroyRuletaAttacks() {
-    world->destroy(ruletaAttacksEntRef);
-    world->destroy(pointerEntRef);
+    entityManager->destroyEntity(ruletaAttacksEntRef);
+    entityManager->destroyEntity(pointerEntRef);
     ruletaAttacksEntRef = nullptr;
     pointerEntRef = nullptr;
     ruletaAttacksRef = nullptr;
@@ -897,8 +938,8 @@ void GameManager::destroyRuletaBatalla() {
 
     std::cout << "got!" << std::endl;
 
-    world->destroy(ruletaBatallaEntRef);
-    world->destroy(pointerEntRef);
+    entityManager->destroyEntity(ruletaBatallaEntRef);
+    entityManager->destroyEntity(pointerEntRef);
     ruletaBatallaEntRef = nullptr;
     pointerEntRef = nullptr;
     ruletaBatallaRef = nullptr;
@@ -914,25 +955,33 @@ void GameManager::eliminateInvocation(int cellPosInArray) {
         passive->OnInvocationDeath();
     }
 
-
     ECS::Entity* invocationEntity = scriptToRemove->getInvocationEntity();
     if (invocationEntity) {
         ComponentHandle<Sprite> sprite = invocationEntity->get<Sprite>();
         if (sprite) {
             const char* invocationId = sprite->filepath;
-
-            // Remove the invocation from the tracking list
             removeInvocationFromBoard(invocationId);
         }
     }
 
     invocationsListRef.erase(invocationsListRef.begin() + cellPosInArray);
 
-    scriptToRemove->destroyInvocation();
+    ECS::Entity* cardBackEnt = scriptToRemove->getCardBackEntity();
+    ECS::Entity* attackNumberEnt = scriptToRemove->getAttackNumberEntity();
+    ECS::Entity* invocationEnt = scriptToRemove->getInvocationEntity();
 
-    //battleing = false;
-    //ruletaBatallaDestroyed = false;
+    // Ya no hace falta anular parent aquí, porque destroyEntity lo hará globalmente:
+    if (cardBackEnt) {
+        entityManager->destroyEntity(cardBackEnt);
+    }
+    if (attackNumberEnt) {
+        entityManager->destroyEntity(attackNumberEnt);
+    }
+    if (invocationEnt) {
+        entityManager->destroyEntity(invocationEnt);
+    }
 }
+
 
 
 
@@ -950,7 +999,7 @@ void GameManager::addCellToList(CellScript* cellsc) {
 
 void GameManager::clearHighlightedList() {
     for (Entity* entity : highlightedEntities) {
-        world->destroy(entity);
+        entityManager->destroyEntity(entity);
         //world->destroyEntity(entity);
     }
     highlightedEntities.clear();
@@ -1116,6 +1165,17 @@ void GameManager::RenderCoinProbabilityText() {
     float textY = screenHeight - 50;  // Position above the coin
 
     textRendererRef->RenderText("KOMTXTTI", coinProbabilityText, centeredX, textY, 0.7f, glm::vec3(1.0f, 1.0f, 1.0f));
+}
+
+void GameManager::RenderGameOverMessage() {
+    if (!gameOverMessage.empty() && textRendererRef) {
+        float textSize = 1.0f; // Adjust size as needed.
+        // Calculate the width of the text so that it can be centered.
+        float textWidth = textRendererRef->CalculateTextWidth("SuperSquad", gameOverMessage, textSize);
+        float centeredX = (screenWidth - textWidth) / 2.0f;
+        float centeredY = screenHeight / 2.0f; // Middle of the screen.
+        textRendererRef->RenderText("SuperSquad", gameOverMessage, centeredX, centeredY, textSize, glm::vec3(131.0f / 255.0f, 34.0f / 255.0f, 137.0f / 255.0f));
+    }
 }
 
 
