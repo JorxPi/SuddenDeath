@@ -11,6 +11,7 @@ public:
 	StartGameScreen(EntityManager* entityManager, OverlayManager* overlayManager);
 
 	void enter() override;
+	void exit() override;
 
 	void setupOverlayScreen();
 	void setupScoreScreen();

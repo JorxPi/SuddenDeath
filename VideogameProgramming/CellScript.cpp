@@ -11,8 +11,14 @@ void CellScript::tickScript(float deltaTime) {
 
 
 bool CellScript::cellToMove(float deltaTime, std::vector<Entity*> cellsToMoveList, InvocationScript* invocationScript) {
+
 	ComponentHandle<Transform> transform = entity->get<Transform>();
+	auto tPos = transform->position;
+
 	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
+	if (!collider) {
+		return false;
+	}
 	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {

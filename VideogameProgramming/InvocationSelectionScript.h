@@ -30,6 +30,8 @@ public:
 
     void updateHoverText();
 
+    void ResetForNewGame();
+
 private:
     OverlayManager* overlayManager = nullptr;
     GameManager* gameManagerRef = nullptr;

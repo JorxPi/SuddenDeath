@@ -18,6 +18,7 @@ void ScreenManager::switchToScreen(std::string name) {
         currentScreen->enter();
 
         if (name == "StartGame") {
+            gameManager->resetGame();
             gameManager->activate(true);
         }
         else {

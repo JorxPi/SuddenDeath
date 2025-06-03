@@ -33,6 +33,8 @@ public:
     void updateScoreVisibility(int playerId, int score); // Update score visibility
 
     EntityManager* getEntityManager();
+
+    void clearAllOverlays();
 private:
     EntityManager* entityManager;
 

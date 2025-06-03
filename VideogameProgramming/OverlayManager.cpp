@@ -139,3 +139,24 @@ void OverlayManager::updateScoreVisibility(int playerId, int score) {
 EntityManager* OverlayManager::getEntityManager() {
     return entityManager;
 }
+
+void OverlayManager::clearAllOverlays() {
+    // Destruye cada entidad registrada en overlayEntities
+    for (ECS::Entity* e : overlayEntities) {
+        if (e) {
+            entityManager->destroyEntity(e);
+        }
+    }
+    overlayEntities.clear();
+
+    // Limpia también todos los scoreEntities
+    for (auto& kv : scoreEntities) {
+        for (auto& pairEnt : kv.second) {
+            ECS::Entity* e = pairEnt.first;
+            if (e) {
+                entityManager->destroyEntity(e);
+            }
+        }
+    }
+    scoreEntities.clear();
+}

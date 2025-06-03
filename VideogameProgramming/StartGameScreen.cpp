@@ -109,6 +109,16 @@ void StartGameScreen::enter() {
 		
 }
 
+void StartGameScreen::exit() {
+	// Antes de destruir la pantalla, limpiamos la lista de celdas del GameManager:
+	if (auto gm = entityManager->getGameManagerRef()) {
+		gm->clearInvocationList();
+		gm->clearCellList();
+	}
+
+	Screen::exit();
+}
+
 
 std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen::setupCardBacks() {
 	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> cardBacks;
@@ -244,6 +254,10 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 }
 
 void StartGameScreen::setupOverlayScreen() {
+	if (auto gm = entityManager->getGameManagerRef()) {
+		gm->clearInvocationSelectionList();
+	}
+
 	ECS::Entity* blanket = entityManager->createEntityWithoutScript(
 		glm::vec2(2200.f, 400.f), 0.f, 1.f,
 		"Textures/OverlayBlanket.png", glm::vec3(1.f)

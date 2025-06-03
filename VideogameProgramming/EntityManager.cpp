@@ -96,6 +96,8 @@ void EntityManager::createInvocationWithPassive(glm::vec2 position, int coliderI
 
 	InvocationScript* latestInvocationScript = gameManagerRef->getInvocationScripts().back();
 	if (latestInvocationScript) {
+		std::cout << "[createInvocationWithPassive] Asignando pasiva "
+			<< passive << " a invocación " << latestInvocationScript << "\n";
 		latestInvocationScript->setPassiveAbility(passive); // Assign the passive
 	}
 	else {

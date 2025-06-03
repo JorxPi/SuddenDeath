@@ -162,3 +162,26 @@ void InvocationSelectionScript::updateHoverText() {
 	gameManager->setHoverText(descriptionText);
 }
 
+void InvocationSelectionScript::ResetForNewGame() {
+	// 1) Desmarcar cualquier selección pendiente
+	card_selected = false;
+
+	// 2) Volver a “no descubierto”
+	discovered = false;
+
+	// 3) Marcar como disponible (isUnavailable = false)
+	isUnavailable = false;
+
+	// 4) Ocultar el overlay negro si existe
+	if (unavailableOverlay) {
+		auto sprite = unavailableOverlay->get<Sprite>();
+		if (sprite) {
+			sprite->visible = false;
+		}
+	}
+
+	// 5) Si estaba mostrando “hover text”, lo limpiamos
+	//    (el GameManager ya borra el hoverText global, pero aseguramos el estado interno)
+	isHovered = false;
+}
+

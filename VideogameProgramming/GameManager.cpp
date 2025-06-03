@@ -21,11 +21,11 @@ ECS::Entity* GameManager::createEntity(glm::vec2 position, float rotation, float
 }
 
 void GameManager::activate(bool status) {
-    isActive = status;
+    /*if (status) {
+        invocCardListRef.clear();
+    }*/
 
-    updateScoreVisibility(1);
-    updateScoreVisibility(2);
-    updateScoreVisibility(3);
+    isActive = status;
 }
 
 void GameManager::update(float deltaTime) {
@@ -191,13 +191,10 @@ void GameManager::update(float deltaTime) {
                 }
 
                 if (hasPassiveEleven && !headOrTails) { // First flip is tails, PassiveEleven active
-                    std::cout << "PassiveEleven active: First tails flip detected, no points awarded. Respawning coin." << std::endl;
-
                     // Trigger PassiveEleven
                     handlePassiveEvent<PassiveEleven>(currentPlayerInvocationsListRef[0], [this](PassiveEleven* passive) {
                         passive->OnEvent(this, currentPlayerInvocationsListRef[0]);
                         if (passive->HowManyFlipsHandled() != 2) {
-                            std::cout << "Respawning coin." << std::endl;
                             spawnCoin(); 
                             coinRespawned = true;
                         }
@@ -225,9 +222,6 @@ void GameManager::update(float deltaTime) {
                     consecutiveTails[currentPlayerTurn]++;
 
                     checkGameEnd();
-
-                    std::cout << "Tails coin points awarded to Player " << currentPlayerTurn
-                        << " now has " << playerScores[currentPlayerTurn] << " points." << std::endl;
 
                     updateScoreVisibility(currentPlayerTurn);
                     ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f, AnnouncementType::General);
@@ -261,7 +255,6 @@ void GameManager::update(float deltaTime) {
 
                 selectionTime = std::chrono::steady_clock::now();
                 delayStarted = true;
-                std::cout << "step3 " << std::endl;
                 break;
             }
         }
@@ -780,12 +773,22 @@ bool GameManager::isInvocationOnBoard(const std::string& invocationId) {
 
 template <typename PassiveType>
 void GameManager::handlePassiveEvent(InvocationScript* invocation, std::function<void(PassiveType*)> eventHandler) {
-    if (!invocation) return;
+    if (!invocation) {
+        std::cout << "[handlePassiveEvent] invocation == nullptr, salto.\n";
+        return;
+    }
 
     PassiveAbility* passive = invocation->getPassiveAbility();
+    std::cout << "[handlePassiveEvent] invocation=" << invocation
+        << "  passive=" << passive
+        << "  tipo esperado=" << typeid(PassiveType).name()
+        << "\n";
+
     if (auto* specificPassive = dynamic_cast<PassiveType*>(passive)) {
-        // Call the event handler with the specific passive
         eventHandler(specificPassive);
+    }
+    else {
+        std::cout << "[handlePassiveEvent] dynamic_cast falló, no es este tipo de pasiva\n";
     }
 }
 
@@ -794,7 +797,7 @@ void GameManager::checkGameEnd() {
     for (const auto& entry : playerScores) {
         int playerID = entry.first;
         int score = entry.second;
-        if (score >= 11) {
+        if (score >= 14) {
             // If game not already ended, end the game.
             if (!gameEnded) {
                 endGame(playerID);
@@ -804,18 +807,136 @@ void GameManager::checkGameEnd() {
     }
 }
 
-    void GameManager::endGame(int winningPlayer) {
-        gameEnded = true;             // Prevent further game updates.
-        gameOverMessage = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
+void GameManager::endGame(int winningPlayer) {
+    gameEnded = true;             // Prevent further game updates.
+    gameOverMessage = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
 
-        // Display a "Game Over" announcement on screen.
-        std::string message = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
-        ShowAnnouncement(message, 10.0f, AnnouncementType::General);
+    // Display a "Game Over" announcement on screen.
+    std::string message = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
+    ShowAnnouncement(message, 10.0f, AnnouncementType::General);
 
-        std::cout << message << std::endl;
+    entityManager->getButtonManagerRef()->moveGameOverButtonIn();
+}
 
-        entityManager->getButtonManagerRef()->moveGameOverButtonIn();
+
+
+
+//RESET GAME
+
+
+void GameManager::resetGame() {
+    
+    // Reset de puntuaciones y visibilidad
+    playerScores[1] = 10;
+    playerScores[2] = 10;
+    playerScores[3] = 10;
+    updateScoreVisibility(1);
+    updateScoreVisibility(2);
+    updateScoreVisibility(3);
+
+    for (auto* cardScript : invocCardListRef) {
+        if (cardScript) {
+            cardScript->ResetForNewGame();
+        }
     }
+
+    if (screenManagerRef && screenManagerRef->getOverlayManager()) {
+        screenManagerRef->getOverlayManager()->lockSelection(false);
+    }
+
+    // Borrar listas de scripts y entidades de la partida anterior
+    //invocationsListRef.clear();
+    currentPlayerInvocationsListRef.clear();
+    //invocCardListRef.clear();
+    invocationsOnBoard.clear();
+
+    // Destruir cualquier "highlight" que quedara en pantalla
+    for (auto* e : highlightedEntities) {
+        entityManager->destroyEntity(e);
+    }
+    highlightedEntities.clear();
+
+    // Reiniciar todos los flags de estado de la partida
+    gameEnded = false;
+    gameOverMessage.clear();
+    announcementText.clear();
+    passiveTriggerText.clear();
+    announcementTimer = 0.0f;
+    passiveTriggerTimer = 0.0f;
+
+    currentInstruction.clear();
+    hoverText.clear();
+    coinProbabilityText.clear();
+
+    hoveredInvocationCount = 0;
+    currentPlayerInvocationsListSetted = false;
+    invocInvocated = false;
+    ruletaAttacksSpawned = false;
+    ruletaAttacksDestroyed = false;
+    ruletaBatallaSpawned = false;
+    ruletaBatallaDestroyed = false;
+    invocDestroyed = true;
+    battleing = false;
+    checkingIfBattle = false;
+    deferredCoinSpawn = false;
+    movementBlocked = false;
+    allInvocsMoved = false;
+
+    skipButtonIn = false;
+    currentInvocationMoving = -1;
+
+    selectingInvocation = false;
+    delayStarted = false;
+    spinResult = -1;
+    invocationToSpawnPos = -1;
+
+    // Destruir cualquier ruleta o moneda que todavía quedara viva
+    if (coinEntRef) {
+        entityManager->destroyEntity(coinEntRef);
+        coinEntRef = nullptr;
+    }
+    coinScriptRef = nullptr;
+
+    if (ruletaAttacksEntRef) {
+        entityManager->destroyEntity(ruletaAttacksEntRef);
+        ruletaAttacksEntRef = nullptr;
+    }
+    if (pointerEntRef) {
+        entityManager->destroyEntity(pointerEntRef);
+        pointerEntRef = nullptr;
+    }
+    ruletaAttacksRef = nullptr;
+
+    if (ruletaBatallaEntRef) {
+        entityManager->destroyEntity(ruletaBatallaEntRef);
+        ruletaBatallaEntRef = nullptr;
+    }
+    ruletaBatallaRef = nullptr;
+
+    // Reset de turnos y contadores auxiliares
+    currentPlayerTurn = 1;
+    consecutiveTails[1] = 0;
+    consecutiveTails[2] = 0;
+    consecutiveTails[3] = 0;
+
+    // Vaciar el registro de log en pantalla
+    if (gameLogRef) {
+        gameLogRef->ClearMessages();
+    }
+}
+
+void GameManager::clearInvocationSelectionList() {
+    invocCardListRef.clear();
+}
+
+void GameManager::clearCellList() {
+    cellListRef.clear();
+}
+
+void GameManager::clearInvocationList() {
+    invocationsListRef.clear();
+}
+
 
 
 
@@ -935,8 +1056,6 @@ void GameManager::destroyRuletaAttacks() {
 
 void GameManager::destroyRuletaBatalla() {
     ruletaBatallaWinner = ruletaBatallaRef->getSpinResult();
-
-    std::cout << "got!" << std::endl;
 
     entityManager->destroyEntity(ruletaBatallaEntRef);
     entityManager->destroyEntity(pointerEntRef);

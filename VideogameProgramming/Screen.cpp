@@ -47,6 +47,11 @@ void Screen::destroyManagedOverlayEntities() {
 
 void Screen::exit() {
     destroyManagedEntities();
+
+    if (overlayManager) {
+        overlayManager->clearAllOverlays();
+    }
+
     destroyManagedOverlayEntities();
 
     swapToScreenName.clear();

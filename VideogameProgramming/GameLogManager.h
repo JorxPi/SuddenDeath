@@ -12,6 +12,7 @@ class GameLogManager {
 public:
     void AddMessage(const std::string& text, glm::vec3 color);
     void RenderLog(class TextRenderer* textRenderer, float x, float y, float scale);
+    void ClearMessages();
 
 private:
     std::vector<LogMessage> messages;

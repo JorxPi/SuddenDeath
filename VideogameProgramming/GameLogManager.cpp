@@ -20,3 +20,7 @@ void GameLogManager::RenderLog(TextRenderer* textRenderer, float x, float y, flo
         yOffset += lineSpacing;
     }
 }
+
+void GameLogManager::ClearMessages() {
+    messages.clear();
+}

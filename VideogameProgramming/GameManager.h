@@ -93,6 +93,12 @@ public:
 	void checkGameEnd();
 	void endGame(int winningPlayer);
 
+	//RESET GAME
+	void resetGame();
+	void clearInvocationSelectionList();
+	void clearCellList();
+	void clearInvocationList();
+
 	//COIN FLIPS
 	bool playerHasInvocations(int playerID);
 	int getConsecutiveTails(int player);
