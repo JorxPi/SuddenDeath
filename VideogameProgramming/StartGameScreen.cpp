@@ -110,7 +110,7 @@ void StartGameScreen::enter() {
 }
 
 void StartGameScreen::exit() {
-	// Antes de destruir la pantalla, limpiamos la lista de celdas del GameManager:
+	// Antes de destruir la pantalla, limpiamos la listas del GameManager
 	if (auto gm = entityManager->getGameManagerRef()) {
 		gm->clearInvocationList();
 		gm->clearCellList();
@@ -191,7 +191,6 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 
 	std::shuffle(invocations.begin(), invocations.end(), g);
 
-	// Fill with DummyPassive for now
 	std::vector<std::unique_ptr<PassiveAbility>> passives;
 
 	// La primera es passiveNine

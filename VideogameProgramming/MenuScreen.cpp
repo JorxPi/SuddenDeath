@@ -30,10 +30,10 @@ void MenuScreen::enter() {
 	auto buttonPlay = entityManager->createEntity(
 		glm::vec2(900.f, 400.f), 0.f, 1.f,
 		"Textures/MenuDecor3.png", glm::vec3(1.f),
-		true,                  // con script
+		true,                  
 		glm::vec2(1.0F, 1.0F),
-		"default",             // sprite shader
-		"ButtonScript"         // Script
+		"default",             
+		"ButtonScript"         
 	);	
 	ECS::Entity* buttonPlayEntity = buttonPlay.first;
 
@@ -43,7 +43,6 @@ void MenuScreen::enter() {
 	ButtonScript* buttonPlay_script = dynamic_cast<ButtonScript*>(generic_script);
 	if (buttonPlay_script) {
 		buttonPlay_script->setOnClickAction([&]() {
-			// Cuando pulsen este botón, pedimos cambiar a “StartGame”
 			std::cout << "[MenuScreen] Click en Play llama a requestScreenSwap(\"StartGame\")\n";
 
 			requestScreenSwap("StartGame");
