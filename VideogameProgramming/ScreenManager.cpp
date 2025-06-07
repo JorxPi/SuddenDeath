@@ -29,9 +29,14 @@ void ScreenManager::switchToScreen(std::string name) {
     }
 }
 
-void ScreenManager::activateOverlay(bool state) {
-    if (overlayManager) {
-        overlayManager->activate(state);
+void ScreenManager::activateOverlay(const std::string& groupName, bool show) {
+    if (!overlayManager) return;
+
+    if (show) {
+        overlayManager->showOverlayGroup(groupName);
+    }
+    else {
+        overlayManager->hideOverlayGroup(groupName);
     }
 }
 

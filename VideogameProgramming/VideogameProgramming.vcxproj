@@ -291,13 +291,19 @@
     <Image Include="Textures\att5.png" />
     <Image Include="Textures\att6.png" />
     <Image Include="Textures\BlueHP.png" />
+    <Image Include="Textures\BlueScoreOverlay.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Image>
     <Image Include="Textures\blue_back.png" />
-    <Image Include="Textures\coin.png" />
+    <Image Include="Textures\coin.png">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Image>
     <Image Include="Textures\coin_heads.png" />
     <Image Include="Textures\coin_tails.png" />
     <Image Include="Textures\GameBack.png" />
     <Image Include="Textures\GoodHighlight.png" />
     <Image Include="Textures\GreenHP.png" />
+    <Image Include="Textures\GreenScoreOverlay.png" />
     <Image Include="Textures\green_back.png" />
     <Image Include="Textures\Health1.png" />
     <Image Include="Textures\Health2.png" />
@@ -330,8 +336,15 @@
     <Image Include="Textures\neutral_back2.png" />
     <Image Include="Textures\ovalo_normal.png" />
     <Image Include="Textures\OverlayBlanket.png" />
+    <Image Include="Textures\OverlayInvocButton.png" />
+    <Image Include="Textures\OverlayLogBlanket.png" />
+    <Image Include="Textures\OverlayLogButton.png" />
+    <Image Include="Textures\OverlayScoreBlueButton.png" />
+    <Image Include="Textures\OverlayScoreGreenButton.png" />
+    <Image Include="Textures\OverlayScoreRedButton.png" />
     <Image Include="Textures\puntero_ruleta.png" />
     <Image Include="Textures\RedHP.png" />
+    <Image Include="Textures\RedScoreOverlay.png" />
     <Image Include="Textures\red_back.png" />
     <Image Include="Textures\resalto_ovalo.png" />
     <Image Include="Textures\Ruleta_1.png" />

@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "CellConstants.h"
+#include "StartGameScreen.h"
 #include <list>
 
 
@@ -841,7 +842,7 @@ void GameManager::resetGame() {
     }
 
     if (screenManagerRef && screenManagerRef->getOverlayManager()) {
-        screenManagerRef->getOverlayManager()->lockSelection(false);
+        screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, false);
     }
 
     // Borrar listas de scripts y entidades de la partida anterior
@@ -1135,7 +1136,8 @@ void GameManager::addInvocationSelectionScriptToList(InvocationSelectionScript* 
 
 
 void GameManager::startInvocationSelection() {
-    screenManagerRef->activateOverlay(true);
+    screenManagerRef->activateOverlay(INVOCATIONS_OVERLAY, true);
+    screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, false);
     //activate(false);
     for (auto* script : invocCardListRef) {
         if (isInvocationOnBoard(script->getSpriteFilepath())) {
@@ -1148,7 +1150,8 @@ void GameManager::startInvocationSelection() {
 }
 
 void GameManager::endInvocationSelection() {
-    screenManagerRef->activateOverlay(false);
+    screenManagerRef->activateOverlay(INVOCATIONS_OVERLAY, false);
+    screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, true);
     //activate(true);
 }
 
@@ -1400,6 +1403,10 @@ InvocationSelectionScript* GameManager::getHoveredInvocation(){
 
 bool GameManager::getAllInvocsMoved() {
     return allInvocsMoved;
+}
+
+bool GameManager::getIsSelectingInvocation() {
+    return selectingInvocation;
 }
 
 

@@ -1,10 +1,8 @@
 #include "InvocationSelectionScript.h"
+#include "StartGameScreen.h"
 
 void InvocationSelectionScript::tickScript(float deltaTime) {
-	if (!overlayManager || overlayManager->isSelectionLocked()) {
-		return;  // Ignore interactions if selection is locked
-	}
-
+	// 1) Always do hover logic, regardless of lock
 	ComponentHandle<Transform> transform = entity->get<Transform>();
 	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
 
@@ -26,7 +24,7 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 
 	if (isHovering) {
 		if (gameManager->isAnyInvocationHovered() && gameManager->getHoveredInvocation() != this) {
-			return;  
+			return;
 		}
 
 		if (!isHovered) {
@@ -37,7 +35,12 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 	}
 	else if (isHovered) {
 		isHovered = false;
-		gameManager->clearHoveredInvocation(this); 
+		gameManager->clearHoveredInvocation(this);
+	}
+
+	// 2) Only process clicks if not locked
+	if (overlayManager && overlayManager->isSelectionLocked(INVOCATIONS_OVERLAY)) {
+		return;  // allow hover, but skip below
 	}
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && isHovering) {
@@ -45,14 +48,14 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 			std::cout << "This invocation is already on the board!" << std::endl;
 			return;
 		}
-
 		if (!discovered) {
 			setInvocAsociatedVisible();
 		}
-
 		card_selected = true;
 		setUnavailable(true);
-		overlayManager->lockSelection(true);
+
+		// Once the player chooses one card, lock further clicks
+		overlayManager->lockSelection(INVOCATIONS_OVERLAY, true);
 
 		if (gameManager) {
 			gameManager->setHoverText("");

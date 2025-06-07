@@ -145,12 +145,37 @@ void EntityManager::destroyEntity(ECS::Entity* entity) {
 			});
 	}
 
-	// 3) Desregistrar de la pantalla activa (si correspondiese)
+	if (screenManagerRef) {
+		OverlayManager* om = screenManagerRef->getOverlayManager();
+		if (om) {
+			om->removeEntityFromAllGroups(entity);
+		}
+	}
+
+	// 3) Now inform the current Screen so that its internal bookkeeping
+	//    (the managedOverlayEntities vector of (groupName, ent) pairs) is cleaned up too.
+	if (screenManagerRef) {
+		Screen* s = screenManagerRef->getCurrentScreen();
+		if (s) {
+			// Each Screen knows exactly which groupName each entity was registered under,
+			// so we can iterate over that stored list and unregister each pair.
+			// However, we do not have direct access here to s->managedOverlayEntities,
+			// so we’ll rely on s->unregisterOverlayEntity(...) being called once per groupName.
+			//
+			// We can either:
+			//  A) Add a Screen method `unregisterFromAllGroups(entity)` that itself
+			//     loops over each (groupName, ent) pair in managedOverlayEntities and calls
+			//     unregisterOverlayEntity(groupName, ent), or
+			//  B) Expose a public getter of managedOverlayEntities. We’ll show option (A) here:
+			s->unregisterOverlayEntityFromAllGroups(entity);
+		}
+	}
+
+	// 4) Also call the generic “unregisterEntity” so that any non?overlay registration is cleaned:
 	if (screenManagerRef) {
 		Screen* s = screenManagerRef->getCurrentScreen();
 		if (s) {
 			s->unregisterEntity(entity);
-			s->unregisterOverlayEntity(entity);
 		}
 	}
 

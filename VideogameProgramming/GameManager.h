@@ -154,6 +154,7 @@ public:
 	int getInvocationIndex(InvocationScript* invocation);
 	InvocationSelectionScript* getHoveredInvocation(); 
 	bool getAllInvocsMoved();
+	bool getIsSelectingInvocation();
 
 	//SETTERS
 	void setTextRenderer(TextRenderer* textRenderer);

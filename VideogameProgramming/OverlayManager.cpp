@@ -1,96 +1,158 @@
 #include "OverlayManager.h"
+#include "StartGameScreen.h"
 
 OverlayManager::OverlayManager(EntityManager* entityManager)
     :entityManager(entityManager) {}
 
 void OverlayManager::update(float deltaTime) {
-    if (!entering && !exiting) return;
-
     auto now = std::chrono::steady_clock::now();
-    float elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - transitionStartTime).count() / 1000.0f;
+    for (auto& kv : groups) {
+        const std::string& name = kv.first;
+        OverlayGroup& group = kv.second;
 
-    float t = std::min(elapsed / transitionDuration, 1.0f); // Clamp t to [0, 1]
+        if (!group.entering && !group.exiting)
+            continue;
 
-    for (int i = 0; i < overlayEntities.size(); i++) {
-        ComponentHandle<Transform> transform = overlayEntities[i]->get<Transform>();
-        transform->position.x = transform->lPos.x + t * (transform->tPos.x - transform->lPos.x);
-    }
+        bool wasEntering = group.entering;
+        bool wasExiting = group.exiting;
 
-    if (t >= 1.0f) {
-        entering = false;
-        exiting = false;
+        float elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - group.transitionStartTime)
+            .count() / 1000.0f;
+        float t = std::min(elapsed / transitionDuration, 1.0f);
+
+        applyTransition(name, t);
+
+        if (t >= 1.0f) {
+            if (wasEntering) {
+                group.active = true;
+            }
+
+            group.entering = false;
+            group.exiting = false;
+        }
     }
 }
 
-void OverlayManager::enter() {
-    //Move entities inside the screen
-
-    for (int i = 0; i < overlayEntities.size(); i++) {
-        ComponentHandle<Transform> transform = overlayEntities[i]->get<Transform>();
-        transform->lPos = transform->position;
-        transform->tPos = glm::vec2(transform->position.x - 1500, transform->position.y);
+void OverlayManager::addOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
+    if (groups.find(groupName) == groups.end()) {
+        groups[groupName] = OverlayGroup{};
     }
-
-    entering = true;
-    exiting = false;
-    transitionStartTime = std::chrono::steady_clock::now();
-    active = true;
+    groups[groupName].entities.push_back(entity);
 }
 
-void OverlayManager::exit() {
-    // Move entities outside screen
+void OverlayManager::removeOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return;
+    OverlayGroup& group = it->second;
+    auto& vec = group.entities;
+    vec.erase(std::remove(vec.begin(), vec.end(), entity), vec.end());
+}
 
-    for (int i = 0; i < overlayEntities.size(); i++) {
-        ComponentHandle<Transform> transform = overlayEntities[i]->get<Transform>();
-        transform->lPos = transform->position;
-        transform->tPos = glm::vec2(transform->position.x + 1500, transform->position.y);
+void OverlayManager::showOverlayGroup(const std::string& groupName) {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return;
+    auto& group = it->second;
+    if (group.active || group.entering) return;
+
+    group.entering = true;
+    group.exiting = false;
+    group.active = false;
+    group.transitionStartTime = std::chrono::steady_clock::now();
+
+    glm::vec2 offset;
+    if (groupName == INVOCATIONS_OVERLAY) {
+        offset = glm::vec2(-1020.f, 0.f);
     }
-
-    entering = false;
-    exiting = true;
-    transitionStartTime = std::chrono::steady_clock::now();
-    active = false;
-}
-
-void OverlayManager::addOverlayEntity(ECS::Entity* entity) {
-    overlayEntities.push_back(entity);
-}
-
-void OverlayManager::activate(bool state) {
-    if (state) {
-        enter();
-        lockSelection(false);
+    else if (groupName == SCORE_BLUE_OVERLAY ||
+        groupName == SCORE_RED_OVERLAY ||
+        groupName == SCORE_GREEN_OVERLAY) {
+        offset = glm::vec2(0.f, +300.f);
     }
     else {
-        exit();
+        offset = glm::vec2(+1020.f, 0.f);
+    }
+
+    for (auto* e : group.entities) {
+        auto t = e->get<Transform>();
+        t->lPos = t->position;           // start where it is now (off-screen)
+        t->tPos = t->position + offset;  
     }
 }
 
-void OverlayManager::removeOverlayEntity(ECS::Entity* entity) {
-    auto it = std::remove(overlayEntities.begin(), overlayEntities.end(), entity);
-    if (it != overlayEntities.end()) {
-        overlayEntities.erase(it, overlayEntities.end());
+void OverlayManager::hideOverlayGroup(const std::string& groupName) {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return;
+    auto& group = it->second;
+    if (!group.active || group.exiting) return;
+
+    group.exiting = true;
+    group.entering = false;
+    group.active = false;
+    group.transitionStartTime = std::chrono::steady_clock::now();
+
+    glm::vec2 offset;
+    if (groupName == INVOCATIONS_OVERLAY) {
+        offset = glm::vec2(-1020.f, 0.f);
+    }
+    else if (groupName == SCORE_BLUE_OVERLAY ||
+        groupName == SCORE_RED_OVERLAY ||
+        groupName == SCORE_GREEN_OVERLAY) {
+        offset = glm::vec2(0.f, +300.f);
+    }
+    else {
+        offset = glm::vec2(+1020.f, 0.f);
+    }
+
+    for (auto* e : group.entities) {
+        auto t = e->get<Transform>();
+        t->lPos = t->position;            // start on-screen
+        t->tPos = t->position - offset;   // move off-screen again
     }
 }
 
-bool OverlayManager::isActive() const {
-    return active;
+void OverlayManager::toggleOverlayGroup(const std::string& groupName) {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return;
+
+    OverlayGroup& group = it->second;
+
+    if (group.entering || group.exiting) {
+        return;
+    }
+
+    if (group.active) {
+        hideOverlayGroup(groupName);
+    }
+    else {
+        showOverlayGroup(groupName);
+    }
 }
 
-void OverlayManager::lockSelection(bool status) {
-    selectionLocked = status;
+void OverlayManager::applyTransition(const std::string& name, float t) {
+    auto& group = groups[name];
+    for (ECS::Entity* e : group.entities) {
+        auto tf = e->get<Transform>();
+        tf->position.x = tf->lPos.x + t * (tf->tPos.x - tf->lPos.x);
+        tf->position.y = tf->lPos.y + t * (tf->tPos.y - tf->lPos.y);
+    }
 }
 
-bool OverlayManager::isSelectionLocked() {
-    return selectionLocked;
+void OverlayManager::lockSelection(const std::string& groupName, bool status) {
+    if (groups.find(groupName) == groups.end()) return;
+    groups[groupName].selectionLocked = status;
 }
 
+bool OverlayManager::isSelectionLocked(const std::string& groupName) const {
+    auto it = groups.find(groupName);
+    return (it == groups.end()) ? false : it->second.selectionLocked;
+}
 
 // SCORE
 
 
 void OverlayManager::addScoreEntity(int playerId, ECS::Entity* entity) {
-    scoreEntities[playerId].emplace_back(entity, false); // Add entity with `false` visibility
+    scoreEntities[playerId].emplace_back(entity, false); 
 }
 
 void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
@@ -99,7 +161,6 @@ void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
         return;
     }
 
-    // Para el vector de pares (Entity*, bool), eliminamos el par cuya primera == entity
     auto& vec = mapIt->second;
     vec.erase(std::remove_if(
         vec.begin(),
@@ -109,29 +170,23 @@ void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
         }),
         vec.end());
 
-    // Si tras eliminarlo la lista de ese jugador queda vacía, podemos borrar la clave completa (opcional)
     if (vec.empty()) {
         scoreEntities.erase(mapIt);
     }
 }
 
-void OverlayManager::activateScoreOverlay(bool state) {
-    for (auto& playerEntry : scoreEntities) { // Loop through all players
-        for (auto& point : playerEntry.second) { // Loop through each player's points
-            auto sprite = point.first->get<Sprite>();
-            if (sprite) {
-                sprite->visible = (state && (playerEntry.first == -1 || point.second)); // Show if `state` is true and `point.second` is true
-
-            }
-        }
-    }
-}
-
 void OverlayManager::updateScoreVisibility(int playerId, int score) {
-    if (scoreEntities.find(playerId) != scoreEntities.end()) {
-        auto& playerPoints = scoreEntities[playerId];
-        for (int i = 0; i < playerPoints.size(); i++) {
-            playerPoints[i].second = (i < score); // Set `true` for points within the score
+    auto it = scoreEntities.find(playerId);
+    if (it == scoreEntities.end()) return;
+
+    auto& playerPoints = it->second;
+    for (int i = 0; i < (int)playerPoints.size(); i++) {
+        bool visible = (i < score);
+        playerPoints[i].second = visible;  // update your internal flag
+
+        // now actually show/hide the sprite
+        if (auto sprite = playerPoints[i].first->get<Sprite>()) {
+            sprite->visible = visible;
         }
     }
 }
@@ -141,15 +196,15 @@ EntityManager* OverlayManager::getEntityManager() {
 }
 
 void OverlayManager::clearAllOverlays() {
-    // Destruye cada entidad registrada en overlayEntities
-    for (ECS::Entity* e : overlayEntities) {
-        if (e) {
-            entityManager->destroyEntity(e);
+    for (auto& kv : groups) {
+        for (ECS::Entity* e : kv.second.entities) {
+            if (e) {
+                entityManager->destroyEntity(e);
+            }
         }
     }
-    overlayEntities.clear();
+    groups.clear();
 
-    // Limpia también todos los scoreEntities
     for (auto& kv : scoreEntities) {
         for (auto& pairEnt : kv.second) {
             ECS::Entity* e = pairEnt.first;
@@ -159,4 +214,11 @@ void OverlayManager::clearAllOverlays() {
         }
     }
     scoreEntities.clear();
+}
+
+void OverlayManager::removeEntityFromAllGroups(ECS::Entity* ent) {
+    for (auto& kv : groups) {
+        const std::string& groupName = kv.first;
+        removeOverlayEntity(groupName, ent);
+    }
 }

@@ -34,8 +34,10 @@ public:
     void registerEntity(ECS::Entity* ent);
     void unregisterEntity(ECS::Entity* ent);
 
-    void registerOverlayEntity(ECS::Entity* ent);
-    void unregisterOverlayEntity(ECS::Entity* ent);
+    void registerOverlayEntity(const std::string& groupName, ECS::Entity* ent);
+    void unregisterOverlayEntity(const std::string& groupName, ECS::Entity* ent);
+
+    void unregisterOverlayEntityFromAllGroups(ECS::Entity* ent);
 
 protected:
     EntityManager* entityManager;
@@ -46,7 +48,7 @@ protected:
 
     void destroyManagedEntities();
 
-    std::vector<ECS::Entity*> managedOverlayEntities;
+    std::vector<std::pair<std::string, ECS::Entity*>> managedOverlayEntities;
 
     void destroyManagedOverlayEntities();
 

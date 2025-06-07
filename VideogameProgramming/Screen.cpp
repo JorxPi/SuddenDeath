@@ -14,20 +14,42 @@ void Screen::unregisterEntity(ECS::Entity* ent) {
     }
 }
 
-void Screen::registerOverlayEntity(ECS::Entity* ent) {
-    overlayManager->addOverlayEntity(ent);
-    auto it = std::find(managedOverlayEntities.begin(), managedOverlayEntities.end(), ent);
-    if (it == managedOverlayEntities.end()) {
-        managedOverlayEntities.push_back(ent);
-    }
+void Screen::registerOverlayEntity(const std::string& groupName, ECS::Entity* ent) {
+    overlayManager->addOverlayEntity(groupName, ent);
+    managedOverlayEntities.emplace_back(groupName, ent);
 }
 
-void Screen::unregisterOverlayEntity(ECS::Entity* ent) {
-    overlayManager->removeOverlayEntity(ent);
-    auto it = std::remove(managedOverlayEntities.begin(), managedOverlayEntities.end(), ent);
-    if (it != managedOverlayEntities.end()) {
-        managedOverlayEntities.erase(it, managedOverlayEntities.end());
+void Screen::unregisterOverlayEntity(const std::string& groupName, ECS::Entity* ent) {
+    overlayManager->removeOverlayEntity(groupName, ent);
+
+    managedOverlayEntities.erase(
+        std::remove_if(
+            managedOverlayEntities.begin(),
+            managedOverlayEntities.end(),
+            [&](auto& pair) {
+                return pair.first == groupName && pair.second == ent;
+            }),
+        managedOverlayEntities.end()
+    );
+}
+
+void Screen::unregisterOverlayEntityFromAllGroups(ECS::Entity* ent) {
+    for (auto& kv : managedOverlayEntities) {
+        const std::string& groupName = kv.first;
+        ECS::Entity* ePtr = kv.second;
+        if (ePtr == ent) {
+            overlayManager->removeOverlayEntity(groupName, ent);
+        }
     }
+    managedOverlayEntities.erase(
+        std::remove_if(
+            managedOverlayEntities.begin(),
+            managedOverlayEntities.end(),
+            [&](auto& pair) {
+                return pair.second == ent;
+            }),
+        managedOverlayEntities.end()
+    );
 }
 
 void Screen::destroyManagedEntities() {
@@ -38,9 +60,13 @@ void Screen::destroyManagedEntities() {
 }
 
 void Screen::destroyManagedOverlayEntities() {
-    for (auto e : managedOverlayEntities) {
-        overlayManager->removeOverlayEntity(e);
-        entityManager->destroyEntity(e);
+    for (auto& pair : managedOverlayEntities) {
+        const std::string& groupName = pair.first;
+        ECS::Entity* ent = pair.second;
+
+        overlayManager->removeOverlayEntity(groupName, ent);
+
+        entityManager->destroyEntity(ent);
     }
     managedOverlayEntities.clear();
 }

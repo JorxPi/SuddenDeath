@@ -19,7 +19,7 @@ public:
 
 	void addScreen(const std::string& name, Screen* screen);
 	void switchToScreen(std::string name);
-	void activateOverlay(bool state);
+	void activateOverlay(const std::string& groupName, bool show);
 
 	Screen* getCurrentScreen();
 
