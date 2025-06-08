@@ -53,6 +53,12 @@ struct Sprite
     glm::vec2 size = glm::vec2(1, 1);
     const char* shaderName;
     bool visible;
+
+    //Shader variables
+    float       ampScale = 0.00f;
+    float       ampAngle = 0.00f;
+    float       freq = 1.0f;
+    float       phase = 0.0f;
 };
 
 struct BoxCollider

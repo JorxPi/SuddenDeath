@@ -62,7 +62,7 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
 
     glm::vec2 offset;
     if (groupName == INVOCATIONS_OVERLAY) {
-        offset = glm::vec2(-1020.f, 0.f);
+        offset = glm::vec2(-820.f, 0.f);
     }
     else if (groupName == SCORE_BLUE_OVERLAY ||
         groupName == SCORE_RED_OVERLAY ||
@@ -70,7 +70,7 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
         offset = glm::vec2(0.f, +300.f);
     }
     else {
-        offset = glm::vec2(+1020.f, 0.f);
+        offset = glm::vec2(+820.f, 0.f);
     }
 
     for (auto* e : group.entities) {
@@ -93,7 +93,7 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
 
     glm::vec2 offset;
     if (groupName == INVOCATIONS_OVERLAY) {
-        offset = glm::vec2(-1020.f, 0.f);
+        offset = glm::vec2(-820.f, 0.f);
     }
     else if (groupName == SCORE_BLUE_OVERLAY ||
         groupName == SCORE_RED_OVERLAY ||
@@ -101,7 +101,7 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
         offset = glm::vec2(0.f, +300.f);
     }
     else {
-        offset = glm::vec2(+1020.f, 0.f);
+        offset = glm::vec2(+820.f, 0.f);
     }
 
     for (auto* e : group.entities) {

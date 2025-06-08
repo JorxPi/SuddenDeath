@@ -248,6 +248,12 @@
     <None Include="ruleta.vert">
       <Filter>Archivos de recursos\Shaders</Filter>
     </None>
+    <None Include="hover.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
+    <None Include="menu_motion.vert">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

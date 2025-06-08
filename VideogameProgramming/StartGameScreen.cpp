@@ -128,10 +128,10 @@ std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen
 	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> cardBacks;
 
 	glm::vec2 positions[] = {
-		glm::vec2(1320.f, 275.f), glm::vec2(1470.f, 275.f), glm::vec2(1620.f, 275.f),
-		glm::vec2(1770.f, 275.f), glm::vec2(1920.f, 275.f), glm::vec2(2070.f, 275.f),
-		glm::vec2(1320.f, 525.f), glm::vec2(1470.f, 525.f), glm::vec2(1620.f, 525.f),
-		glm::vec2(1770.f, 525.f), glm::vec2(1920.f, 525.f), glm::vec2(2070.f, 525.f)
+		glm::vec2(1290.f, 300.f), glm::vec2(1420.f, 300.f), glm::vec2(1550.f, 300.f),
+		glm::vec2(1680.f, 300.f), glm::vec2(1810.f, 300.f), glm::vec2(1940.f, 300.f),
+		glm::vec2(1290.f, 500.f), glm::vec2(1420.f, 500.f), glm::vec2(1550.f, 500.f),
+		glm::vec2(1680.f, 500.f), glm::vec2(1810.f, 500.f), glm::vec2(1940.f, 500.f)
 	};
 
 	int numPositions = sizeof(positions) / sizeof(positions[0]);
@@ -140,13 +140,13 @@ std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen
 		auto result = entityManager->createEntity(
 			positions[i], 0.f, 1.f,
 			"Textures/neutral_back1.png", glm::vec3(1.f),
-			false, glm::vec2(119.f, 159.f),
+			false, glm::vec2(107.f, 143.f),
 			"default", "InvocationSelectionScript"
 		);
 		ECS::Entity* cardBack = result.first;
 
 		InvocationSelectionScript* script = dynamic_cast<InvocationSelectionScript*>(result.second);
-		cardBack->assign<BoxCollider>(119.f, 159.f);
+		cardBack->assign<BoxCollider>(107.f, 143.f);
 		cardBack->get<Transform>()->layer = 10;
 		registerOverlayEntity(INVOCATIONS_OVERLAY, cardBack);
 
@@ -154,7 +154,7 @@ std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> StartGameScreen
 		ECS::Entity* overlay = entityManager->createEntityWithoutScript(
 			positions[i], 0.f, 1.f,
 			"Textures/InvNotAv.png", glm::vec3(1.f),
-			false, glm::vec2(119.f, 159.f)
+			false, glm::vec2(107.f, 143.f)
 		);
 		overlay->get<Sprite>()->visible = false;
 		overlay->get<Transform>()->layer = 11;
@@ -237,8 +237,8 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 	invocationPool.clear();
 	for (size_t i = 0; i < invocations.size() && i < passives.size(); i++) {
 		InvocationWithPassiveData data;
-		data.filepath = invocations[i]->get<Sprite>()->filepath; // Assign filepath
-		data.passive = std::move(passives[i]);                   // Move passive ownership
+		data.filepath = invocations[i]->get<Sprite>()->filepath; 
+		data.passive = std::move(passives[i]);                  
 		invocationPool.push_back(std::move(data));
 	}
 
@@ -255,90 +255,6 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 		entityManager->settingCardsSelectionList(script);
 	}
 }
-
-/*void StartGameScreen::setupOverlayScreen() {
-	if (auto gm = entityManager->getGameManagerRef()) {
-		gm->clearInvocationSelectionList();
-	}
-
-	ECS::Entity* blanket = entityManager->createEntityWithoutScript(
-		glm::vec2(2200.f, 400.f), 0.f, 1.f,
-		"Textures/OverlayBlanket.png", glm::vec3(1.f)
-	);
-	blanket->get<Transform>()->layer = 10;
-
-	registerOverlayEntity(blanket);
-
-	auto cardBacks = setupCardBacks();
-	auto invocations = setupInvocations();
-	randomizeInvocations(cardBacks, invocations);
-
-	//overlayManager->addOverlayEntity(blanket);
-	for (int i = 0; i < cardBacks.size(); i++) {
-		InvocationSelectionScript* script = cardBacks[i].second;
-		if (script) {
-			ECS::Entity* overlay = script->getUnavailableOverlay();
-			if (overlay) {
-				registerOverlayEntity(overlay);
-			}
-			script->setOverlayManager(overlayManager);
-		}
-	}
-	for (int i = 0; i < invocations.size(); i++) {
-		registerOverlayEntity(invocations[i]);
-	}
-}*/
-
-/*void StartGameScreen::setupScoreScreen() {
-	ECS::Entity* scoreBackground = entityManager->createEntityWithoutScript(
-		glm::vec2(600.f, 400.f), 0.f, 1.f,
-		"Textures/ScoreTab.png", glm::vec3(1.f)
-	);
-	scoreBackground->get<Sprite>()->visible = false;
-	scoreBackground->get<Transform>()->layer = 20;
-
-	registerOverlayEntity(scoreBackground);
-	overlayManager->addScoreEntity(-1, scoreBackground);
-
-
-	glm::vec2 playerColumnStartPositions[] = {
-		glm::vec2(459.f, 241.f),
-		glm::vec2(578.f, 241.f),
-		glm::vec2(697.f, 241.f)
-	};
-
-	const int numRows = 20;
-	const int numColumns = 3;
-	const float verticalSpacing = 20.5f;
-	const float horizontalSpacing = 23.f;
-
-	for (int playerIndex = 0; playerIndex < 3; playerIndex++) {
-		glm::vec2 startPos = playerColumnStartPositions[playerIndex];
-
-		for (int row = 0; row < numRows; row++) {
-			for (int col = 0; col < numColumns; col++) {
-				glm::vec2 position = glm::vec2(
-					startPos.x + (col * horizontalSpacing), // X position
-					startPos.y + (row * verticalSpacing) // Adjust Y position
-				);
-
-
-				ECS::Entity* playerPoint = entityManager->createEntityWithoutScript(
-					position, 0.f, 1.f,
-					"Textures/SuddenPoint.png", glm::vec3(1.f)
-				);
-				playerPoint->get<Sprite>()->visible = false; // Initially invisible
-				playerPoint->get<Transform>()->layer = 21;   // Above the background layer
-
-				registerOverlayEntity(playerPoint);
-				// Add it to the overlay manager under the correct player ID
-				overlayManager->addScoreEntity(playerIndex + 1, playerPoint); // Player ID: 1, 2, 3
-			}
-		}
-	}
-}*/
-
-
 
 void StartGameScreen::createToggleButtons() {
 	{
@@ -433,8 +349,8 @@ void StartGameScreen::setupInvocationsOverlay() {
 
 	// 1) Blanket semitransparente
 	ECS::Entity* blanket = entityManager->createEntityWithoutScript(
-		glm::vec2(1720.f, 400.f), 0.f, 1.f,
-		"Textures/OverlayBlanket.png", glm::vec3(1.f)
+		glm::vec2(1620.f, 400.f), 0.f, 1.f,
+		"Textures/OverlayBlanket.png", glm::vec3(1.f), false, glm::vec2(835.f, 432.f)
 	);
 	blanket->get<Transform>()->layer = 10;
 	registerOverlayEntity(INVOCATIONS_OVERLAY, blanket);

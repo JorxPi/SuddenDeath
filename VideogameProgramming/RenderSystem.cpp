@@ -53,6 +53,29 @@ void RenderSystem::tick(World* world, float deltaTime)
                     std::cerr << rouletteData->atac1 << std::endl;
                 }
             }
+            else if (sprite->shaderName == "menu_motion") {
+                sr.DrawSprite(
+                    texture,
+                    projection,
+                    transform->getPosition(),
+                    texture.GetSize(), 
+                    transform->rotation,
+                    sprite->color,
+                    sprite->shaderName,
+
+                    // roulette params (use defaults: 0,0,any)
+                    0.0f,
+                    0.0f,
+                    glm::vec3(1, 0, 0),
+                    glm::vec3(0, 1, 0),
+
+                    //  motion params 
+                    sprite->ampScale,
+                    sprite->ampAngle,
+                    sprite->freq,
+                    sprite->phase
+                );
+            }
             else {
                 if (sprite->autoSize) {
                     sr.DrawSprite(texture, projection, transform->getPosition(), texture.GetSize(), transform->rotation, sprite->color, sprite->shaderName);

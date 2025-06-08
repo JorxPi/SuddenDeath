@@ -19,8 +19,6 @@ public:
 	void enter() override;
 	void exit() override;
 
-	void setupOverlayScreen();
-	//void setupScoreScreen();
 	std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>> setupCardBacks();
 	std::vector<ECS::Entity*> setupInvocations();
 	void randomizeInvocations(std::vector<std::pair<ECS::Entity*, InvocationSelectionScript*>>& cardBacks, std::vector<ECS::Entity*>& invocations);

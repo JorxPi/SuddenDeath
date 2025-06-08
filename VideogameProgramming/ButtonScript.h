@@ -17,6 +17,7 @@ public:
 
 private:
     std::function<void()> onClickAction;
+    bool isHovered = false;
 
 
 };

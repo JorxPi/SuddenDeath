@@ -9,6 +9,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Components.h"
 
 using namespace std;
 
@@ -26,7 +27,11 @@ public:
         glm::vec3 color = glm::vec3(1.0f), std::string shaderName = "default",
         float atac1 = 0.0f, float atac2 = 0.0f,
         glm::vec3 ruletaColor1 = glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec3 ruletaColor2 = glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::vec3 ruletaColor2 = glm::vec3(0.0f, 1.0f, 0.0f), 
+        float ampScale = 0.0f,
+        float ampAngle = 0.0f,
+        float freq = 1.0f,
+        float phase = 0.0f);
 
     void Delete();
 private:
@@ -34,6 +39,8 @@ private:
     std::shared_ptr<Shader> shaderInverted;
     std::shared_ptr<Shader> shaderRepeating;
     std::shared_ptr<Shader> shaderRuleta;
+    std::shared_ptr<Shader> shaderHover;
+    std::shared_ptr<Shader> shaderMenuMotion;
     std::shared_ptr<VAO> vao;
     std::shared_ptr<VBO> vbo;
     std::shared_ptr<EBO> ebo;

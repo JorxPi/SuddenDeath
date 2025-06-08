@@ -27,6 +27,8 @@ void SpriteRenderer::Init()
     shaderInverted = std::make_shared<Shader>("default.vert", "inverted.frag");
     shaderRepeating = std::make_shared<Shader>("default.vert", "repeating.frag");
     shaderRuleta = std::make_shared<Shader>("ruleta.vert", "ruleta.frag");
+    shaderHover = std::make_shared<Shader>("default.vert", "hover.frag");
+    shaderMenuMotion = std::make_shared<Shader>("menu_motion.vert", "default.frag");
 
     // Generates Vertex Array Object and binds it
     vao = std::make_shared<VAO>();
@@ -51,7 +53,11 @@ void SpriteRenderer::Init()
 void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 position,
     glm::vec2 size, float rotate, glm::vec3 color, std::string shaderName,
     float atac1, float atac2,
-    glm::vec3 ruletaColor1, glm::vec3 ruletaColor2)
+    glm::vec3 ruletaColor1, glm::vec3 ruletaColor2,
+    float ampScale,
+    float ampAngle,
+    float freq,
+    float phase)
 {
     std::shared_ptr<Shader> shader = shaderDefault;
     if (shaderName == "inverted") {
@@ -67,6 +73,18 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 posi
         shader->SetFloat("atac2", atac2);
         shader->SetVector3f("ruletaColor1", ruletaColor1);
         shader->SetVector3f("ruletaColor2", ruletaColor2);
+    }
+    if (shaderName == "hover") {
+        shader = shaderHover;
+    }
+    if (shaderName == "menu_motion") {
+        shader = shaderMenuMotion;
+        shader->Activate();
+        shader->SetFloat("t", t);            // your running time
+        shader->SetFloat("ampScale", ampScale);
+        shader->SetFloat("ampAngle", ampAngle);
+        shader->SetFloat("freq", freq);
+        shader->SetFloat("phase", phase);
     }
     
     // prepare transformations

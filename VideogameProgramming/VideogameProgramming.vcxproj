@@ -212,7 +212,9 @@
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="hover.frag" />
     <None Include="inverted.frag" />
+    <None Include="menu_motion.vert" />
     <None Include="repeating.frag" />
     <None Include="ruleta.frag" />
     <None Include="ruleta.vert" />

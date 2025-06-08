@@ -39,8 +39,8 @@ void GameManager::update(float deltaTime) {
         float centeredInstructionX = (screenWidth - instructionWidth) / 2.0f;
 
         textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
-        RenderAnnouncement(AnnouncementType::General);
-        RenderAnnouncement(AnnouncementType::PassiveTrigger);
+        //RenderAnnouncement(AnnouncementType::General);
+        //RenderAnnouncement(AnnouncementType::PassiveTrigger);
         RenderGameLog();
         RenderHoverText();
         RenderCoinProbabilityText();
@@ -51,8 +51,8 @@ void GameManager::update(float deltaTime) {
     }
 
     //Timer for the announcements
-    UpdateAnnouncement(AnnouncementType::General);
-    UpdateAnnouncement(AnnouncementType::PassiveTrigger);
+    //UpdateAnnouncement(AnnouncementType::General);
+    //UpdateAnnouncement(AnnouncementType::PassiveTrigger);
 
     if (gameEnded) {
         RenderGameOverMessage();
@@ -129,7 +129,7 @@ void GameManager::update(float deltaTime) {
 
         eliminateInvocation(losingIndex);
 
-        ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
+        //ShowAnnouncement("Player " + std::to_string(winnerPlayer) + " won the battle. " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
         LogPlayerScore(winnerPlayer, pointsAwarded, "winning a battle");
 
         battleing = false;
@@ -209,7 +209,7 @@ void GameManager::update(float deltaTime) {
 
                 // Normal coin flip resolution
                 if (headOrTails) {
-                    ShowAnnouncement("Heads! Spin the roulette to determine the attack.", 3.0f, AnnouncementType::General);
+                    //ShowAnnouncement("Heads! Spin the roulette to determine the attack.", 3.0f, AnnouncementType::General);
                     consecutiveTails[currentPlayerTurn] = 0;
 
                     spawnRuletaAttacks();
@@ -225,7 +225,7 @@ void GameManager::update(float deltaTime) {
                     checkGameEnd();
 
                     updateScoreVisibility(currentPlayerTurn);
-                    ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f, AnnouncementType::General);
+                    //ShowAnnouncement("Tails! Player " + std::to_string(currentPlayerTurn) + " scores 3 points and finishes its turn.", 3.0f, AnnouncementType::General);
                     LogPlayerScore(currentPlayerTurn, 3, "coin flippling tails");
                     changeTurnAndReset();   
                 }
@@ -240,7 +240,7 @@ void GameManager::update(float deltaTime) {
 
     //Attack Roulette has determined an attack, we are ready to choose invocation
     if (startInvocSelection && !selectingInvocation && ruletaAttacksDestroyed) {
-            ShowAnnouncement("Now select the invocation to summon.", 3.0f, AnnouncementType::General);
+            //ShowAnnouncement("Now select the invocation to summon.", 3.0f, AnnouncementType::General);
             startInvocationSelection();
             selectingInvocation = true;  
             startInvocSelection = false;
@@ -326,7 +326,7 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     invocScript->setRecentlySummoned(true);
     int pointsAwarded = awardInvocationPoints(invocScript);
 
-    ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
+    //ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
     LogPlayerScore(currentPlayerTurn, pointsAwarded, "invocation summoned");
 
     handlePassiveEvent<PassiveFive>(invocScript, [this, invocScript](PassiveFive* passiveFive) {
@@ -744,7 +744,7 @@ void GameManager::updateConquerableCells() {
     // Award points if applicable
     if (pointsAwarded > 0) {
         addPlayerPoints(currentPlayerTurn, pointsAwarded);
-        ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " + std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f, AnnouncementType::General);
+        //ShowAnnouncement("Player " + std::to_string(currentPlayerTurn) + " gained " + std::to_string(pointsAwarded) + " points from controlled triangles!", 3.0f, AnnouncementType::General);
         LogPlayerScore(currentPlayerTurn, pointsAwarded, "controlled triangles");
     }
 }
@@ -814,7 +814,7 @@ void GameManager::endGame(int winningPlayer) {
 
     // Display a "Game Over" announcement on screen.
     std::string message = "Game Over! Player " + std::to_string(winningPlayer) + " wins!";
-    ShowAnnouncement(message, 10.0f, AnnouncementType::General);
+    //ShowAnnouncement(message, 10.0f, AnnouncementType::General);
 
     entityManager->getButtonManagerRef()->moveGameOverButtonIn();
 }
@@ -860,9 +860,9 @@ void GameManager::resetGame() {
     // Reiniciar todos los flags de estado de la partida
     gameEnded = false;
     gameOverMessage.clear();
-    announcementText.clear();
+    //announcementText.clear();
     passiveTriggerText.clear();
-    announcementTimer = 0.0f;
+    //announcementTimer = 0.0f;
     passiveTriggerTimer = 0.0f;
 
     currentInstruction.clear();
@@ -1269,8 +1269,8 @@ void GameManager::RenderHoverText() {
     if (hoverText.empty() || !textRendererRef) return;
 
     float textWidth = textRendererRef->CalculateTextWidth("KOMTXTTI", hoverText, 0.5f);
-    float textX = screenWidth - textWidth - 20; 
-    float textY = screenHeight - 100; 
+    float textX = 620; 
+    float textY = 395; 
 
     textRendererRef->RenderText("KOMTXTTI", hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
