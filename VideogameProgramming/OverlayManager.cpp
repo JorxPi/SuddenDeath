@@ -69,6 +69,9 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
         groupName == SCORE_GREEN_OVERLAY) {
         offset = glm::vec2(0.f, +300.f);
     }
+    else if (groupName == INFO_OVERLAY) {
+        offset = glm::vec2(0.f, -145.f);
+    }
     else {
         offset = glm::vec2(+820.f, 0.f);
     }
@@ -99,6 +102,9 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
         groupName == SCORE_RED_OVERLAY ||
         groupName == SCORE_GREEN_OVERLAY) {
         offset = glm::vec2(0.f, +300.f);
+    }
+    else if (groupName == INFO_OVERLAY) {
+        offset = glm::vec2(0.f, -145.f);
     }
     else {
         offset = glm::vec2(+820.f, 0.f);

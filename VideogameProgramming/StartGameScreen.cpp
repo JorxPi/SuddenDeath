@@ -109,6 +109,8 @@ void StartGameScreen::enter() {
 	for (int playerId = 1; playerId <= 3; ++playerId) {
 		entityManager->getGameManagerRef()->updateScoreVisibility(playerId);
 	}
+
+	setupInfoOverlay();
 	//setupLogOverlay();
 
 }
@@ -320,6 +322,26 @@ void StartGameScreen::createToggleButtons() {
 				});
 		}
 	}
+
+	{
+		auto result = entityManager->createEntity(
+			glm::vec2(1030.f, 800.f), 0.f, 1.f,
+			"Textures/OverlayInvocButton.png", glm::vec3(1.f),
+			false, glm::vec2(56.f, 56.f),
+			"default", "ButtonScript"
+		);
+		buttonToggleInfo = result.first;
+		buttonToggleInfo->assign<BoxCollider>(64.f, 56.f, 1);
+
+		registerOverlayEntity(INFO_OVERLAY, buttonToggleInfo);
+
+		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
+		if (bs) {
+			bs->setOnClickAction([this]() {
+				overlayManager->toggleOverlayGroup(INFO_OVERLAY);
+				});
+		}
+	}
 	/*
 	// One button at left-center for the Game Log
 	{
@@ -432,6 +454,15 @@ void StartGameScreen::setupScoreOverlays() {
 			}
 		}
 	}
+}
+
+void StartGameScreen::setupInfoOverlay() {
+	ECS::Entity* infoPanel = entityManager->createEntityWithoutScript(
+		glm::vec2(1030.f, 872.5f), 0.f, 1.f,
+		"Textures/OverlayInfo.png", glm::vec3(1.f), false, glm::vec2(285.f, 145.f)
+	);
+	infoPanel->get<Transform>()->layer = 10;
+	registerOverlayEntity(INFO_OVERLAY, infoPanel);
 }
 
 /*void StartGameScreen::setupLogOverlay() {

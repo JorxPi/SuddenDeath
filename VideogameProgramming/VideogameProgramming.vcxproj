@@ -338,6 +338,7 @@
     <Image Include="Textures\neutral_back2.png" />
     <Image Include="Textures\ovalo_normal.png" />
     <Image Include="Textures\OverlayBlanket.png" />
+    <Image Include="Textures\OverlayInfo.png" />
     <Image Include="Textures\OverlayInvocButton.png" />
     <Image Include="Textures\OverlayLogBlanket.png" />
     <Image Include="Textures\OverlayLogButton.png" />

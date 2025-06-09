@@ -657,6 +657,9 @@
     <Image Include="Textures\RedScoreOverlay.png">
       <Filter>Archivos de recursos\Textures</Filter>
     </Image>
+    <Image Include="Textures\OverlayInfo.png">
+      <Filter>Archivos de recursos\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\OpenSans.ttf">
