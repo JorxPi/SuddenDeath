@@ -44,22 +44,52 @@ ECS::Entity* EntityManager::createEntityWithoutScript(glm::vec2 position, float 
 	return entity;
 }
 
-void EntityManager::createInvocation(glm::vec2 position, int coliderId, int attack, const char* text_back, const char* text_inv, const char* text_att, int playerOwner) {
+ECS::Entity* EntityManager::createTextLabelEntity(glm::vec2 position, float rotation, float scale, const std::string& text, const std::string& font, glm::vec3 color) {
+	ECS::Entity* entity = world->create();
+	entity->assign<Transform>(position, rotation, scale);
+	entity->assign<TextLabel>(text, font, color);
+
+	if (screenManagerRef) {
+		Screen* s = screenManagerRef->getCurrentScreen();
+		if (s) {
+			s->registerEntity(entity);
+		}
+	}
+
+	return entity;
+}
+
+void EntityManager::createInvocation(glm::vec2 position, int coliderId, int attack, const char* text_back, const char* text_inv, const char* text_att, int playerOwner, TextRenderer* tr) {
 	glm::vec2 defaultSize(61.f, 92.f);
 	glm::vec2 invocSize = defaultSize;
+	std::string displayName =  "";
 
+	const InvocationData* invData = nullptr;
 	for (int i = 0; i < Invocations::numInvocations; ++i) {
 		if (strcmp(Invocations::data[i].texturePath, text_inv) == 0) {
-			invocSize = Invocations::data[i].size;
+			invData = &Invocations::data[i];
 			break;
 		}
 	}
 
+	if (invData) {
+		invocSize = invData->size;
+		displayName = invData->name;
+	}
 
 	ECS::Entity* spawn_card = createEntityWithoutScript(glm::vec2(0.f, 15.f), 0.f, 1.f, text_back, glm::vec3(1., 1., 1.), false, glm::vec2(119., 159.));
 
-	auto result_gobobo = createEntity(position, 0.f, 1.f, text_inv, glm::vec3(1., 1., 1.), false, invocSize, "default", "InvocationScript");
+	auto result_gobobo = createEntity(position, 0.f, 1.f, text_inv, glm::vec3(1., 1., 1.), false, invocSize, "menu_motion", "InvocationScript");
 	ECS::Entity* spawn_gobobo = result_gobobo.first;
+
+	if (invData) {
+		auto sprite = spawn_gobobo->get<Sprite>();
+		sprite->ampScale = invData->idle.ampScale;
+		sprite->ampAngle = invData->idle.ampAngle;
+		sprite->freq = invData->idle.freq;
+		sprite->phase = invData->idle.phase;
+	}
+
 	Script* generic_script = result_gobobo.second;
 
 	InvocationScript* invoc_script = dynamic_cast<InvocationScript*>(generic_script);
@@ -82,11 +112,27 @@ void EntityManager::createInvocation(glm::vec2 position, int coliderId, int atta
 
 	spawn_card->get<Transform>()->assignParent(&spawn_gobobo->get<Transform>().get());
 	att->get<Transform>()->assignParent(&spawn_gobobo->get<Transform>().get());
+
+	if (!displayName.empty()) {
+		auto* labelEnt = createTextLabelEntity(
+			glm::vec2(0.f, - 42.f),
+			0.f,
+			0.35f,           // aquí va a Transform::scale
+			displayName,
+			"ActionMan",
+			glm::vec3(0.f)   // negro
+		);
+
+		// Parentamos la etiqueta para heredar transform
+		labelEnt->get<Transform>()->assignParent(&spawn_gobobo->get<Transform>().get());
+
+		labelEnt->get<Transform>()->layer = 5;
+	}
 }
 
-void EntityManager::createInvocationWithPassive(glm::vec2 position, int coliderId, int attack, const char* text_back, const char* text_inv, const char* text_att, int playerOwner, PassiveAbility* passive) {
+void EntityManager::createInvocationWithPassive(glm::vec2 position, int coliderId, int attack, const char* text_back, const char* text_inv, const char* text_att, int playerOwner, PassiveAbility* passive, TextRenderer* tr) {
 	// Use the existing createInvocation logic
-	createInvocation(position, coliderId, attack, text_back, text_inv, text_att, playerOwner);
+	createInvocation(position, coliderId, attack, text_back, text_inv, text_att, playerOwner, tr);
 
 	// Get the last created invocation script (assuming the last script added to the list is the current one)
 	if (!gameManagerRef || gameManagerRef->getInvocationScripts().empty()) {

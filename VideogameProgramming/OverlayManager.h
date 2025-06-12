@@ -25,6 +25,8 @@ public:
     // Toggle visibility: if shown, hide; if hidden, show
     void toggleOverlayGroup(const std::string& groupName);
 
+    glm::vec2 getOverlayOffset(const std::string& groupName) const;
+
     // Register a new entity into a specific overlay group.
     // It will be positioned offscreen initially (based on your logic) and moved in when showOverlayGroup is called.
     void addOverlayEntity(const std::string& groupName, ECS::Entity* entity);

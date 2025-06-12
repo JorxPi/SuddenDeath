@@ -9,23 +9,15 @@ void PassiveNine::Activate(GameManager* gameManager, InvocationScript* invocatio
 void PassiveNine::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
     if (!gameManager || !invocation) return;
 
-    // Increment combat wins for the invocation
-    combatWins++;
+    int playerOwner = invocation->getPlayerOwner();
 
-    // Check if the invocation has won 2 combats
-    if (combatWins == 2) {
-        int playerOwner = invocation->getPlayerOwner();
+    // Award 3 sudden points to the player
+    gameManager->addPlayerPoints(playerOwner, 2);
+    std::cout << "Player " << playerOwner << " gained 2 sudden points from PassiveNine!" << std::endl;
 
-        // Award 3 sudden points to the player
-        gameManager->addPlayerPoints(playerOwner, 3);
-        std::cout << "Player " << playerOwner << " gained 3 sudden points from PassiveNine!" << std::endl;
+    AnnouncePassiveUsage(gameManager, invocation);
 
-        AnnouncePassiveUsage(gameManager, invocation);
-
-        Reveal();
-
-        combatWins = 0;
-    }
+    Reveal();
 }
 
 void PassiveNine::OnInvocationDeath() {

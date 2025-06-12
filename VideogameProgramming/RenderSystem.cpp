@@ -12,78 +12,93 @@ double prevTime = glfwGetTime();
 
 void RenderSystem::tick(World* world, float deltaTime)
 {
+    // 1) Actualizamos el tiempo y pasamos a SpriteRenderer
     t += glfwGetTime() - prevTime;
     prevTime = glfwGetTime();
-
     sr.SetTime(t);
 
-    std::vector<std::pair<Entity*, int>> entities; // Store entity and its creation order
+    // 2) Recogemos todas las entidades con Sprite y con TextLabel
+    std::vector<std::pair<Entity*, int>> entities;
     static int creationOrderCounter = 0;
 
     world->each<Sprite>([&](Entity* ent, ComponentHandle<Sprite> sprite) {
-        entities.push_back(std::make_pair(ent, creationOrderCounter++));
+        entities.emplace_back(ent, creationOrderCounter++);
+        });
+    world->each<TextLabel>([&](Entity* ent, ComponentHandle<TextLabel> label) {
+        entities.emplace_back(ent, creationOrderCounter++);
         });
 
-    // Sort entities by layer and then by creation order
-    std::sort(entities.begin(), entities.end(), [](const std::pair<Entity*, int>& a, const std::pair<Entity*, int>& b) {
-        auto aLayer = a.first->get<Transform>()->layer;
-        auto bLayer = b.first->get<Transform>()->layer;
-
-        if (aLayer == bLayer) {
-            return a.second < b.second; // Sort by creation order within the same layer
-        }
-
-        return aLayer < bLayer;
+    // 3) Ordenamos por layer y luego por orden de creación
+    std::sort(entities.begin(), entities.end(),
+        [&](auto& a, auto& b) {
+            int la = a.first->get<Transform>()->layer;
+            int lb = b.first->get<Transform>()->layer;
+            if (la != lb) return la < lb;
+            return a.second < b.second;
         });
 
-    for (const auto& pair : entities) {
-        Entity* ent = pair.first;
-        ComponentHandle<Sprite> sprite = ent->get<Sprite>();
-        ComponentHandle<Transform> transform = ent->get<Transform>();
+    // 4) Recorremos e intercalamos sprites y texto
+    for (auto& pr : entities) {
+        Entity* ent = pr.first;
+        auto   transformC = ent->get<Transform>();          // ComponentHandle<Transform>
+        glm::vec2 pos = transformC->getPosition();
 
-        Texture texture = textureManager.GetTexture(sprite->filepath);
+        // —— Sprites ——
+        if (ent->has<Sprite>()) {
+            auto spr = ent->get<Sprite>();
+            if (!spr->visible) continue;
+            Texture tx = textureManager.GetTexture(spr->filepath);
 
-        if (sprite->visible) {
-            if (sprite->shaderName == "ruleta") {
-                auto rouletteData = ent->get<RouletteData>();
-                if (rouletteData) {
-                    sr.DrawSprite(texture, projection, transform->getPosition(), texture.GetSize(), transform->rotation, sprite->color, sprite->shaderName, rouletteData->atac1, rouletteData->atac2, rouletteData->color1, rouletteData->color2);
-                }
-                else {
-                    std::cerr << rouletteData->atac1 << std::endl;
+            if (spr->shaderName == "ruleta") {
+                auto rd = ent->get<RouletteData>();
+                if (rd) {
+                    sr.DrawSprite(tx, projection, pos, tx.GetSize(),
+                        transformC->rotation, spr->color,
+                        spr->shaderName,
+                        rd->atac1, rd->atac2,
+                        rd->color1, rd->color2);
                 }
             }
-            else if (sprite->shaderName == "menu_motion") {
-                sr.DrawSprite(
-                    texture,
-                    projection,
-                    transform->getPosition(),
-                    texture.GetSize(), 
-                    transform->rotation,
-                    sprite->color,
-                    sprite->shaderName,
-
-                    // roulette params (use defaults: 0,0,any)
-                    0.0f,
-                    0.0f,
-                    glm::vec3(1, 0, 0),
-                    glm::vec3(0, 1, 0),
-
-                    //  motion params 
-                    sprite->ampScale,
-                    sprite->ampAngle,
-                    sprite->freq,
-                    sprite->phase
-                );
+            else if (spr->shaderName == "menu_motion") {
+                glm::vec2 size = spr->autoSize ? tx.GetSize() : spr->size;
+                sr.DrawSprite(tx, projection, pos, size,
+                    transformC->rotation, spr->color,
+                    spr->shaderName,
+                    0, 0, glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
+                    spr->ampScale, spr->ampAngle,
+                    spr->freq, spr->phase);
             }
             else {
-                if (sprite->autoSize) {
-                    sr.DrawSprite(texture, projection, transform->getPosition(), texture.GetSize(), transform->rotation, sprite->color, sprite->shaderName);
-                }
-                else {
-                    sr.DrawSprite(texture, projection, transform->getPosition(), sprite->size, transform->rotation, sprite->color, sprite->shaderName);
-                }
+                glm::vec2 size = spr->autoSize ? tx.GetSize() : spr->size;
+                sr.DrawSprite(tx, projection, pos, size,
+                    transformC->rotation, spr->color,
+                    spr->shaderName);
             }
+            continue;
+        }
+
+        // —— TextLabels ——
+        if (ent->has<TextLabel>()) {
+            auto lbl = ent->get<TextLabel>();
+            float textScale = transformC->scale;
+            // centrar X    
+            float w = textRendererRef->CalculateTextWidth(
+                lbl->fontName, lbl->text, textScale);
+            float x_text = pos.x - w * 0.5f;
+            // convertir Y a sistema TextRenderer (0 abajo)
+            float y_text = 800 - pos.y;
+            textRendererRef->RenderText(
+                lbl->fontName,
+                lbl->text,
+                x_text,
+                y_text,
+                textScale,
+                lbl->color
+            );
         }
     }
+}
+
+void RenderSystem::setTextRendererRef(TextRenderer* tr) {
+    textRendererRef = tr;
 }

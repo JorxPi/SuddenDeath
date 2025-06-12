@@ -54,6 +54,7 @@ float t = 0;
 time_t current_time;
 
 World* world;
+RenderSystem* renderSystem;
 GameManager* gameManager;
 ButtonManager* buttonManager;
 EntityManager* entityManager;
@@ -142,7 +143,8 @@ void SetupRealWorld() {
 
 	world = World::createWorld();
 
-	world->registerSystem(new RenderSystem(width, height));
+	renderSystem = new RenderSystem(width, height);
+	world->registerSystem(renderSystem);
 
 	ScriptSystem* scriptSystem = new ScriptSystem();
 	world->registerSystem(scriptSystem);
@@ -161,6 +163,8 @@ void SetupRealWorld() {
 	textRenderer->LoadFont("Libraries/fonts/Super Squad.ttf", 48, "SuperSquad");
 	textRenderer->LoadFont("Libraries/fonts/Action Man.ttf", 48, "ActionMan");
 	textRenderer->LoadFont("Libraries/fonts/KOMTXTTI.ttf", 48, "KOMTXTTI");
+
+	renderSystem->setTextRendererRef(textRenderer);
 
 	gameManager->setTextRenderer(textRenderer);
 	gameManager->setButtonManagerRef(buttonManager);

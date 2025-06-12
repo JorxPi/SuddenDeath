@@ -9,25 +9,19 @@ void PassiveTen::Activate(GameManager* gameManager, InvocationScript* invocation
 void PassiveTen::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
     if (!gameManager) return;
 
-    // Increment combat win count
-    combatWins++;
+    std::cout << "PassiveTen: Invocation won a combat, All rival players lose 1 sudden point." << std::endl;
 
-    std::cout << "PassiveTen: Invocation won a combat. Current wins: " << combatWins << std::endl;
-
-    if (combatWins >= 1) {
-        std::cout << "PassiveTen: Invocation won 3 combats, All rival players lose 3 sudden points." << std::endl;
-
-        // Deduct 3 points from all rival players
-        for (int i = 1; i <= 3; i++) {
-            if (i != invocation->getPlayerOwner()) { 
-                gameManager->addPlayerPoints(i, -3);
-            }
+    // Deduct 1 points from all rival players
+    for (int i = 1; i <= 3; i++) {
+        if (i != invocation->getPlayerOwner()) { 
+            gameManager->addPlayerPoints(i, -1);
         }
-
-        AnnouncePassiveUsage(gameManager, invocation);
-
-        Reveal();
     }
+
+    AnnouncePassiveUsage(gameManager, invocation);
+
+    Reveal();
+    
 }
 
 void PassiveTen::OnInvocationDeath() {

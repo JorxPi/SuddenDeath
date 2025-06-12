@@ -96,11 +96,6 @@ void StartGameScreen::enter() {
 
 	entityManager->getButtonManagerRef()->setGameOverButtonRef(buttonGameOverScript);
 
-	//
-	//setupOverlayScreen();
-	//setupScoreScreen();
-	//
-
 	createToggleButtons();
 
 	setupInvocationsOverlay();
@@ -111,7 +106,7 @@ void StartGameScreen::enter() {
 	}
 
 	setupInfoOverlay();
-	//setupLogOverlay();
+	setupLogOverlay();
 
 }
 
@@ -269,6 +264,7 @@ void StartGameScreen::createToggleButtons() {
 		buttonToggleInvocations = result.first;
 		buttonToggleInvocations->assign<BoxCollider>(64.f, 64.f, 1);
 
+		buttonToggleInvocations->get<Transform>()->layer = 10;
 		registerOverlayEntity(INVOCATIONS_OVERLAY, buttonToggleInvocations);
 
 		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
@@ -331,8 +327,9 @@ void StartGameScreen::createToggleButtons() {
 			"default", "ButtonScript"
 		);
 		buttonToggleInfo = result.first;
-		buttonToggleInfo->assign<BoxCollider>(64.f, 56.f, 1);
+		buttonToggleInfo->assign<BoxCollider>(56.f, 56.f, 1);
 
+		buttonToggleInfo->get<Transform>()->layer = 10;
 		registerOverlayEntity(INFO_OVERLAY, buttonToggleInfo);
 
 		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
@@ -342,26 +339,26 @@ void StartGameScreen::createToggleButtons() {
 				});
 		}
 	}
-	/*
-	// One button at left-center for the Game Log
+
 	{
 		auto result = entityManager->createEntity(
-			glm::vec2(50.f, 300.f), 0.f, 1.f,
-			"Textures/ButtonToggleLog.png", glm::vec3(1.f),
-			true, glm::vec2(48.f, 48.f),
+			glm::vec2(0.f, 720.f), 0.f, 1.f,
+			"Textures/OverlayLogButton.png", glm::vec3(1.f),
+			false, glm::vec2(56.f, 56.f),
 			"default", "ButtonScript"
 		);
 		buttonToggleLog = result.first;
-		registerEntity(buttonToggleLog);
+		buttonToggleLog->assign<BoxCollider>(56.f, 56.f, 1);
 
-		buttonToggleLog->assign<BoxCollider>(48.f, 48.f, 1);
+		registerOverlayEntity(LOG_OVERLAY, buttonToggleLog);
+
 		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
 		if (bs) {
 			bs->setOnClickAction([this]() {
 				overlayManager->toggleOverlayGroup(LOG_OVERLAY);
 				});
 		}
-	}*/
+	}
 }
 
 void StartGameScreen::setupInvocationsOverlay() {
@@ -465,28 +462,11 @@ void StartGameScreen::setupInfoOverlay() {
 	registerOverlayEntity(INFO_OVERLAY, infoPanel);
 }
 
-/*void StartGameScreen::setupLogOverlay() {
-	// Create a panel (or several text lines), all off?screen initially.
-	// We assume the GameLogManager draws text onto some container entity. 
-	// Here, we might create a large semi?transparent rectangle off?screen, etc.
-	ECS::Entity* logBg = entityManager->createEntityWithoutScript(
-		glm::vec2(100.f, 100.f) + glm::vec2(-1500.f, 0.f), // off?screen left
-		0.f, 1.f,
-		"Textures/LogPanel.png", glm::vec3(1.f)
+void StartGameScreen::setupLogOverlay() {
+	ECS::Entity* logBlanket = entityManager->createEntityWithoutScript(
+		glm::vec2(-230.f, 720.f), 0.f, 1.f,
+		"Textures/OverlayLogBlanket.png", glm::vec3(1.f), false, glm::vec2(460.f, 140.f)
 	);
-	logBg->get<Transform>()->layer = 15;
-	registerOverlayEntity(logBg);
-	overlayManager->addOverlayEntity(LOG_OVERLAY, logBg);
-
-	for (int i = 0; i < 6; ++i) {
-		ECS::Entity* logLine = entityManager->createEntityWithoutScript(
-			glm::vec2(120.f, 120.f + i * 20.f) + glm::vec2(-1500.f, 0.f),
-			0.f, 1.f,
-			"Textures/TransparentTextQuad.png", glm::vec3(1.f)
-		);
-		logLine->get<Transform>()->layer = 16;
-		registerOverlayEntity(logLine);
-		overlayManager->addOverlayEntity(LOG_OVERLAY, logLine);
-		// You would attach a small component to render each line of text via TextRenderer later.
-	}
-}*/
+	logBlanket->get<Transform>()->layer = 10;
+	registerOverlayEntity(LOG_OVERLAY, logBlanket);
+}

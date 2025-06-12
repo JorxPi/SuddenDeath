@@ -40,10 +40,10 @@ void GameManager::update(float deltaTime) {
 
         textRendererRef->RenderText("ActionMan", currentInstruction, centeredInstructionX, screenHeight - 30, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
         //RenderAnnouncement(AnnouncementType::General);
-        //RenderAnnouncement(AnnouncementType::PassiveTrigger);
+        RenderAnnouncement(AnnouncementType::PassiveTrigger);
         RenderGameLog();
         RenderHoverText();
-        RenderCoinProbabilityText();
+        //RenderCoinProbabilityText();
     }
 
     if (!isAnyInvocationHovered()) {
@@ -52,7 +52,7 @@ void GameManager::update(float deltaTime) {
 
     //Timer for the announcements
     //UpdateAnnouncement(AnnouncementType::General);
-    //UpdateAnnouncement(AnnouncementType::PassiveTrigger);
+    UpdateAnnouncement(AnnouncementType::PassiveTrigger);
 
     if (gameEnded) {
         RenderGameOverMessage();
@@ -176,7 +176,7 @@ void GameManager::update(float deltaTime) {
             if (elapsed.count() >= 3) {
                 bool headOrTails = coinScriptRef->getHeadOrTails();
                 entityManager->destroyEntity(coinEntRef);
-                setCoinProbabilityText("");
+                //setCoinProbabilityText("");
                 coinEntRef = nullptr;
                 coinScriptRef = nullptr;
 
@@ -305,15 +305,15 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     switch (currentPlayerTurn) {
     case 1:
         entityManager->createInvocationWithPassive(
-            glm::vec2(670.f, 110.f), 1, invocAttack, "Textures/blue_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive);
+            glm::vec2(670.f, 110.f), 1, invocAttack, "Textures/blue_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive, textRendererRef);
         break;
     case 2:
         entityManager->createInvocationWithPassive(
-            glm::vec2(950.f, 600.f), 2, invocAttack, "Textures/red_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive);
+            glm::vec2(950.f, 600.f), 2, invocAttack, "Textures/red_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive, textRendererRef);
         break;
     case 3:
         entityManager->createInvocationWithPassive(
-            glm::vec2(300.f, 570.f), 3, invocAttack, "Textures/green_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive);
+            glm::vec2(300.f, 570.f), 3, invocAttack, "Textures/green_back.png", filepath, returnAttackText(invocAttack), currentPlayerTurn, passive, textRendererRef);
         break;
     default:
         break;
@@ -528,7 +528,7 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
 
         spawnRuletaBatalla(color1, color2, atac1, atac2);
 
-        currentInstruction = "Battle between Invocations! Spin the roulette to determine the winner";
+        currentInstruction = "Battle between Invocations! Spin the roulette";
 
         ruletaBatallaSpawned = true;
         invocDestroyed = false;
@@ -798,7 +798,7 @@ void GameManager::checkGameEnd() {
     for (const auto& entry : playerScores) {
         int playerID = entry.first;
         int score = entry.second;
-        if (score >= 14) {
+        if (score >= 60) {
             // If game not already ended, end the game.
             if (!gameEnded) {
                 endGame(playerID);
@@ -867,7 +867,7 @@ void GameManager::resetGame() {
 
     currentInstruction.clear();
     hoverText.clear();
-    coinProbabilityText.clear();
+    //coinProbabilityText.clear();
 
     hoveredInvocationCount = 0;
     currentPlayerInvocationsListSetted = false;
@@ -971,44 +971,44 @@ void GameManager::resetConsecutiveTails(int player) {
 
 
 void GameManager::spawnCoin() {
-    auto result_coin = entityManager->createEntity(glm::vec2(1000.f, 170.f), 0.f, 1.f, "Textures/coin.png", glm::vec3(1., 1., 1.), true, glm::vec2(1.0F, 1.0F), "default", "CoinScript");
+    auto result_coin = entityManager->createEntity(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/coin.png", glm::vec3(1., 1., 1.), false, glm::vec2(208.f, 208.f), "default", "CoinScript");
     ECS::Entity* coin = result_coin.first;
 
     Script* generic_script = result_coin.second;
     CoinScript* coin_script = dynamic_cast<CoinScript*>(generic_script);
 
-    coin->assign<BoxCollider>(208.f, 208.f, currentPlayerTurn);
+    coin->assign<BoxCollider>(234.f, 234.f, currentPlayerTurn);
     setCoinRef(coin_script, coin);
     coin_script->setGameManagerRef(this);
 
     int summonChance = coin_script->calculateSummonProbability();
-    setCoinProbabilityText(std::to_string(summonChance) + "% chance of heads coin flip");
+    //setCoinProbabilityText(std::to_string(summonChance) + "% chance of heads coin flip");
 }
 
 void GameManager::spawnRuletaAttacks() {
-    auto result_ruleta = entityManager->createEntity(glm::vec2(1000.f, 170.f), 0.f, 1.f, "Textures/Ruleta_1.png", glm::vec3(1., 1., 1.), true, glm::vec2(1.0F, 1.0F), "default", "RuletaAttacks");
+    auto result_ruleta = entityManager->createEntity(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/Ruleta_1.png", glm::vec3(1., 1., 1.), false, glm::vec2(260.f, 272.f), "default", "RuletaAttacks");
     ECS::Entity* ruleta = result_ruleta.first;
 
     Script* generic_script = result_ruleta.second;
 
     RuletaAttacks* ruleta_script = dynamic_cast<RuletaAttacks*>(generic_script);
 
-    ruleta->assign<BoxCollider>(278.f, 290.f, currentPlayerTurn);
-    Entity* pointer_ruleta = entityManager->createEntityWithoutScript(glm::vec2(1000.f, 150.f), 0.f, 1.f, "Textures/puntero_ruleta.png", glm::vec3(1., 1., 1.));
+    ruleta->assign<BoxCollider>(260.f, 272.f, currentPlayerTurn);
+    Entity* pointer_ruleta = entityManager->createEntityWithoutScript(glm::vec2(170.f, 332.5f), 0.f, 1.f, "Textures/puntero_ruleta.png", glm::vec3(1., 1., 1.), false, glm::vec2(23.25f, 54.75f));
     setRuletaAttacksRef(ruleta_script, ruleta, pointer_ruleta);
 }
 
 void GameManager::spawnRuletaBatalla(glm::vec3 color1, glm::vec3 color2, float atac1, float atac2) {
-    auto result_ruleta = entityManager->createEntity(glm::vec2(1000.f, 170.f), 0.f, 1.f, "Textures/Ruleta_1.png", glm::vec3(1., 1., 1.), true, glm::vec2(1.0, 1.0), "ruleta", "RuletaBatalla");
+    auto result_ruleta = entityManager->createEntity(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/Ruleta_1.png", glm::vec3(1., 1., 1.), false, glm::vec2(260.f, 272.f), "ruleta", "RuletaBatalla");
     ECS::Entity* ruleta_batalla = result_ruleta.first;
 
     Script* generic_script = result_ruleta.second;
 
     RuletaBatalla* ruleta_batalla_script = dynamic_cast<RuletaBatalla*>(generic_script);
 
-    ruleta_batalla->assign<BoxCollider>(278.f, 290.f, currentPlayerTurn);
+    ruleta_batalla->assign<BoxCollider>(260.f, 272.f, currentPlayerTurn);
     ruleta_batalla->assign<RouletteData>(color1, color2, atac1, atac2);
-    Entity* pointer_ruleta = entityManager->createEntityWithoutScript(glm::vec2(1000.f, 150.f), 0.f, 1.f, "Textures/puntero_ruleta.png", glm::vec3(1., 1., 1.));
+    Entity* pointer_ruleta = entityManager->createEntityWithoutScript(glm::vec2(170.f, 332.5f), 0.f, 1.f, "Textures/puntero_ruleta.png", glm::vec3(1., 1., 1.), false, glm::vec2(23.25f, 54.75f));
     setRuletaBatallaRef(ruleta_batalla_script, ruleta_batalla, pointer_ruleta);
 }
 
@@ -1177,7 +1177,7 @@ void GameManager::RenderPlayerTurn() {
     switch (currentPlayerTurn) {
     case 1:
         playerText += "Blue";
-        playerColor = glm::vec3(0.0f, 0.0f, 1.0f); // Blue
+        playerColor = glm::vec3(0.3f, 0.5f, 1.0f); // Blue
         break;
     case 2:
         playerText += "Red";
@@ -1269,17 +1269,17 @@ void GameManager::RenderHoverText() {
     if (hoverText.empty() || !textRendererRef) return;
 
     float textWidth = textRendererRef->CalculateTextWidth("KOMTXTTI", hoverText, 0.5f);
-    float textX = 620; 
+    float textX = 800 - textWidth * 0.5f;
     float textY = 395; 
 
     textRendererRef->RenderText("KOMTXTTI", hoverText, textX, textY, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
-void GameManager::setCoinProbabilityText(const std::string& text) {
+/*void GameManager::setCoinProbabilityText(const std::string& text) {
     coinProbabilityText = text;
-}
+}*/
 
-void GameManager::RenderCoinProbabilityText() {
+/*void GameManager::RenderCoinProbabilityText() {
     if (!textRendererRef || coinProbabilityText.empty()) return;
 
     float textWidth = textRendererRef->CalculateTextWidth("KOMTXTTI", coinProbabilityText, 0.7f);
@@ -1287,7 +1287,7 @@ void GameManager::RenderCoinProbabilityText() {
     float textY = screenHeight - 50;  // Position above the coin
 
     textRendererRef->RenderText("KOMTXTTI", coinProbabilityText, centeredX, textY, 0.7f, glm::vec3(1.0f, 1.0f, 1.0f));
-}
+}*/
 
 void GameManager::RenderGameOverMessage() {
     if (!gameOverMessage.empty() && textRendererRef) {
@@ -1309,19 +1309,36 @@ void GameManager::RenderGameOverMessage() {
 void GameManager::LogPlayerScore(int player, int points, const std::string& reason) {
     std::string playerColorText;
     glm::vec3 playerColor;
-
     switch (player) {
-    case 1: playerColorText = "Blue";  playerColor = glm::vec3(0.3f, 0.5f, 1.0f); break;
-    case 2: playerColorText = "Red";   playerColor = glm::vec3(1.0f, 0.0f, 0.0f); break;
-    case 3: playerColorText = "Green"; playerColor = glm::vec3(0.0f, 1.0f, 0.0f); break;
-    default: playerColorText = "Unknown"; playerColor = glm::vec3(1.0f, 1.0f, 1.0f); break;
+    case 1:
+        playerColorText = "Blue";
+        playerColor = glm::vec3(0.3f, 0.5f, 1.0f);
+        break;
+    case 2:
+        playerColorText = "Red";
+        playerColor = glm::vec3(1.0f, 0.0f, 0.0f);
+        break;
+    case 3:
+        playerColorText = "Green";
+        playerColor = glm::vec3(0.0f, 1.0f, 0.0f);
+        break;
+    default:
+        playerColorText = "Unknown";
+        playerColor = glm::vec3(1.0f);
     }
 
-    std::string message = playerColorText + " player scored " + std::to_string(points) + " SP due to " + reason;
-    gameLogRef->AddMessage(message, playerColor);
+    std::vector<LogSegment> segs = {
+        { playerColorText + " ",            playerColor },
+        { "player scored ",                 glm::vec3(1.0f) },        // blanco
+        { std::to_string(points) + " SP",   glm::vec3(1.0f,1.0f,0.0f) },// amarillo
+        { " due to ",                       glm::vec3(1.0f) },        // blanco
+        { reason,                          glm::vec3(0.0f) }         // negro
+    };
+
+    gameLogRef->AddMessage(segs);
 }
 
-void GameManager::LogPassiveUsage(InvocationScript* invocation) {
+/*void GameManager::LogPassiveUsage(InvocationScript* invocation) {
     if (!invocation) return;
     PassiveAbility* passive = invocation->getPassiveAbility();
     if (!passive) return;
@@ -1339,14 +1356,23 @@ void GameManager::LogPassiveUsage(InvocationScript* invocation) {
 
     std::string message = playerColorText + " player invocation passive used: " + passive->GetDescription();
     gameLogRef->AddMessage(message, playerColor);
-}
+}*/
 
 void GameManager::RenderGameLog() {
-    float logX = 30.0f;   // Adjust to fit the red rectangle
-    float logY = 120.0f;  // Adjust to fit inside the UI
-    float logScale = 0.35f;  // Small font for fitting more text
+    float baseX = -440.0f;
+    float baseY = 125.0f;
+    float scale = 0.35f;
 
-    gameLogRef->RenderLog(textRendererRef, logX, logY, logScale);
+    // **Aquí** pedimos el offset al OverlayManager
+    glm::vec2 overlayOffset = screenManagerRef->getOverlayManager()->getOverlayOffset(LOG_OVERLAY);
+
+    // Aplicamos el offset al renderizado del texto
+    gameLogRef->RenderLog(
+        textRendererRef,
+        baseX + overlayOffset.x,
+        baseY + overlayOffset.y,
+        scale
+    );
 }
 
 

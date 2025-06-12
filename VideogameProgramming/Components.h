@@ -97,3 +97,16 @@ struct RouletteData {
     float atac1;
     float atac2;
 };
+
+struct TextLabel {
+    TextLabel(const std::string& _text,const std::string& _fontName, const glm::vec3& _color) {
+        this->text = _text;
+        this->fontName = _fontName;
+        this->color = _color;
+    }
+
+    std::string text;
+    std::string fontName;
+    glm::vec3   color;
+
+};

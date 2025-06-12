@@ -134,14 +134,14 @@ public:
 	void UpdateAnnouncement(AnnouncementType type);
 	void setHoverText(const std::string& text);
 	void RenderHoverText();
-	void setCoinProbabilityText(const std::string& text);
-	void RenderCoinProbabilityText();
+	//void setCoinProbabilityText(const std::string& text);
+	//void RenderCoinProbabilityText();
 	void RenderGameOverMessage();
 
 
 	//LOG
 	void LogPlayerScore(int player, int points, const std::string& reason);
-	void LogPassiveUsage(InvocationScript* invocation);
+	//void LogPassiveUsage(InvocationScript* invocation);
 	void RenderGameLog();
 
 	//GETTERS

@@ -72,6 +72,9 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
     else if (groupName == INFO_OVERLAY) {
         offset = glm::vec2(0.f, -145.f);
     }
+    else if (groupName == LOG_OVERLAY) {
+        offset = glm::vec2(+460.f, 0.f);
+    }
     else {
         offset = glm::vec2(+820.f, 0.f);
     }
@@ -106,6 +109,9 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
     else if (groupName == INFO_OVERLAY) {
         offset = glm::vec2(0.f, -145.f);
     }
+    else if (groupName == LOG_OVERLAY) {
+        offset = glm::vec2(+460.f, 0.f);
+    }
     else {
         offset = glm::vec2(+820.f, 0.f);
     }
@@ -133,6 +139,30 @@ void OverlayManager::toggleOverlayGroup(const std::string& groupName) {
     else {
         showOverlayGroup(groupName);
     }
+}
+
+glm::vec2 OverlayManager::getOverlayOffset(const std::string& groupName) const {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return glm::vec2(0.f);
+
+    const auto& group = it->second;
+    // Repite el cálculo de rawOffset tal cual lo haces en show/hide
+    glm::vec2 rawOffset;
+    if (groupName == LOG_OVERLAY)         rawOffset = glm::vec2(+460.f, 0.f);
+    else if (groupName == INVOCATIONS_OVERLAY) rawOffset = glm::vec2(-820.f, 0.f);
+    else if (groupName == INFO_OVERLAY)    rawOffset = glm::vec2(0.f, -145.f);
+    else /*otros*/                        rawOffset = glm::vec2(+820.f, 0.f);
+
+    // Suponiendo que tu transición dura `transitionDuration` segundos
+    float elapsed = std::chrono::duration<float>(
+        std::chrono::steady_clock::now() - group.transitionStartTime
+    ).count();
+    float t = glm::clamp(elapsed / transitionDuration, 0.f, 1.f);
+
+    if (group.entering)  return rawOffset * t;          
+    if (group.exiting)   return rawOffset * (1.f - t);  
+    if (group.active)    return rawOffset;              
+    return glm::vec2(0.f);
 }
 
 void OverlayManager::applyTransition(const std::string& name, float t) {

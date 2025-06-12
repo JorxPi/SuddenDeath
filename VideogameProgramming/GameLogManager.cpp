@@ -1,22 +1,22 @@
 #include "GameLogManager.h"
 #include "TextRenderer.h"
 
-void GameLogManager::AddMessage(const std::string& text, glm::vec3 color) {
-    // If the log is full, remove the oldest message
-    if (messages.size() >= maxMessages) {
+void GameLogManager::AddMessage(const std::vector<LogSegment>& segs) {
+    if (messages.size() >= maxMessages)
         messages.erase(messages.begin());
-    }
-
-    // Add new message
-    messages.push_back({ text, color });
+    messages.push_back({ segs });
 }
 
-void GameLogManager::RenderLog(TextRenderer* textRenderer, float x, float y, float scale) {
-    float lineSpacing = 20.0f;  // Spacing between lines
+void GameLogManager::RenderLog(TextRenderer* tr, float x, float y, float scale) {
+    float lineSpacing = 20.0f;
     float yOffset = 0.0f;
 
-    for (const auto& message : messages) {
-        textRenderer->RenderText("ActionMan", message.text, x, y - yOffset, scale, message.color);
+    for (const auto& msg : messages) {
+        float cursorX = x;
+        for (const auto& seg : msg.segments) {
+            tr->RenderText("ActionMan", seg.text, cursorX, y - yOffset, scale, seg.color);
+            cursorX += tr->CalculateTextWidth("ActionMan", seg.text, scale);
+        }
         yOffset += lineSpacing;
     }
 }
