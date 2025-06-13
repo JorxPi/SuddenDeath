@@ -22,20 +22,30 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 		}
 	}
 
-	if (isHovering) {
-		if (gameManager->isAnyInvocationHovered() && gameManager->getHoveredInvocation() != this) {
-			return;
-		}
+	bool transitioning = overlayManager && overlayManager->isOverlayGroupTransitioning(INVOCATIONS_OVERLAY);
 
-		if (!isHovered) {
-			isHovered = true;
-			gameManager->setHoveredInvocation(this);
-			updateHoverText();
+	if (!transitioning) {
+		if (isHovering) {
+			if (gameManager->isAnyInvocationHovered() && gameManager->getHoveredInvocation() != this) {
+				return;
+			}
+
+			if (!isHovered) {
+				isHovered = true;
+				gameManager->setHoveredInvocation(this);
+				updateHoverText();
+			}
+		}
+		else if (isHovered) {
+			isHovered = false;
+			gameManager->clearHoveredInvocation(this);
 		}
 	}
-	else if (isHovered) {
-		isHovered = false;
-		gameManager->clearHoveredInvocation(this);
+	else {
+		if (isHovered) {
+			isHovered = false;
+			gameManager->clearHoveredInvocation(this);
+		}
 	}
 
 	// 2) Only process clicks if not locked

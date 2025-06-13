@@ -12,6 +12,17 @@
 
 //GENERAL LOGIC
 
+void RuletaAttacks::tickScript(float deltaTime)
+{
+    Ruleta::tickScript(deltaTime);
+
+    if (!destroyedFlechas && isSpinning && flechasEnt) {
+        // destruyo la entidad de flechas
+        world->destroy(flechasEnt);
+        flechasEnt = nullptr;
+        destroyedFlechas = true;
+    }
+}
 
 
 void RuletaAttacks::tickCont() {
@@ -41,4 +52,8 @@ void RuletaAttacks::determineSpinResult(float finalRotation) {
 
 double RuletaAttacks::getSpinResult() {
     return spinResult;
+}
+
+void RuletaAttacks::setFlechasEntity(ECS::Entity* flechas) {
+    flechasEnt = flechas;
 }

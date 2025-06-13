@@ -41,6 +41,9 @@ private:
     std::shared_ptr<Shader> shaderRuleta;
     std::shared_ptr<Shader> shaderHover;
     std::shared_ptr<Shader> shaderMenuMotion;
+    std::shared_ptr<Shader> shaderReadyState;
+    std::shared_ptr<Shader> shaderHoverAndMove;
+    std::shared_ptr<Shader> shaderArrows;
     std::shared_ptr<VAO> vao;
     std::shared_ptr<VBO> vbo;
     std::shared_ptr<EBO> ebo;

@@ -971,8 +971,12 @@ void GameManager::resetConsecutiveTails(int player) {
 
 
 void GameManager::spawnCoin() {
-    auto result_coin = entityManager->createEntity(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/coin.png", glm::vec3(1., 1., 1.), false, glm::vec2(208.f, 208.f), "default", "CoinScript");
+    auto result_coin = entityManager->createEntity(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/coin.png", glm::vec3(1., 1., 1.), false, glm::vec2(208.f, 208.f), "ready_state", "CoinScript");
     ECS::Entity* coin = result_coin.first;
+
+    auto param = coin->get<Sprite>();              
+    param->ampScale = 0.03f;
+    param->freq = 0.5f;
 
     Script* generic_script = result_coin.second;
     CoinScript* coin_script = dynamic_cast<CoinScript*>(generic_script);
@@ -995,6 +999,13 @@ void GameManager::spawnRuletaAttacks() {
 
     ruleta->assign<BoxCollider>(260.f, 272.f, currentPlayerTurn);
     Entity* pointer_ruleta = entityManager->createEntityWithoutScript(glm::vec2(170.f, 332.5f), 0.f, 1.f, "Textures/puntero_ruleta.png", glm::vec3(1., 1., 1.), false, glm::vec2(23.25f, 54.75f));
+
+    Entity* flechas = entityManager->createEntityWithoutScript(glm::vec2(170.f, 350.f), 0.f, 1.f, "Textures/flechas_ruleta.png", glm::vec3(1., 1., 1.), true, glm::vec2(351.f, 351.f), "arrow");
+    auto param = flechas->get<Sprite>();
+    param->ampAngle = 1.2f;
+    param->freq = 0.5f;
+
+    ruleta_script->setFlechasEntity(flechas);
     setRuletaAttacksRef(ruleta_script, ruleta, pointer_ruleta);
 }
 

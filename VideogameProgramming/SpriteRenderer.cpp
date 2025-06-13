@@ -29,6 +29,9 @@ void SpriteRenderer::Init()
     shaderRuleta = std::make_shared<Shader>("ruleta.vert", "ruleta.frag");
     shaderHover = std::make_shared<Shader>("default.vert", "hover.frag");
     shaderMenuMotion = std::make_shared<Shader>("menu_motion.vert", "default.frag");
+    shaderReadyState = std::make_shared<Shader>("readystate.vert", "readystate.frag");
+    shaderHoverAndMove = std::make_shared<Shader>("readystate.vert", "hover.frag");
+    shaderArrows = std::make_shared<Shader>("arrow.vert", "default.frag");
 
     // Generates Vertex Array Object and binds it
     vao = std::make_shared<VAO>();
@@ -85,6 +88,28 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 posi
         shader->SetFloat("ampAngle", ampAngle);
         shader->SetFloat("freq", freq);
         shader->SetFloat("phase", phase);
+    }
+    if (shaderName == "ready_state") {
+        shader = shaderReadyState;
+        shader->Activate();
+        shader->SetFloat("t", t);
+        shader->SetFloat("pulseFreq", freq);            
+        shader->SetFloat("pulseAmp", ampScale);              
+        shader->SetVector3f("glowColor", glm::vec3(1, 1, 0)); 
+    }
+    if (shaderName == "hover_move") {
+        shader = shaderHoverAndMove;
+        shader->Activate();
+        shader->SetFloat("t", t);
+        shader->SetFloat("pulseFreq", freq);
+        shader->SetFloat("pulseAmp", ampScale);
+    }
+    if (shaderName == "arrow") {
+        shader = shaderArrows;
+        shader->Activate();
+        shader->SetFloat("t", t);
+        shader->SetFloat("amplitude", ampAngle);     // ángulo máx en radianes
+        shader->SetFloat("freq", freq);     // medio ciclo por segundo
     }
     
     // prepare transformations

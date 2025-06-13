@@ -47,33 +47,39 @@ void RenderSystem::tick(World* world, float deltaTime)
         if (ent->has<Sprite>()) {
             auto spr = ent->get<Sprite>();
             if (!spr->visible) continue;
-            Texture tx = textureManager.GetTexture(spr->filepath);
 
+            Texture tx = textureManager.GetTexture(spr->filepath);
+            glm::vec2 size = spr->autoSize ? tx.GetSize() : spr->size;
+
+            // prepara datos de ruleta (sólo válidos si shaderName=="ruleta")
+            float        atac1 = 0.0f, atac2 = 0.0f;
+            glm::vec3 color1(1.0f), color2(0.0f);
             if (spr->shaderName == "ruleta") {
                 auto rd = ent->get<RouletteData>();
                 if (rd) {
-                    sr.DrawSprite(tx, projection, pos, tx.GetSize(),
-                        transformC->rotation, spr->color,
-                        spr->shaderName,
-                        rd->atac1, rd->atac2,
-                        rd->color1, rd->color2);
+                    atac1 = rd->atac1;
+                    atac2 = rd->atac2;
+                    color1 = rd->color1;
+                    color2 = rd->color2;
                 }
             }
-            else if (spr->shaderName == "menu_motion") {
-                glm::vec2 size = spr->autoSize ? tx.GetSize() : spr->size;
-                sr.DrawSprite(tx, projection, pos, size,
-                    transformC->rotation, spr->color,
-                    spr->shaderName,
-                    0, 0, glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
-                    spr->ampScale, spr->ampAngle,
-                    spr->freq, spr->phase);
-            }
-            else {
-                glm::vec2 size = spr->autoSize ? tx.GetSize() : spr->size;
-                sr.DrawSprite(tx, projection, pos, size,
-                    transformC->rotation, spr->color,
-                    spr->shaderName);
-            }
+
+            sr.DrawSprite(
+                tx, projection,
+                pos, size,
+                transformC->rotation,
+                spr->color,
+                spr->shaderName,
+
+                atac1, atac2,
+                color1, color2,
+
+                spr->ampScale,
+                spr->ampAngle,
+                spr->freq,
+                spr->phase
+            );
+
             continue;
         }
 

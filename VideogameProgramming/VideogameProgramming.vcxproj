@@ -210,11 +210,14 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="arrow.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="hover.frag" />
     <None Include="inverted.frag" />
     <None Include="menu_motion.vert" />
+    <None Include="readystate.frag" />
+    <None Include="readystate.vert" />
     <None Include="repeating.frag" />
     <None Include="ruleta.frag" />
     <None Include="ruleta.vert" />
@@ -302,6 +305,7 @@
     </Image>
     <Image Include="Textures\coin_heads.png" />
     <Image Include="Textures\coin_tails.png" />
+    <Image Include="Textures\flechas_ruleta.png" />
     <Image Include="Textures\GameBack.png" />
     <Image Include="Textures\GoodHighlight.png" />
     <Image Include="Textures\GreenHP.png" />

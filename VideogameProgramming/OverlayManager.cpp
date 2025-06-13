@@ -184,6 +184,13 @@ bool OverlayManager::isSelectionLocked(const std::string& groupName) const {
     return (it == groups.end()) ? false : it->second.selectionLocked;
 }
 
+bool OverlayManager::isOverlayGroupTransitioning(const std::string& groupName) const {
+    auto it = groups.find(groupName);
+    if (it == groups.end()) return false;
+    const OverlayGroup& g = it->second;
+    return g.entering || g.exiting;
+}
+
 // SCORE
 
 

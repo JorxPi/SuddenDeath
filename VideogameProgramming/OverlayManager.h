@@ -37,6 +37,8 @@ public:
     void lockSelection(const std::string& groupName, bool status);
     bool isSelectionLocked(const std::string& groupName) const;
 
+    bool isOverlayGroupTransitioning(const std::string& groupName) const;
+
 
     void addScoreEntity(int playerId, ECS::Entity* entity); // Add score entities
     void removeScoreEntity(int playerId, ECS::Entity* entity);

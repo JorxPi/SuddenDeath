@@ -5,21 +5,33 @@ void CoinScript::tickScript(float deltaTime) {
 	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
 	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
 
-	if (!coinFlipped) {
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			double mouseX, mouseY;
-			glfwGetCursorPos(window, &mouseX, &mouseY);
+    if (coinFlipped) {
+        sprite->shaderName = "default";
+        return;
+    }
 
-			if (mouseX >= transform->position.x - collider->width / 2.0f && mouseX <= transform->position.x + collider->width / 2.0f &&
-				mouseY >= transform->position.y - collider->height / 2.0f && mouseY <= transform->position.y + collider->height / 2.0f) {
-				if (collider->colliderId == gameRef->getCurrentPlayerTurn()) {
+    double mouseX, mouseY;
+    glfwGetCursorPos(window, &mouseX, &mouseY);
 
-				coinFlipped = true;
-				coinFlip();
-				}
-			}
-		}
-	}
+    bool over =
+        mouseX >= transform->position.x - collider->width * 0.5f &&
+        mouseX <= transform->position.x + collider->width * 0.5f &&
+        mouseY >= transform->position.y - collider->height * 0.5f &&
+        mouseY <= transform->position.y + collider->height * 0.5f;
+
+    if (over) {
+        sprite->shaderName = "hover_move";
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
+            collider->colliderId == gameRef->getCurrentPlayerTurn())
+        {
+            coinFlipped = true;
+            coinFlip();
+        }
+    }
+    else {
+        sprite->shaderName = "ready_state";
+    }
 }
 
 
