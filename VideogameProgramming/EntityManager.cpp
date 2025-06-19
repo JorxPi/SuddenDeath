@@ -19,8 +19,8 @@ std::pair<ECS::Entity*, Script*> EntityManager::createEntity(glm::vec2 position,
 		entity->assign<ScriptComponent>(scriptManagerRef->AddScript(script));
 	}
 
-	if (screenManagerRef) {
-		Screen* s = screenManagerRef->getCurrentScreen();
+	if (screenSystemRef) {
+		Screen* s = screenSystemRef->getCurrentScreen();
 		if (s) {
 			s->registerEntity(entity);
 		}
@@ -34,8 +34,8 @@ ECS::Entity* EntityManager::createEntityWithoutScript(glm::vec2 position, float 
 	entity->assign<Transform>(position, rotation, scale);
 	entity->assign<Sprite>(filepath, color, autoSize, size, shaderName);
 
-	if (screenManagerRef) {
-		Screen* s = screenManagerRef->getCurrentScreen();
+	if (screenSystemRef) {
+		Screen* s = screenSystemRef->getCurrentScreen();
 		if (s) {
 			s->registerEntity(entity);
 		}
@@ -49,8 +49,8 @@ ECS::Entity* EntityManager::createTextLabelEntity(glm::vec2 position, float rota
 	entity->assign<Transform>(position, rotation, scale);
 	entity->assign<TextLabel>(text, font, color);
 
-	if (screenManagerRef) {
-		Screen* s = screenManagerRef->getCurrentScreen();
+	if (screenSystemRef) {
+		Screen* s = screenSystemRef->getCurrentScreen();
 		if (s) {
 			s->registerEntity(entity);
 		}
@@ -191,8 +191,8 @@ void EntityManager::destroyEntity(ECS::Entity* entity) {
 			});
 	}
 
-	if (screenManagerRef) {
-		OverlayManager* om = screenManagerRef->getOverlayManager();
+	if (screenSystemRef) {
+		OverlaySystem* om = screenSystemRef->getOverlaySystem();
 		if (om) {
 			om->removeEntityFromAllGroups(entity);
 		}
@@ -200,8 +200,8 @@ void EntityManager::destroyEntity(ECS::Entity* entity) {
 
 	// 3) Now inform the current Screen so that its internal bookkeeping
 	//    (the managedOverlayEntities vector of (groupName, ent) pairs) is cleaned up too.
-	if (screenManagerRef) {
-		Screen* s = screenManagerRef->getCurrentScreen();
+	if (screenSystemRef) {
+		Screen* s = screenSystemRef->getCurrentScreen();
 		if (s) {
 			// Each Screen knows exactly which groupName each entity was registered under,
 			// so we can iterate over that stored list and unregister each pair.
@@ -218,8 +218,8 @@ void EntityManager::destroyEntity(ECS::Entity* entity) {
 	}
 
 	// 4) Also call the generic “unregisterEntity” so that any non?overlay registration is cleaned:
-	if (screenManagerRef) {
-		Screen* s = screenManagerRef->getCurrentScreen();
+	if (screenSystemRef) {
+		Screen* s = screenSystemRef->getCurrentScreen();
 		if (s) {
 			s->unregisterEntity(entity);
 		}
@@ -230,11 +230,11 @@ void EntityManager::destroyEntity(ECS::Entity* entity) {
 }
 
 
-void EntityManager::setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr, ScreenManager* smrRef) {
+void EntityManager::setManagerRefs(GameManager* gmr, ButtonManager* bmr, ScriptManager* smr, ScreenSystem* smrRef) {
 	gameManagerRef = gmr;
 	buttonManagerRef = bmr;
 	scriptManagerRef = smr;
-	screenManagerRef = smrRef;
+	screenSystemRef = smrRef;
 
 }
 

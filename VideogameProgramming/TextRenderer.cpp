@@ -150,7 +150,6 @@ void TextRenderer::RenderText(const std::string& fontName, const std::string& te
 
         float xpos = x + ch.Bearing.x * scale;
         float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-
         float w = ch.Size.x * scale;
         float h = ch.Size.y * scale;
 

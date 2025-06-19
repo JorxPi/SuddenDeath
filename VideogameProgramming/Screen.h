@@ -4,23 +4,23 @@
 #include <vector>
 //#include "Script.h"
 #include "EntityManager.h"
-#include "OverlayManager.h"
+#include "OverlaySystem.h"
 
 //namespace ECS { class Entity; }
 
 class EntityManager;
 
-class ScreenManager;
+class ScreenSystem;
 
-class OverlayManager;
+class OverlaySystem;
 
 class Screen //: public Script
 {
     //using Script::Script;
 
 public:
-    Screen(EntityManager* entityManager, OverlayManager* overlayManager)
-        : entityManager(entityManager), overlayManager(overlayManager) {
+    Screen(EntityManager* entityManager, OverlaySystem* overlaySystem)
+        : entityManager(entityManager), overlaySystem(overlaySystem) {
     }
 
     virtual ~Screen() = default;
@@ -41,7 +41,7 @@ public:
 
 protected:
     EntityManager* entityManager;
-    OverlayManager* overlayManager;
+    OverlaySystem* overlaySystem;
 
 
     std::vector<ECS::Entity*> managedEntities;

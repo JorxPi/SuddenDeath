@@ -27,12 +27,12 @@
 #include "InvocationScript.h"
 #include "CellScript.h"
 #include "CellConstants.h"
-#include "ScreenManager.h"
+#include "ScreenSystem.h"
 #include "Screen.h"
 #include "MenuScreen.h"
 #include "StartGameScreen.h"
-#include "OverlayManager.h"
-#include "InputManager.h"
+#include "OverlaySystem.h"
+#include "InputSystem.h"
 #include "GameLogManager.h"
 
 
@@ -58,9 +58,9 @@ RenderSystem* renderSystem;
 GameManager* gameManager;
 ButtonManager* buttonManager;
 EntityManager* entityManager;
-ScreenManager* screenManager;
-OverlayManager* overlayManager;
-InputManager* inputManager;
+ScreenSystem* screenSystem;
+OverlaySystem* overlaySystem;
+InputSystem* inputSystem;
 TextRenderer* textRenderer;
 GameLogManager* gameLogManager;
 
@@ -153,9 +153,16 @@ void SetupRealWorld() {
 	entityManager = new EntityManager(window, world, scriptSystem);
 	buttonManager = new ButtonManager(window, world);
 	gameManager = new GameManager(window, world, entityManager);
-	overlayManager = new OverlayManager(entityManager);
-	screenManager = new ScreenManager(window, world);
-	inputManager = new InputManager(window, overlayManager);
+
+	overlaySystem = new OverlaySystem(entityManager);
+	world->registerSystem(overlaySystem);
+
+	screenSystem = new ScreenSystem(window, world);
+	world->registerSystem(screenSystem);
+
+	inputSystem = new InputSystem(window, overlaySystem);
+	world->registerSystem(inputSystem);
+
 	gameLogManager = new GameLogManager();
 	textRenderer = new TextRenderer(1200, 800);
 	textRenderer->LoadFont("Libraries/fonts/OpenSans.ttf", 48, "OpenSans");
@@ -168,15 +175,15 @@ void SetupRealWorld() {
 
 	gameManager->setTextRenderer(textRenderer);
 	gameManager->setButtonManagerRef(buttonManager);
-	gameManager->setScreenManagerRef(screenManager);
+	gameManager->setScreenSystemRef(screenSystem);
 	gameManager->setGameLogManager(gameLogManager);
-	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager, screenManager);
-	screenManager->setManagerRefs(gameManager, overlayManager);
+	entityManager->setManagerRefs(gameManager, buttonManager, scriptManager, screenSystem);
+	screenSystem->setManagerRefs(gameManager, overlaySystem);
 
-	screenManager->addScreen("Menu", new MenuScreen(entityManager, overlayManager));
-	screenManager->addScreen("StartGame", new StartGameScreen(entityManager, overlayManager));
+	screenSystem->addScreen("Menu", new MenuScreen(entityManager, overlaySystem));
+	screenSystem->addScreen("StartGame", new StartGameScreen(entityManager, overlaySystem));
 
-	screenManager->switchToScreen("Menu");
+	screenSystem->switchToScreen("Menu");
 
 	scriptSystem->start(world);
 }
@@ -215,15 +222,15 @@ int main() {
 			if (gameManager) {
 				gameManager->update(dt);
 			}	
-			if (screenManager) {
+			/*if (screenManager) {
 				screenManager->update(dt);
-			}
-			if (overlayManager) {
+			}*/
+			/*if (overlayManager) {
 				overlayManager->update(dt);
-			}
-			if (inputManager) {
+			}*/
+			/*if (inputManager) {
 				inputManager->update(dt);
-			}
+			}*/
 		}
 
 		glfwSwapBuffers(window); //Swap buffers

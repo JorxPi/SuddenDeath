@@ -750,8 +750,8 @@ void GameManager::updateConquerableCells() {
 }
 
 void GameManager::updateScoreVisibility(int playerScoring) {
-    if (screenManagerRef && screenManagerRef->getOverlayManager()) {
-        screenManagerRef->getOverlayManager()->updateScoreVisibility(playerScoring, playerScores[playerScoring]);
+    if (screenSystemRef && screenSystemRef->getOverlaySystem()) {
+        screenSystemRef->getOverlaySystem()->updateScoreVisibility(playerScoring, playerScores[playerScoring]);
     }
 }
 
@@ -841,8 +841,8 @@ void GameManager::resetGame() {
         }
     }
 
-    if (screenManagerRef && screenManagerRef->getOverlayManager()) {
-        screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, false);
+    if (screenSystemRef && screenSystemRef->getOverlaySystem()) {
+        screenSystemRef->getOverlaySystem()->lockSelection(INVOCATIONS_OVERLAY, false);
     }
 
     // Borrar listas de scripts y entidades de la partida anterior
@@ -1147,8 +1147,8 @@ void GameManager::addInvocationSelectionScriptToList(InvocationSelectionScript* 
 
 
 void GameManager::startInvocationSelection() {
-    screenManagerRef->activateOverlay(INVOCATIONS_OVERLAY, true);
-    screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, false);
+    screenSystemRef->activateOverlay(INVOCATIONS_OVERLAY, true);
+    screenSystemRef->getOverlaySystem()->lockSelection(INVOCATIONS_OVERLAY, false);
     //activate(false);
     for (auto* script : invocCardListRef) {
         if (isInvocationOnBoard(script->getSpriteFilepath())) {
@@ -1161,8 +1161,8 @@ void GameManager::startInvocationSelection() {
 }
 
 void GameManager::endInvocationSelection() {
-    screenManagerRef->activateOverlay(INVOCATIONS_OVERLAY, false);
-    screenManagerRef->getOverlayManager()->lockSelection(INVOCATIONS_OVERLAY, true);
+    screenSystemRef->activateOverlay(INVOCATIONS_OVERLAY, false);
+    screenSystemRef->getOverlaySystem()->lockSelection(INVOCATIONS_OVERLAY, true);
     //activate(true);
 }
 
@@ -1374,8 +1374,8 @@ void GameManager::RenderGameLog() {
     float baseY = 125.0f;
     float scale = 0.35f;
 
-    // **Aquí** pedimos el offset al OverlayManager
-    glm::vec2 overlayOffset = screenManagerRef->getOverlayManager()->getOverlayOffset(LOG_OVERLAY);
+    // **Aquí** pedimos el offset al OverlaySystem
+    glm::vec2 overlayOffset = screenSystemRef->getOverlaySystem()->getOverlayOffset(LOG_OVERLAY);
 
     // Aplicamos el offset al renderizado del texto
     gameLogRef->RenderLog(
@@ -1460,8 +1460,8 @@ void GameManager::setButtonManagerRef(ButtonManager* bmr) {
     buttonRef = bmr;
 }
 
-void GameManager::setScreenManagerRef(ScreenManager* smr) {
-    screenManagerRef = smr;
+void GameManager::setScreenSystemRef(ScreenSystem* smr) {
+    screenSystemRef = smr;
 }
 
 void GameManager::setRuletaAttacksRef(RuletaAttacks* rcr, Entity* rent, Entity* pointent) {

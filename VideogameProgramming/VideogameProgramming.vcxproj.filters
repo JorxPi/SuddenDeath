@@ -147,20 +147,11 @@
     <ClCompile Include="StartGameScreen.cpp">
       <Filter>Archivos de origen\Scripts\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenManager.cpp">
-      <Filter>Archivos de origen\Scripts\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="MenuScreen.cpp">
       <Filter>Archivos de origen\Scripts\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="OverlayManager.cpp">
-      <Filter>Archivos de origen\Scripts\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="InvocationSelectionScript.cpp">
       <Filter>Archivos de origen\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Archivos de origen\Scripts\Managers</Filter>
     </ClCompile>
     <ClCompile Include="PassiveOne.cpp">
       <Filter>Archivos de origen\Scripts\Passives</Filter>
@@ -227,6 +218,15 @@
     </ClCompile>
     <ClCompile Include="Screen.cpp">
       <Filter>Archivos de origen\Scripts\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenSystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlaySystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -349,20 +349,11 @@
     <ClInclude Include="ButtonConstants.h">
       <Filter>Archivos de encabezado\Scripts\Constants</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenManager.h">
-      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="OverlayManager.h">
-      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="InvocationSelectionScript.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="InvocationConstants.h">
       <Filter>Archivos de encabezado\Scripts\Constants</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Archivos de encabezado\Scripts\Managers</Filter>
     </ClInclude>
     <ClInclude Include="PassiveAbilities.h">
       <Filter>Archivos de encabezado\Scripts\Passives</Filter>
@@ -429,6 +420,15 @@
     </ClInclude>
     <ClInclude Include="GameLogManager.h">
       <Filter>Archivos de encabezado\Scripts\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenSystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlaySystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

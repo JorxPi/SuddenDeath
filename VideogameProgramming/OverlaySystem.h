@@ -10,11 +10,11 @@
 
 class EntityManager;
 
-class OverlayManager {
+class OverlaySystem : public ECS::EntitySystem {
 public:
-    OverlayManager(EntityManager* entityManager);
+    OverlaySystem(EntityManager* entityManager);
 
-    void update(float deltaTime);
+    virtual void tick(ECS::World* world, float dt) override;
 
     // Show a named overlay group (if it was hidden, animate it in)
     void showOverlayGroup(const std::string& groupName);
@@ -59,7 +59,7 @@ private:
         bool exiting = false;      // true if in the process of animating out
         bool selectionLocked = false; // if true, ignore input within this group
 
-        std::chrono::steady_clock::time_point transitionStartTime;
+        float elapsed = 0.0f; //Start Time
 
     };
 

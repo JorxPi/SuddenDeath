@@ -1,7 +1,7 @@
 #include "MenuScreen.h"
 
-MenuScreen::MenuScreen(EntityManager* entityManager, OverlayManager* overlayManager)
-	: Screen(entityManager, overlayManager) {
+MenuScreen::MenuScreen(EntityManager* entityManager, OverlaySystem* overlaySystem)
+	: Screen(entityManager, overlaySystem) {
 }
 
 void MenuScreen::enter() {

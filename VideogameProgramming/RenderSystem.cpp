@@ -17,7 +17,7 @@ void RenderSystem::tick(World* world, float deltaTime)
     prevTime = glfwGetTime();
     sr.SetTime(t);
 
-    // 2) Recogemos todas las entidades con Sprite y con TextLabel
+    // All Entities of the world are stored
     std::vector<std::pair<Entity*, int>> entities;
     static int creationOrderCounter = 0;
 
@@ -28,7 +28,7 @@ void RenderSystem::tick(World* world, float deltaTime)
         entities.emplace_back(ent, creationOrderCounter++);
         });
 
-    // 3) Ordenamos por layer y luego por orden de creación
+    // They are ordered by layer and after by cration order
     std::sort(entities.begin(), entities.end(),
         [&](auto& a, auto& b) {
             int la = a.first->get<Transform>()->layer;

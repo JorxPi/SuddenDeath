@@ -5,7 +5,7 @@
 class MenuScreen : public Screen 
 {
 public:
-	MenuScreen(EntityManager* entityManager, OverlayManager* overlayManager);
+	MenuScreen(EntityManager* entityManager, OverlaySystem* overlaySystem);
 
 	void enter() override;
 

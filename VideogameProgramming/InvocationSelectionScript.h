@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Script.h"
-#include "OverlayManager.h"
+#include "OverlaySystem.h"
 #include "PassiveAbilities.h"
 
-class OverlayManager;
+class OverlaySystem;
 
 class InvocationSelectionScript : public Script
 {
@@ -26,14 +26,14 @@ public:
     void setUnavailableOverlay(ECS::Entity* overlay);
     ECS::Entity* getUnavailableOverlay();
 
-    void setOverlayManager(OverlayManager* manager);
+    void setOverlaySystem(OverlaySystem* manager);
 
     void updateHoverText();
 
     void ResetForNewGame();
 
 private:
-    OverlayManager* overlayManager = nullptr;
+    OverlaySystem* overlaySystem = nullptr;
     GameManager* gameManagerRef = nullptr;
 
     Entity* invocAsociated;

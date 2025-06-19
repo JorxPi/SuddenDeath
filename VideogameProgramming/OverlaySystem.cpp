@@ -1,11 +1,11 @@
-#include "OverlayManager.h"
+#include "OverlaySystem.h"
 #include "StartGameScreen.h"
 
-OverlayManager::OverlayManager(EntityManager* entityManager)
+OverlaySystem::OverlaySystem(EntityManager* entityManager)
     :entityManager(entityManager) {}
 
-void OverlayManager::update(float deltaTime) {
-    auto now = std::chrono::steady_clock::now();
+void OverlaySystem::tick(ECS::World* world, float dtTicks) {
+    float dt = dtTicks / float(CLOCKS_PER_SEC);
     for (auto& kv : groups) {
         const std::string& name = kv.first;
         OverlayGroup& group = kv.second;
@@ -13,35 +13,34 @@ void OverlayManager::update(float deltaTime) {
         if (!group.entering && !group.exiting)
             continue;
 
-        bool wasEntering = group.entering;
-        bool wasExiting = group.exiting;
+        // 1) Accumulate delta-time
+        group.elapsed += dt;
 
-        float elapsed =
-            std::chrono::duration_cast<std::chrono::milliseconds>(now - group.transitionStartTime)
-            .count() / 1000.0f;
-        float t = std::min(elapsed / transitionDuration, 1.0f);
+        // 2) Compute normalized transition factor
+        float t = std::min(group.elapsed / transitionDuration, 1.0f);
 
+        // 3) Apply the transition at time t
         applyTransition(name, t);
 
+        // 4) Once complete, update flags and reset elapsed timer
         if (t >= 1.0f) {
-            if (wasEntering) {
-                group.active = true;
-            }
-
+            if (group.entering)  group.active = true;
+            // leaving or any end-of-transition state
             group.entering = false;
             group.exiting = false;
+            group.elapsed = 0.0f;
         }
     }
 }
 
-void OverlayManager::addOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
+void OverlaySystem::addOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
     if (groups.find(groupName) == groups.end()) {
         groups[groupName] = OverlayGroup{};
     }
     groups[groupName].entities.push_back(entity);
 }
 
-void OverlayManager::removeOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
+void OverlaySystem::removeOverlayEntity(const std::string& groupName, ECS::Entity* entity) {
     auto it = groups.find(groupName);
     if (it == groups.end()) return;
     OverlayGroup& group = it->second;
@@ -49,7 +48,7 @@ void OverlayManager::removeOverlayEntity(const std::string& groupName, ECS::Enti
     vec.erase(std::remove(vec.begin(), vec.end(), entity), vec.end());
 }
 
-void OverlayManager::showOverlayGroup(const std::string& groupName) {
+void OverlaySystem::showOverlayGroup(const std::string& groupName) {
     auto it = groups.find(groupName);
     if (it == groups.end()) return;
     auto& group = it->second;
@@ -58,7 +57,7 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
     group.entering = true;
     group.exiting = false;
     group.active = false;
-    group.transitionStartTime = std::chrono::steady_clock::now();
+    group.elapsed = 0.0f;
 
     glm::vec2 offset;
     if (groupName == INVOCATIONS_OVERLAY) {
@@ -86,7 +85,7 @@ void OverlayManager::showOverlayGroup(const std::string& groupName) {
     }
 }
 
-void OverlayManager::hideOverlayGroup(const std::string& groupName) {
+void OverlaySystem::hideOverlayGroup(const std::string& groupName) {
     auto it = groups.find(groupName);
     if (it == groups.end()) return;
     auto& group = it->second;
@@ -95,7 +94,7 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
     group.exiting = true;
     group.entering = false;
     group.active = false;
-    group.transitionStartTime = std::chrono::steady_clock::now();
+    group.elapsed = 0.0f;
 
     glm::vec2 offset;
     if (groupName == INVOCATIONS_OVERLAY) {
@@ -123,7 +122,7 @@ void OverlayManager::hideOverlayGroup(const std::string& groupName) {
     }
 }
 
-void OverlayManager::toggleOverlayGroup(const std::string& groupName) {
+void OverlaySystem::toggleOverlayGroup(const std::string& groupName) {
     auto it = groups.find(groupName);
     if (it == groups.end()) return;
 
@@ -141,7 +140,7 @@ void OverlayManager::toggleOverlayGroup(const std::string& groupName) {
     }
 }
 
-glm::vec2 OverlayManager::getOverlayOffset(const std::string& groupName) const {
+glm::vec2 OverlaySystem::getOverlayOffset(const std::string& groupName) const {
     auto it = groups.find(groupName);
     if (it == groups.end()) return glm::vec2(0.f);
 
@@ -154,10 +153,7 @@ glm::vec2 OverlayManager::getOverlayOffset(const std::string& groupName) const {
     else /*otros*/                        rawOffset = glm::vec2(+820.f, 0.f);
 
     // Suponiendo que tu transición dura `transitionDuration` segundos
-    float elapsed = std::chrono::duration<float>(
-        std::chrono::steady_clock::now() - group.transitionStartTime
-    ).count();
-    float t = glm::clamp(elapsed / transitionDuration, 0.f, 1.f);
+    float t = glm::clamp(group.elapsed / transitionDuration, 0.f, 1.f);
 
     if (group.entering)  return rawOffset * t;          
     if (group.exiting)   return rawOffset * (1.f - t);  
@@ -165,7 +161,7 @@ glm::vec2 OverlayManager::getOverlayOffset(const std::string& groupName) const {
     return glm::vec2(0.f);
 }
 
-void OverlayManager::applyTransition(const std::string& name, float t) {
+void OverlaySystem::applyTransition(const std::string& name, float t) {
     auto& group = groups[name];
     for (ECS::Entity* e : group.entities) {
         auto tf = e->get<Transform>();
@@ -174,17 +170,17 @@ void OverlayManager::applyTransition(const std::string& name, float t) {
     }
 }
 
-void OverlayManager::lockSelection(const std::string& groupName, bool status) {
+void OverlaySystem::lockSelection(const std::string& groupName, bool status) {
     if (groups.find(groupName) == groups.end()) return;
     groups[groupName].selectionLocked = status;
 }
 
-bool OverlayManager::isSelectionLocked(const std::string& groupName) const {
+bool OverlaySystem::isSelectionLocked(const std::string& groupName) const {
     auto it = groups.find(groupName);
     return (it == groups.end()) ? false : it->second.selectionLocked;
 }
 
-bool OverlayManager::isOverlayGroupTransitioning(const std::string& groupName) const {
+bool OverlaySystem::isOverlayGroupTransitioning(const std::string& groupName) const {
     auto it = groups.find(groupName);
     if (it == groups.end()) return false;
     const OverlayGroup& g = it->second;
@@ -194,11 +190,11 @@ bool OverlayManager::isOverlayGroupTransitioning(const std::string& groupName) c
 // SCORE
 
 
-void OverlayManager::addScoreEntity(int playerId, ECS::Entity* entity) {
+void OverlaySystem::addScoreEntity(int playerId, ECS::Entity* entity) {
     scoreEntities[playerId].emplace_back(entity, false); 
 }
 
-void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
+void OverlaySystem::removeScoreEntity(int playerId, ECS::Entity* entity) {
     auto mapIt = scoreEntities.find(playerId);
     if (mapIt == scoreEntities.end()) {
         return;
@@ -218,7 +214,7 @@ void OverlayManager::removeScoreEntity(int playerId, ECS::Entity* entity) {
     }
 }
 
-void OverlayManager::updateScoreVisibility(int playerId, int score) {
+void OverlaySystem::updateScoreVisibility(int playerId, int score) {
     auto it = scoreEntities.find(playerId);
     if (it == scoreEntities.end()) return;
 
@@ -234,11 +230,11 @@ void OverlayManager::updateScoreVisibility(int playerId, int score) {
     }
 }
 
-EntityManager* OverlayManager::getEntityManager() {
+EntityManager* OverlaySystem::getEntityManager() {
     return entityManager;
 }
 
-void OverlayManager::clearAllOverlays() {
+void OverlaySystem::clearAllOverlays() {
     for (auto& kv : groups) {
         for (ECS::Entity* e : kv.second.entities) {
             if (e) {
@@ -259,7 +255,7 @@ void OverlayManager::clearAllOverlays() {
     scoreEntities.clear();
 }
 
-void OverlayManager::removeEntityFromAllGroups(ECS::Entity* ent) {
+void OverlaySystem::removeEntityFromAllGroups(ECS::Entity* ent) {
     for (auto& kv : groups) {
         const std::string& groupName = kv.first;
         removeOverlayEntity(groupName, ent);

@@ -10,8 +10,8 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-StartGameScreen::StartGameScreen(EntityManager* entityManager, OverlayManager* overlayManager)
-	: Screen(entityManager, overlayManager) {
+StartGameScreen::StartGameScreen(EntityManager* entityManager, OverlaySystem* overlaySystem)
+	: Screen(entityManager, overlaySystem) {
 }
 
 void StartGameScreen::enter() {
@@ -274,8 +274,8 @@ void StartGameScreen::createToggleButtons() {
 				if (gm && gm->getIsSelectingInvocation()) {
 					return;
 				}
-				overlayManager->toggleOverlayGroup(INVOCATIONS_OVERLAY);
-				overlayManager->lockSelection(INVOCATIONS_OVERLAY, true);
+				overlaySystem->toggleOverlayGroup(INVOCATIONS_OVERLAY);
+				overlaySystem->lockSelection(INVOCATIONS_OVERLAY, true);
 
 				});
 		}
@@ -314,7 +314,7 @@ void StartGameScreen::createToggleButtons() {
 		if (bs) {
 			bs->setOnClickAction([this, groupName]() {
 				// Use a different group name for each color
-				overlayManager->toggleOverlayGroup(groupName);
+				overlaySystem->toggleOverlayGroup(groupName);
 				});
 		}
 	}
@@ -335,7 +335,7 @@ void StartGameScreen::createToggleButtons() {
 		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
 		if (bs) {
 			bs->setOnClickAction([this]() {
-				overlayManager->toggleOverlayGroup(INFO_OVERLAY);
+				overlaySystem->toggleOverlayGroup(INFO_OVERLAY);
 				});
 		}
 	}
@@ -355,7 +355,7 @@ void StartGameScreen::createToggleButtons() {
 		ButtonScript* bs = static_cast<ButtonScript*>(result.second);
 		if (bs) {
 			bs->setOnClickAction([this]() {
-				overlayManager->toggleOverlayGroup(LOG_OVERLAY);
+				overlaySystem->toggleOverlayGroup(LOG_OVERLAY);
 				});
 		}
 	}
@@ -389,7 +389,7 @@ void StartGameScreen::setupInvocationsOverlay() {
 		if (overlay) {
 			registerOverlayEntity(INVOCATIONS_OVERLAY, overlay);
 		}
-		script->setOverlayManager(overlayManager);
+		script->setOverlaySystem(overlaySystem);
 	}
 
 	// 4) Registrar cada invocation en INVOCATIONS_OVERLAY
@@ -447,7 +447,7 @@ void StartGameScreen::setupScoreOverlays() {
 					pt->get<Transform>()->layer = 21;
 
 					registerOverlayEntity(groupName, pt);
-					overlayManager->addScoreEntity(i + 1, pt);
+					overlaySystem->addScoreEntity(i + 1, pt);
 			}
 		}
 	}

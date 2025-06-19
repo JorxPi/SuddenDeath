@@ -51,16 +51,10 @@ void SpriteRenderer::Init()
     ebo->Unbind();
 }
 
-//,float atac1 = 0.0f, float atac2 = 0.0f, glm::vec3 ruletaColor1 = glm::vec3(1.0f), glm::vec3 ruletaColor2 = glm::vec3(1.0f))
-
 void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 position,
     glm::vec2 size, float rotate, glm::vec3 color, std::string shaderName,
-    float atac1, float atac2,
-    glm::vec3 ruletaColor1, glm::vec3 ruletaColor2,
-    float ampScale,
-    float ampAngle,
-    float freq,
-    float phase)
+    float atac1, float atac2, glm::vec3 ruletaColor1, glm::vec3 ruletaColor2,
+    float ampScale, float ampAngle, float freq, float phase)
 {
     std::shared_ptr<Shader> shader = shaderDefault;
     if (shaderName == "inverted") {
@@ -71,7 +65,7 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 posi
     }
     if (shaderName == "ruleta") {
         shader = shaderRuleta;
-        shader->Activate(); // Make sure this is done before setting uniforms
+        shader->Activate(); 
         shader->SetFloat("atac1", atac1);
         shader->SetFloat("atac2", atac2);
         shader->SetVector3f("ruletaColor1", ruletaColor1);
@@ -83,7 +77,7 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 posi
     if (shaderName == "menu_motion") {
         shader = shaderMenuMotion;
         shader->Activate();
-        shader->SetFloat("t", t);            // your running time
+        shader->SetFloat("t", t);  
         shader->SetFloat("ampScale", ampScale);
         shader->SetFloat("ampAngle", ampAngle);
         shader->SetFloat("freq", freq);
@@ -108,22 +102,16 @@ void SpriteRenderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 posi
         shader = shaderArrows;
         shader->Activate();
         shader->SetFloat("t", t);
-        shader->SetFloat("amplitude", ampAngle);     // ángulo máx en radianes
-        shader->SetFloat("freq", freq);     // medio ciclo por segundo
+        shader->SetFloat("amplitude", ampAngle);   
+        shader->SetFloat("freq", freq);    
     }
     
     // prepare transformations
     shader->Activate();
     glm::mat4 model = glm::mat4(1.0f);
 
-    // glm::vec2 actuall position = position
-    // Transform* current_transform = 
-
-
     model = glm::translate(model, glm::vec3(position, 0.0f));
     model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-    //model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-    //model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
 
     model = glm::scale(model, glm::vec3(size/2.0f, 1.0f));
 

@@ -38,7 +38,10 @@ public:
 
 struct Sprite
 {
-    Sprite(const char* filepath, glm::vec3 color, bool autoSize = true, glm::vec2 size = glm::vec2(1, 1), const char* shaderName = "default", bool visible = true) {
+    Sprite(const char* filepath, glm::vec3 color, bool autoSize = true, 
+        glm::vec2 size = glm::vec2(1, 1), const char* shaderName = "default"
+        , bool visible = true) {
+
         this->filepath = filepath;
         this->color = color;
         this->autoSize = autoSize;

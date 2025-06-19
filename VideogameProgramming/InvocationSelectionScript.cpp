@@ -15,14 +15,14 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 		mouseY <= transform->position.y + collider->height / 2.0f);
 
 	GameManager* gameManager = nullptr;
-	if (overlayManager) {
-		EntityManager* entityManager = overlayManager->getEntityManager();
+	if (overlaySystem) {
+		EntityManager* entityManager = overlaySystem->getEntityManager();
 		if (entityManager) {
 			gameManager = entityManager->getGameManagerRef();
 		}
 	}
 
-	bool transitioning = overlayManager && overlayManager->isOverlayGroupTransitioning(INVOCATIONS_OVERLAY);
+	bool transitioning = overlaySystem && overlaySystem->isOverlayGroupTransitioning(INVOCATIONS_OVERLAY);
 
 	if (!transitioning) {
 		if (isHovering) {
@@ -49,7 +49,7 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 	}
 
 	// 2) Only process clicks if not locked
-	if (overlayManager && overlayManager->isSelectionLocked(INVOCATIONS_OVERLAY)) {
+	if (overlaySystem && overlaySystem->isSelectionLocked(INVOCATIONS_OVERLAY)) {
 		return;  // allow hover, but skip below
 	}
 
@@ -65,7 +65,7 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 		setUnavailable(true);
 
 		// Once the player chooses one card, lock further clicks
-		overlayManager->lockSelection(INVOCATIONS_OVERLAY, true);
+		overlaySystem->lockSelection(INVOCATIONS_OVERLAY, true);
 
 		if (gameManager) {
 			gameManager->setHoverText("");
@@ -144,14 +144,14 @@ ECS::Entity* InvocationSelectionScript::getUnavailableOverlay() {
 	return unavailableOverlay;
 }
 
-void InvocationSelectionScript::setOverlayManager(OverlayManager* manager) {
-	overlayManager = manager;
+void InvocationSelectionScript::setOverlaySystem(OverlaySystem* manager) {
+	overlaySystem = manager;
 }
 
 void InvocationSelectionScript::updateHoverText() {
-	if (!overlayManager) return;
+	if (!overlaySystem) return;
 
-	EntityManager* entityManager = overlayManager->getEntityManager();
+	EntityManager* entityManager = overlaySystem->getEntityManager();
 	if (!entityManager) return;
 
 	GameManager* gameManager = entityManager->getGameManagerRef();

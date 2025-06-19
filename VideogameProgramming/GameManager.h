@@ -10,7 +10,7 @@
 #include "InvocationSelectionScript.h"
 #include "ButtonManager.h"
 #include "EntityManager.h"
-#include "ScreenManager.h"
+#include "ScreenSystem.h"
 #include "GameLogManager.h"
 #include "PassiveAbilities.h"
 #include "PassiveNine.h"
@@ -46,7 +46,7 @@ class ButtonManager;
 
 class EntityManager;
 
-class ScreenManager;
+class ScreenSystem;
 
 class GameLogManager;
 
@@ -159,7 +159,7 @@ public:
 	//SETTERS
 	void setTextRenderer(TextRenderer* textRenderer);
 	void setButtonManagerRef(ButtonManager* bmr);
-	void setScreenManagerRef(ScreenManager* smr);
+	void setScreenSystemRef(ScreenSystem* smr);
 	void setRuletaAttacksRef(RuletaAttacks* rcr, Entity* rent, Entity* pointent);
 	void setRuletaBatallaRef(RuletaBatalla* rbcr, Entity* rbent, Entity* pointent);
 	void setCoinRef(CoinScript* ccr, Entity* cent);
@@ -187,7 +187,7 @@ private:
 
 	//SCRIPTS
 	ButtonManager* buttonRef;
-	ScreenManager* screenManagerRef;
+	ScreenSystem* screenSystemRef;
 	RuletaAttacks* ruletaAttacksRef;
 	RuletaBatalla* ruletaBatallaRef;
 	CoinScript* coinScriptRef;

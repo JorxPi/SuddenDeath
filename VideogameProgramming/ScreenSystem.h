@@ -3,19 +3,22 @@
 #include "ScriptManager.h"
 #include "ScriptSystem.h"
 #include "GameManager.h"
-#include "OverlayManager.h"
+#include "OverlaySystem.h"
 #include <memory>
 #include <map>
 #include <string>
 #include "Screen.h"
+#include "ECS.h"
 
 class Screen;
 
-class OverlayManager;
+class OverlaySystem;
 
-class ScreenManager {
-public:
-	ScreenManager(GLFWwindow* window, ECS::World* world);
+class ScreenSystem : public ECS::EntitySystem {
+public: 
+	ScreenSystem(GLFWwindow* window, ECS::World* world);
+
+	virtual void tick(ECS::World* world, float dt) override;
 
 	void addScreen(const std::string& name, Screen* screen);
 	void switchToScreen(std::string name);
@@ -23,18 +26,16 @@ public:
 
 	Screen* getCurrentScreen();
 
-	void update(float dt);
+	void setManagerRefs(GameManager* gmr, OverlaySystem* omr);
 
-	void setManagerRefs(GameManager* gmr, OverlayManager* omr);
-
-	OverlayManager* getOverlayManager();
+	OverlaySystem* getOverlaySystem();
 
 private:
 	GLFWwindow* window;
 	ECS::World* world;
 
 	GameManager* gameManager;
-	OverlayManager* overlayManager;
+	OverlaySystem* overlaySystem;
 
 	std::map<std::string, std::unique_ptr<Screen>> screens;
 	Screen* currentScreen = nullptr;

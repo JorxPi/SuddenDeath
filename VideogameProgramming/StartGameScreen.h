@@ -15,7 +15,7 @@ static constexpr char LOG_OVERLAY[] = "LogOverlay";
 
 class StartGameScreen : public Screen {
 public:
-	StartGameScreen(EntityManager* entityManager, OverlayManager* overlayManager);
+	StartGameScreen(EntityManager* entityManager, OverlaySystem* overlaySystem);
 
 	void enter() override;
 	void exit() override;
