@@ -9,10 +9,10 @@ void PassiveSixteen::OnEvent(GameManager* gameManager, InvocationScript* invocat
     int flipPlayer = gameManager->getCurrentPlayerTurn();
     int passiveOwner = invocation->getPlayerOwner();
 
-    int playerScore = gameManager->getPlayerScore(flipPlayer);
-    int opponentScore = gameManager->getPlayerScore(passiveOwner);
+    int flipPlayerScore = gameManager->getPlayerScore(flipPlayer);
+    int passiveHolderScore = gameManager->getPlayerScore(passiveOwner);
 
-    if (opponentScore > playerScore) {
+    if (flipPlayerScore > passiveHolderScore) {
         gameManager->addPlayerPoints(flipPlayer, -3);
 
         AnnouncePassiveUsage(gameManager);
