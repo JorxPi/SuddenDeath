@@ -219,6 +219,25 @@ void GameManager::update(float deltaTime) {
                 else {
                     //Tails, so the next player turn will start
                     playerScores[currentPlayerTurn] += 3;
+
+                    for (auto* invoc : invocationsListRef) {
+                        // skip your own invocations
+                        if (invoc->getPlayerOwner() == currentPlayerTurn)
+                            continue;
+
+                        // if this opponent invocation has PassiveSixteen, fire it & break
+                        if (auto* p16 = dynamic_cast<PassiveSixteen*>(invoc->getPassiveAbility())) {
+                            handlePassiveEvent<PassiveSixteen>(
+                                invoc,
+                                [this, invoc](PassiveSixteen* passive) {
+                                    passive->OnEvent(this, invoc);
+                                }
+                            );
+                            break;
+                        }
+                    }
+
+
                     //consecutiveTails +1
                     consecutiveTails[currentPlayerTurn]++;
 
@@ -329,20 +348,12 @@ void GameManager::invocInvocation(int invocAttack, const char* filepath, Passive
     //ShowAnnouncement("Invocation summoned with attack " + std::to_string(invocAttack) + ". " + std::to_string(pointsAwarded) + " points awarded.", 3.0f, AnnouncementType::General);
     LogPlayerScore(currentPlayerTurn, pointsAwarded, "invocation summoned");
 
-    handlePassiveEvent<PassiveFive>(invocScript, [this, invocScript](PassiveFive* passiveFive) {
-        passiveFive->Activate(this, invocScript);
-        });
-
-    handlePassiveEvent<PassiveSix>(invocScript, [this, invocScript](PassiveSix* passiveSix) {
-        passiveSix->Activate(this, invocScript);
-        });
-
-    handlePassiveEvent<PassiveFifteen>(invocScript, [this, invocScript](PassiveFifteen* passiveFifteen) {
-        passiveFifteen->Activate(this, invocScript);
-        });
+    if (passive) {
+        passive->Activate(this, invocScript);
+    }
 
     for (auto* invocation : invocationsListRef) {
-        if (invocation->getPlayerOwner() != currentPlayerTurn) {  // Check only rival players
+        if (invocation->getPlayerOwner() != currentPlayerTurn) { 
             handlePassiveEvent<PassiveSix>(invocation, [this, invocScript](PassiveSix* passive) {
                 passive->OnEvent(this, invocScript);
                 });
@@ -385,7 +396,7 @@ void GameManager::changeTurnAndReset() {
 
         if (invocation->getPlayerOwner() == currentPlayerTurn) {
             handlePassiveEvent<PassiveFifteen>(invocation, [this, invocation](PassiveFifteen* passiveFifteen) {
-                passiveFifteen->OnTurnEnd(this, invocation);
+                passiveFifteen->OnEvent(this, invocation);
                 });
         }
     }
@@ -495,12 +506,12 @@ void GameManager::checkBattle(InvocationScript* invocScript) {
 
         // Check if posListInvoc1 has PassiveSeven
         handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc1], [this](PassiveSeven* passive) {
-            passive->ReduceOpponentAttack(this, invocationsListRef[posListInvoc1], invocationsListRef[posListInvoc2]);  // Reduce posListInvoc2's attack
+            passive->OnEvent(this, invocationsListRef[posListInvoc2]);  // Reduce posListInvoc2's attack
             });
 
         // Check if posListInvoc2 has PassiveSeven
         handlePassiveEvent<PassiveSeven>(invocationsListRef[posListInvoc2], [this](PassiveSeven* passive) {
-            passive->ReduceOpponentAttack(this, invocationsListRef[posListInvoc2], invocationsListRef[posListInvoc1]);  // Reduce posListInvoc1's attack
+            passive->OnEvent(this, invocationsListRef[posListInvoc1]);  // Reduce posListInvoc1's attack
             });
 
         //Only need to set hasBattled to the invoc triggering the battle, as this is just to prevent the use of Undo button
@@ -727,8 +738,8 @@ void GameManager::updateConquerableCells() {
 
                     // **Step 4: Make sure PassiveTwo belongs to a different player than the conqueror**
                     if (passiveHolderOwner != newOwner) {
-                        handlePassiveEvent<PassiveTwo>(invocation, [this, invocation, conqueringInvocation](PassiveTwo* passiveTwo) {
-                            passiveTwo->TriggerPassiveEffect(this, invocation, conqueringInvocation);
+                        handlePassiveEvent<PassiveTwo>(invocation, [this, conqueringInvocation](PassiveTwo* passiveTwo) {
+                            passiveTwo->OnEvent(this, conqueringInvocation);
                             });
                     }
                 }
@@ -774,22 +785,10 @@ bool GameManager::isInvocationOnBoard(const std::string& invocationId) {
 
 template <typename PassiveType>
 void GameManager::handlePassiveEvent(InvocationScript* invocation, std::function<void(PassiveType*)> eventHandler) {
-    if (!invocation) {
-        std::cout << "[handlePassiveEvent] invocation == nullptr, salto.\n";
-        return;
-    }
-
     PassiveAbility* passive = invocation->getPassiveAbility();
-    std::cout << "[handlePassiveEvent] invocation=" << invocation
-        << "  passive=" << passive
-        << "  tipo esperado=" << typeid(PassiveType).name()
-        << "\n";
 
     if (auto* specificPassive = dynamic_cast<PassiveType*>(passive)) {
         eventHandler(specificPassive);
-    }
-    else {
-        std::cout << "[handlePassiveEvent] dynamic_cast falló, no es este tipo de pasiva\n";
     }
 }
 
@@ -985,7 +984,6 @@ void GameManager::spawnCoin() {
     setCoinRef(coin_script, coin);
     coin_script->setGameManagerRef(this);
 
-    int summonChance = coin_script->calculateSummonProbability();
     //setCoinProbabilityText(std::to_string(summonChance) + "% chance of heads coin flip");
 }
 
@@ -1406,6 +1404,14 @@ std::string GameManager::getPlayerColor(int player) {
     }
 }
 
+int GameManager::getPlayerScore(int player) {
+    auto it = playerScores.find(player);
+    if (it != playerScores.end()) {
+        return it->second;
+    }
+    return 0;
+}
+
 std::vector<Entity*> GameManager::getHighlightedEntities() {
     return highlightedEntities;
 }
@@ -1504,3 +1510,4 @@ void GameManager::setHoveredInvocation(InvocationSelectionScript* script) {
 void GameManager::setGameLogManager(GameLogManager* glr) {
     gameLogRef = glr;
 }
+

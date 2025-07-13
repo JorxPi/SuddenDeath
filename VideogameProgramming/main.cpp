@@ -149,6 +149,9 @@ void SetupRealWorld() {
 	ScriptSystem* scriptSystem = new ScriptSystem();
 	world->registerSystem(scriptSystem);
 
+	overlaySystem = new OverlaySystem(entityManager);
+	world->registerSystem(overlaySystem);
+
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 	entityManager = new EntityManager(window, world, scriptSystem);
 	buttonManager = new ButtonManager(window, world);

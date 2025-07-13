@@ -131,24 +131,11 @@ void EntityManager::createInvocation(glm::vec2 position, int coliderId, int atta
 }
 
 void EntityManager::createInvocationWithPassive(glm::vec2 position, int coliderId, int attack, const char* text_back, const char* text_inv, const char* text_att, int playerOwner, PassiveAbility* passive, TextRenderer* tr) {
-	// Use the existing createInvocation logic
 	createInvocation(position, coliderId, attack, text_back, text_inv, text_att, playerOwner, tr);
 
-	// Get the last created invocation script (assuming the last script added to the list is the current one)
-	if (!gameManagerRef || gameManagerRef->getInvocationScripts().empty()) {
-		std::cerr << "Error: Unable to assign passive because invocation list is empty!" << std::endl;
-		return;
-	}
-
 	InvocationScript* latestInvocationScript = gameManagerRef->getInvocationScripts().back();
-	if (latestInvocationScript) {
-		std::cout << "[createInvocationWithPassive] Asignando pasiva "
-			<< passive << " a invocación " << latestInvocationScript << "\n";
-		latestInvocationScript->setPassiveAbility(passive); // Assign the passive
-	}
-	else {
-		std::cerr << "Error: Unable to assign passive to the latest invocation script!" << std::endl;
-	}
+	latestInvocationScript->setPassiveAbility(passive); 
+
 }
 
 ECS::Entity* EntityManager::createCell(glm::vec2 position, const char* text_cell_type, float col_w, float col_h, bool conquerable) {

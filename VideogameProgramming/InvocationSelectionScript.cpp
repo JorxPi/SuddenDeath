@@ -55,7 +55,6 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && isHovering) {
 		if (isUnavailable) {
-			std::cout << "This invocation is already on the board!" << std::endl;
 			return;
 		}
 		if (!discovered) {
@@ -64,7 +63,6 @@ void InvocationSelectionScript::tickScript(float deltaTime) {
 		card_selected = true;
 		setUnavailable(true);
 
-		// Once the player chooses one card, lock further clicks
 		overlaySystem->lockSelection(INVOCATIONS_OVERLAY, true);
 
 		if (gameManager) {

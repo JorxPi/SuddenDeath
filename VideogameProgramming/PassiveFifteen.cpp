@@ -7,12 +7,11 @@
 #include <vector>
 
 void PassiveFifteen::Activate(GameManager* gameManager, InvocationScript* invocation) {
-    // Passive activates when the invocation is summoned
-    std::cout << "PassiveFifteen activated: Tracking turns survived." << std::endl;
+    PassiveAbility::Activate(gameManager, invocation);
     turnsSurvived = 0;  // Reset turn counter
 }
 
-void PassiveFifteen::OnTurnEnd(GameManager* gameManager, InvocationScript* invocation) {
+void PassiveFifteen::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
     if (!gameManager || !invocation) return;
 
     turnsSurvived++;
@@ -41,12 +40,17 @@ void PassiveFifteen::ModifyMovableCells(GameManager* gameManager, InvocationScri
             }
         }
 
-        AnnouncePassiveUsage(gameManager, invocation);
+        AnnouncePassiveUsage(gameManager);
         Reveal();
     }
 }
 
 const std::string& PassiveFifteen::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveFifteen;
+    static const std::string description = PassiveDescriptions::GetDescription(14);
     return description;
+}
+
+const std::string& PassiveFifteen::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(14);
+    return name;
 }

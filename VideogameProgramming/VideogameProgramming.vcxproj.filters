@@ -204,9 +204,6 @@
     <ClCompile Include="DummyPassive.cpp">
       <Filter>Archivos de origen\Scripts\Passives</Filter>
     </ClCompile>
-    <ClCompile Include="PassiveDescriptions.cpp">
-      <Filter>Archivos de encabezado\Scripts\Constants</Filter>
-    </ClCompile>
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>

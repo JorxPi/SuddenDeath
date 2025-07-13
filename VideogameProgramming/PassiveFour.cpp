@@ -4,9 +4,6 @@
 #include "PassiveDescriptions.h"
 #include <iostream>
 
-void PassiveFour::Activate(GameManager* gameManager, InvocationScript* invocation) {
-}
-
 void PassiveFour::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
 
 }
@@ -16,8 +13,13 @@ void PassiveFour::OnInvocationDeath() {
 }
 
 const std::string& PassiveFour::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveFour;
+    static const std::string description = PassiveDescriptions::GetDescription(3);
     return description;
+}
+
+const std::string& PassiveFour::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(3);
+    return name;
 }
 
 void PassiveFour::CheckAndSwapWinner(GameManager* gameManager, InvocationScript* invocation, int& winningIndex, int& losingIndex) {
@@ -25,7 +27,7 @@ void PassiveFour::CheckAndSwapWinner(GameManager* gameManager, InvocationScript*
 
     std::swap(winningIndex, losingIndex);
 
-    AnnouncePassiveUsage(gameManager, invocation);
+    AnnouncePassiveUsage(gameManager);
 
     Reveal();
 }

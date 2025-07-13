@@ -2,10 +2,6 @@
 #include "PassiveDescriptions.h"
 #include <iostream>
 
-void PassiveNine::Activate(GameManager* gameManager, InvocationScript* invocation) {
-    // Not used directly
-}
-
 void PassiveNine::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
     if (!gameManager || !invocation) return;
 
@@ -15,7 +11,7 @@ void PassiveNine::OnEvent(GameManager* gameManager, InvocationScript* invocation
     gameManager->addPlayerPoints(playerOwner, 2);
     std::cout << "Player " << playerOwner << " gained 2 sudden points from PassiveNine!" << std::endl;
 
-    AnnouncePassiveUsage(gameManager, invocation);
+    AnnouncePassiveUsage(gameManager);
 
     Reveal();
 }
@@ -27,6 +23,11 @@ void PassiveNine::OnInvocationDeath() {
 }
 
 const std::string& PassiveNine::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveNine; // Use the constant
+    static const std::string description = PassiveDescriptions::GetDescription(8); // Use the constant
     return description;
+}
+
+const std::string& PassiveNine::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(8);
+    return name;
 }

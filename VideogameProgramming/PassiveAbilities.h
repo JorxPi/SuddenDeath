@@ -10,17 +10,19 @@ class PassiveAbility {
 public:
     virtual ~PassiveAbility() = default;
 
-    // Called to activate the passive when triggered
-    virtual void Activate(GameManager* gameManager, InvocationScript* invocation) = 0;
+    //Called when the creature is summoned.
+    virtual void Activate(GameManager* gameManager, InvocationScript* invocation);
 
-    // Optional: Called to react to specific game events
+    //Called to react to specific game events.
     virtual void OnEvent(GameManager* gameManager, InvocationScript* invocation) {}
 
-    // Add virtual to enable overriding in derived classes
+    //Used for any cleanup if the creature is destroyed.
     virtual void OnInvocationDeath() {}
 
     // Description for debugging and revealing
     virtual const std::string& GetDescription() const;
+
+    virtual const std::string& GetName() const;
 
     // Reveal logic for the hidden state
     void Reveal() { revealed = true; }
@@ -28,8 +30,9 @@ public:
 
 protected:
     // Announce the passive ability usage
-    void AnnouncePassiveUsage(GameManager* gameManager, InvocationScript* invocation);
+    void AnnouncePassiveUsage(GameManager* gameManager);
 
+    InvocationScript* invocationRef = nullptr;
 private:
     bool revealed = false;
 };

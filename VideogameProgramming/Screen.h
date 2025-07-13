@@ -29,6 +29,7 @@ public:
     virtual void exit();
 
     void requestScreenSwap(const std::string& screenName) { swapToScreenName = screenName; }
+
     const std::string& getRequestedSwap() const { return swapToScreenName; }
 
     void registerEntity(ECS::Entity* ent);

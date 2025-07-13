@@ -4,17 +4,18 @@
 #include "PassiveDescriptions.h"
 #include <iostream>
 
-void PassiveTwo::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
-
-}
-
 const std::string& PassiveTwo::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveTwo;
+    static const std::string description = PassiveDescriptions::GetDescription(1);
     return description;
 }
 
-void PassiveTwo::TriggerPassiveEffect(GameManager* gameManager, InvocationScript* passiveHolder, InvocationScript* enemyInvocation) {
-    if (!gameManager || !passiveHolder || !enemyInvocation) return;
+const std::string& PassiveTwo::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(1);
+    return name;
+}
+
+void PassiveTwo::OnEvent(GameManager* gameManager, InvocationScript* enemyInvocation) {
+    if (!gameManager || !enemyInvocation) return;
 
     // Reduce attack by 2, ensuring it doesn’t go below 1
     int newAttack = enemyInvocation->getAttack() - 2;
@@ -22,7 +23,7 @@ void PassiveTwo::TriggerPassiveEffect(GameManager* gameManager, InvocationScript
     enemyInvocation->setInvocAttack(newAttack);
 
     // **Trigger the announcement**
-    AnnouncePassiveUsage(gameManager, passiveHolder);
+    AnnouncePassiveUsage(gameManager);
 
     Reveal();
 }

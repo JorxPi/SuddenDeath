@@ -176,11 +176,6 @@ void TextRenderer::RenderText(const std::string& fontName, const std::string& te
 }
 
 float TextRenderer::CalculateTextWidth(const std::string& fontName, const std::string& text, float scale) {
-    if (Fonts.find(fontName) == Fonts.end()) {
-        std::cerr << "Font not found: " << fontName << ". Using default font.\n";
-        return 0.0f;
-    }
-
     std::map<char, Character>& Characters = Fonts[fontName];
     float width = 0.0f;
 

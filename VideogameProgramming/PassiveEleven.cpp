@@ -3,8 +3,8 @@
 #include "PassiveDescriptions.h"
 
 void PassiveEleven::Activate(GameManager* gameManager, InvocationScript* invocation) {
+    PassiveAbility::Activate(gameManager, invocation);
     flipsHandled = 0;
-    std::cout << "PassiveEleven: Activated for invocation." << std::endl;
 }
 
 void PassiveEleven::OnEvent(GameManager* gameManager, InvocationScript* invocation) {
@@ -12,7 +12,7 @@ void PassiveEleven::OnEvent(GameManager* gameManager, InvocationScript* invocati
 
     flipsHandled++;
 
-    AnnouncePassiveUsage(gameManager, invocation);
+    AnnouncePassiveUsage(gameManager);
 
     Reveal();
 
@@ -25,8 +25,13 @@ void PassiveEleven::OnInvocationDeath() {
 }
 
 const std::string& PassiveEleven::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveEleven;
+    static const std::string description = PassiveDescriptions::GetDescription(10);
     return description;
+}
+
+const std::string& PassiveEleven::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(10);
+    return name;
 }
 
 void PassiveEleven::ResetTurnState() {

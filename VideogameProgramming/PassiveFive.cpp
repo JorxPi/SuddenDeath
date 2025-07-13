@@ -3,6 +3,8 @@
 #include "PassiveDescriptions.h"
 
 void PassiveFive::Activate(GameManager* gameManager, InvocationScript* invocation) {
+    PassiveAbility::Activate(gameManager, invocation);
+
     active = true;
     stationaryCounter.clear(); // Reset tracking
 
@@ -53,7 +55,7 @@ void PassiveFive::OnEvent(GameManager* gameManager, InvocationScript* invocation
                     std::cout << "PassiveFive: Destroying invocation at index " << index << "." << std::endl;
                     gameManager->eliminateInvocation(index);
 
-                    AnnouncePassiveUsage(gameManager, invocation);
+                    AnnouncePassiveUsage(gameManager);
 
                     Reveal();
                 }
@@ -105,6 +107,11 @@ void PassiveFive::OnInvocationDeath() {
 }
 
 const std::string& PassiveFive::GetDescription() const {
-    static const std::string description = PassiveDescriptions::PassiveFive;
+    static const std::string description = PassiveDescriptions::GetDescription(4);
     return description;
+}
+
+const std::string& PassiveFive::GetName() const {
+    static const std::string name = PassiveDescriptions::GetName(4);
+    return name;
 }

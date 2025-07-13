@@ -103,9 +103,7 @@ void InvocationScript::highlightCells() {
 	std::vector<CellScript*> allCellScripts = gameRef->getAllCellScripts();
 
 	auto cellPosInMap = highlightMap.find(pos);
-	//checks if the position was found or not
 		if (cellPosInMap != highlightMap.end()) {
-			//->second = is the value inside each element in the map, ->first would be the name (ex CellPos::c1))
 			for (int index : cellPosInMap->second) {
 				if (!gameRef->checkIfAllyInvocInCell(index)) {
 					gameRef->highlightSprite(index);
@@ -158,13 +156,9 @@ void InvocationScript::undoLastMove() {
 		fullyMoved = false;  
 		moved = false;     
 
-		// Update Transform
 		moveInvocation(previousPos.x, previousPos.y);
 
-		// Hide the Undo button after undoing
 		buttonRef->moveUndoButtonOut();
-
-		std::cout << "Undoing move, returning to (" << lPos.x << ", " << lPos.y << ")" << std::endl;
 	}
 }
 

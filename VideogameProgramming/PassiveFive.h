@@ -11,6 +11,7 @@ public:
     void synchronizeTracking(GameManager* gameManager, InvocationScript* ownerInvocation);
 
     const std::string& GetDescription() const override;
+    const std::string& GetName() const override;
 
 private:
     std::unordered_map<InvocationScript*, int> stationaryCounter; // Track skipped turns for relevant invocations

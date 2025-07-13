@@ -54,7 +54,9 @@ void Ruleta::applyRotation(float deltaTime) {
     double elapsedTime = glfwGetTime() - spinStartTime;
 
     double fractionOfCompletion = elapsedTime / spinDuration;
-    fractionOfCompletion = (fractionOfCompletion > 1.0) ? 1.0 : fractionOfCompletion; 
+    if (fractionOfCompletion > 1.0) {
+        fractionOfCompletion = 1.0;
+    }
     double easeOutCubic = 1 - pow(1 - fractionOfCompletion, 3);
 
     ComponentHandle<Transform> transform = entity->get<Transform>();
@@ -65,11 +67,9 @@ void Ruleta::applyRotation(float deltaTime) {
         transform->rotation += 360.0;
 
     if (elapsedTime >= spinDuration) {
-        std::cout << "in 10!" << std::endl;
         transform->rotation = fmod(targetAngle, 360.0); 
         determineSpinResult(transform->rotation);
         isSpinning = false;
-        std::cout << "in 11!" << std::endl;
     }
 }
 

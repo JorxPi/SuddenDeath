@@ -7,7 +7,6 @@ ScreenSystem::ScreenSystem(GLFWwindow* window, ECS::World* world)
 
 void ScreenSystem::tick(ECS::World* world, float dt) {
     if (!currentScreen) return;
-    // Comprobamos si la pantalla actual solicitó cambiar a otra (getRequestedSwap() != "")
     const std::string& next = currentScreen->getRequestedSwap();
     if (!next.empty()) {
         switchToScreen(next);
