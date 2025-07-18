@@ -139,6 +139,7 @@ public:
 	//void setCoinProbabilityText(const std::string& text);
 	//void RenderCoinProbabilityText();
 	void RenderGameOverMessage();
+	void RenderScores();
 
 
 	//LOG

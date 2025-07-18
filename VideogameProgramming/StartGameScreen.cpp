@@ -99,7 +99,7 @@ void StartGameScreen::enter() {
 	createToggleButtons();
 
 	setupInvocationsOverlay();
-	setupScoreOverlays();
+	//setupScoreOverlays();
 
 	for (int playerId = 1; playerId <= 3; ++playerId) {
 		entityManager->getGameManagerRef()->updateScoreVisibility(playerId);
@@ -235,7 +235,7 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 		passives.emplace_back(std::make_unique<DummyPassive>());
 	}*/
 
-	//std::shuffle(passives.begin(), passives.end(), g);
+	std::shuffle(passives.begin(), passives.end(), g);
 
 	invocationPool.clear();
 	for (size_t i = 0; i < invocations.size() && i < passives.size(); i++) {
@@ -288,7 +288,7 @@ void StartGameScreen::createToggleButtons() {
 	}
 
 	// Three smaller buttons at top-right for each player's score
-	glm::vec2 scoreButtonPositions[3] = {
+	/*glm::vec2 scoreButtonPositions[3] = {
 		{930.f, 0.f}, // Blue
 		{1020.f, 0.f}, // Red
 		{1110.f, 0.f}, // Green
@@ -323,7 +323,7 @@ void StartGameScreen::createToggleButtons() {
 				overlaySystem->toggleOverlayGroup(groupName);
 				});
 		}
-	}
+	}*/
 
 	{
 		auto result = entityManager->createEntity(

@@ -43,6 +43,7 @@ void GameManager::update(float deltaTime) {
         RenderAnnouncement(AnnouncementType::PassiveTrigger);
         RenderGameLog();
         RenderHoverText();
+        RenderScores();
         //RenderCoinProbabilityText();
     }
 
@@ -1318,6 +1319,42 @@ void GameManager::RenderGameOverMessage() {
         textRendererRef->RenderText("SuperSquad", gameOverMessage, centeredX, centeredY, textSize, glm::vec3(131.0f / 255.0f, 34.0f / 255.0f, 137.0f / 255.0f));
     }
 }
+
+void GameManager::RenderScores() {
+    if (!textRendererRef) return;
+
+    static const char* names[4] = { nullptr, "Blue", "Red", "Green" };
+    static const glm::vec3 playerTextColor[4] = {
+        {},                        // unused
+        { 0.2f, 0.5f, 1.0f },      // Blue
+        { 1.0f, 0.2f, 0.2f },      // Red
+        { 0.2f, 1.0f, 0.2f }       // Green
+    };
+
+    float textSize = 0.5f;
+    float yPos = screenHeight - 50.0f;  // 30 px down from top
+    float x = 820.0f;               // start 20 px from left
+
+    for (int playerId = 1; playerId <= 3; ++playerId) {
+        std::string block = std::string(names[playerId])
+            + " "
+            + std::to_string(getPlayerScore(playerId));
+
+        // Measure and render
+        float w = textRendererRef->CalculateTextWidth("SuperSquad", block, textSize);
+        textRendererRef->RenderText(
+            "SuperSquad",
+            block,
+            x,
+            yPos,
+            textSize,
+            playerTextColor[playerId]
+        );
+
+        x += w + 20.0f;
+    }
+}
+
 
 
 
