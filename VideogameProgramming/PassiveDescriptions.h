@@ -11,7 +11,7 @@ namespace PassiveDescriptions {
     static const PassiveData data[Count] = {
         { "Patient Strength",      "Gain 1 attack every time this invocation doesn't move" },
         { "Territorial Control",  "When an enemy invocation conquers a positive cell, reduce its attack by 2" },
-        { "Goblin Gambler",     "Summon a 3-attack goblin without passive if player has less than 3 invocations after a tails coinflip" },
+        { "Against All Odds",     "After turn 5, if the player owning this invocation doesn't control any conquerable cell gain 6 points. Can only be activated once." },
         { "Reverse Fate",    "The result of the combats of this invocation is reversed" },
         { "Silent Execution",      "Destroy any enemy summon that remains stationary for 2 consecutive turns" },
         { "Underestimate","If a rival summons an invocation with more attack than this, its attack is reduced by 1" },

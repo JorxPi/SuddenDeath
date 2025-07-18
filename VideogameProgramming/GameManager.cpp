@@ -394,6 +394,10 @@ void GameManager::changeTurnAndReset() {
             passiveEleven->ResetTurnState();
             });
 
+        handlePassiveEvent<PassiveThree>(invocation, [this, invocation](PassiveThree* passiveThree) {
+            passiveThree->OnEvent(this, invocation);
+            });
+
         if (invocation->getPlayerOwner() == currentPlayerTurn) {
             handlePassiveEvent<PassiveFifteen>(invocation, [this, invocation](PassiveFifteen* passiveFifteen) {
                 passiveFifteen->OnEvent(this, invocation);
@@ -419,6 +423,7 @@ void GameManager::changeTurnAndReset() {
     }
     else {
         currentPlayerTurn = 1;
+        currentGameTurn = currentGameTurn++;
     }
     movementBlocked = false;
     allInvocsMoved = false;
@@ -890,6 +895,8 @@ void GameManager::resetGame() {
     spinResult = -1;
     invocationToSpawnPos = -1;
 
+    currentGameTurn = 1;
+
     // Destruir cualquier ruleta o moneda que todavía quedara viva
     if (coinEntRef) {
         entityManager->destroyEntity(coinEntRef);
@@ -1179,7 +1186,7 @@ void GameManager::RenderGameText(const std::string& text, float x, float y, floa
 void GameManager::RenderPlayerTurn() {
     if (!textRendererRef) return;
 
-    std::string playerText = "Player Turn: ";
+    std::string playerText = "Player ";
     glm::vec3 playerColor;
     std::string fontToUse = "SuperSquad";
 
@@ -1202,7 +1209,10 @@ void GameManager::RenderPlayerTurn() {
         break;
     }
 
+    std::string gameTurnText = std::string("Turn ") + std::to_string(currentGameTurn);
+
     textRendererRef->RenderText(fontToUse, playerText, 20.0f, screenHeight - 50, 0.6f, playerColor);
+    textRendererRef->RenderText(fontToUse, gameTurnText, 20.0f, screenHeight - 100, 0.6f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void GameManager::ShowAnnouncement(const std::string& text, float duration, AnnouncementType type) {
@@ -1390,6 +1400,10 @@ void GameManager::RenderGameLog() {
 //GETTERS
 
 
+
+int GameManager::getCurrentGameTurn() {
+    return currentGameTurn;
+}
 
 int GameManager::getCurrentPlayerTurn() {
     return currentPlayerTurn;

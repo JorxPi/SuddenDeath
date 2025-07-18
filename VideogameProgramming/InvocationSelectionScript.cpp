@@ -155,9 +155,14 @@ void InvocationSelectionScript::updateHoverText() {
 	GameManager* gameManager = entityManager->getGameManagerRef();
 	if (!gameManager) return;
 
+	bool ctrlDown = glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+
 	std::string descriptionText;
 
-	if (!discovered) {
+	if (ctrlDown && passive) {
+		descriptionText = passive->GetDescription();
+	}
+	else if (!discovered) {
 		descriptionText = "This invocation has not been revealed yet.";
 	}
 	else if (passive && !passive->IsRevealed()) {

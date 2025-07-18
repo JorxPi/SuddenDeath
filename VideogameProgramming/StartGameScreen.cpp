@@ -227,10 +227,13 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 	//onzena passiveSixteen
 	passives.emplace_back(std::make_unique<PassiveSixteen>());
 
+	//dotzena passiveThree
+	passives.emplace_back(std::make_unique<PassiveThree>());
+
 	// La resta DummyPassive
-	for (size_t i = 11; i < invocations.size(); i++) {
+	/*for (size_t i = 11; i < invocations.size(); i++) {
 		passives.emplace_back(std::make_unique<DummyPassive>());
-	}
+	}*/
 
 	//std::shuffle(passives.begin(), passives.end(), g);
 

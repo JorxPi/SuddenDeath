@@ -24,6 +24,7 @@
 #include "PassiveTwo.h"
 #include "PassiveFifteen.h"
 #include "PassiveSixteen.h"
+#include "PassiveThree.h"
 #include "TextRenderer.h"
 #include <vector>
 
@@ -146,6 +147,7 @@ public:
 	void RenderGameLog();
 
 	//GETTERS
+	int getCurrentGameTurn();
 	int getCurrentPlayerTurn();
 	std::string getPlayerColor(int player);
 	int getPlayerScore(int player);
@@ -247,6 +249,7 @@ private:
 
 
 	//OTHER
+	int currentGameTurn = 1;
 	int currentPlayerTurn = 1;
 	int ruletaBatallaWinner;
 	int posListInvoc1, posListInvoc2;
