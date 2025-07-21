@@ -17,6 +17,8 @@ void PassiveSixteen::OnEvent(GameManager* gameManager, InvocationScript* invocat
 
     if (flipPlayerScore > passiveHolderScore) {
         gameManager->addPlayerPoints(flipPlayer, -3);
+        gameManager->LogPlayerScore(flipPlayer, -3, "passive activation");
+
 
         AnnouncePassiveUsage(gameManager);
         Reveal();

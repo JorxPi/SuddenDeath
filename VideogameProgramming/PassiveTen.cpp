@@ -8,6 +8,7 @@ void PassiveTen::OnEvent(GameManager* gameManager, InvocationScript* invocation)
     for (int i = 1; i <= 3; i++) {
         if (i != invocation->getPlayerOwner()) { 
             gameManager->addPlayerPoints(i, -1);
+            gameManager->LogPlayerScore(i, -1, "passive activation");
         }
     }
 

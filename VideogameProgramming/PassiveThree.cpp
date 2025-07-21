@@ -26,6 +26,8 @@ void PassiveThree::OnEvent(GameManager* gm, InvocationScript* inv) {
         gm->addPlayerPoints(playerId, +6);
         hasActivated = true;
 
+        gm->LogPlayerScore(gm->getCurrentPlayerTurn(), 6, "passive activation");
+
         AnnouncePassiveUsage(gm);
         Reveal();
     }

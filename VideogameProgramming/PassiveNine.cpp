@@ -7,8 +7,11 @@ void PassiveNine::OnEvent(GameManager* gameManager, InvocationScript* invocation
 
     int playerOwner = invocation->getPlayerOwner();
 
-    // Award 3 sudden points to the player
+    // Award 2 sudden points to the player
     gameManager->addPlayerPoints(playerOwner, 2);
+
+    gameManager->LogPlayerScore(playerOwner, 2, "passive activation");
+
     std::cout << "Player " << playerOwner << " gained 2 sudden points from PassiveNine!" << std::endl;
 
     AnnouncePassiveUsage(gameManager);
