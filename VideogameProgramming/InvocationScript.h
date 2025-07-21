@@ -57,7 +57,7 @@ public:
     void setFullyMovedToTrue();
     void setMoveAllowedToTrue();
     void setInvocAttack(int invAttack);
-    void setBattleCheckedToTrue();
+    void setBattleChecked(bool trueOrFalse);
     void setMoved(bool value);
     void setRightClickPressed(bool value);
     void setPlayerOwner(int owner);

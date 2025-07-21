@@ -154,7 +154,8 @@ void InvocationScript::undoLastMove() {
 	if (moved) {
 		moveAllowed = false;  
 		fullyMoved = false;  
-		moved = false;     
+		moved = false;
+		battleChecked = false;
 
 		moveInvocation(previousPos.x, previousPos.y);
 
@@ -270,8 +271,8 @@ void InvocationScript::setInvocAttack(int invAttack) {
 	}
 }
 
-void InvocationScript::setBattleCheckedToTrue() {
-	battleChecked = true;
+void InvocationScript::setBattleChecked(bool trueOrFalse) {
+	battleChecked = trueOrFalse;
 }
 
 void InvocationScript::setMoved(bool value) {

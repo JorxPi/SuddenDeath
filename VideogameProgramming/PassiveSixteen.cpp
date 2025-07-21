@@ -9,7 +9,10 @@ void PassiveSixteen::OnEvent(GameManager* gameManager, InvocationScript* invocat
     int flipPlayer = gameManager->getCurrentPlayerTurn();
     int passiveOwner = invocation->getPlayerOwner();
 
-    int flipPlayerScore = gameManager->getPlayerScore(flipPlayer);
+    std::cout << "Player flipping tails : " << gameManager->getCurrentPlayerTurn() << ". Has " << gameManager->getPlayerScore(flipPlayer) << " points." << std::endl;
+    std::cout << "Player holding passive : " << invocation->getPlayerOwner() << ". Has " << gameManager->getPlayerScore(passiveOwner) << " points." << std::endl;
+
+    int flipPlayerScore = gameManager->getPlayerScore(flipPlayer) - 3;
     int passiveHolderScore = gameManager->getPlayerScore(passiveOwner);
 
     if (flipPlayerScore > passiveHolderScore) {

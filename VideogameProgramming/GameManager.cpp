@@ -72,7 +72,8 @@ void GameManager::update(float deltaTime) {
         //checkingIfBattle = true;
         for (int i = 0; i < currentPlayerInvocationsListRef.size(); i++) {
             if (currentPlayerInvocationsListRef[i]->getFullyMoved() && !currentPlayerInvocationsListRef[i]->getBattleChecked()) {
-                currentPlayerInvocationsListRef[i]->setBattleCheckedToTrue();
+                std::cout << "im here" << std::endl;
+                currentPlayerInvocationsListRef[i]->setBattleChecked(true);
                 checkingIfBattle = true;
                 checkBattle(currentPlayerInvocationsListRef[i]);
             }
