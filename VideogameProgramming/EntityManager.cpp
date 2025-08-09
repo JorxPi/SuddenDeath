@@ -77,7 +77,7 @@ void EntityManager::createInvocation(glm::vec2 position, int coliderId, int atta
 		displayName = invData->name;
 	}
 
-	ECS::Entity* spawn_card = createEntityWithoutScript(glm::vec2(0.f, 15.f), 0.f, 1.f, text_back, glm::vec3(1., 1., 1.), false, glm::vec2(119., 159.));
+	ECS::Entity* spawn_card = createEntityWithoutScript(glm::vec2(0.f, 10.f), 0.f, 1.f, text_back, glm::vec3(1., 1., 1.), false, glm::vec2(150., 170.));
 
 	auto result_gobobo = createEntity(position, 0.f, 1.f, text_inv, glm::vec3(1., 1., 1.), false, invocSize, "menu_motion", "InvocationScript");
 	ECS::Entity* spawn_gobobo = result_gobobo.first;
@@ -106,7 +106,7 @@ void EntityManager::createInvocation(glm::vec2 position, int coliderId, int atta
 	invoc_script->setButtonManagerRef(buttonManagerRef);
 	invoc_script->setGameManagerRef(gameManagerRef);
 
-	ECS::Entity* att = createEntityWithoutScript(glm::vec2(0.f, 70.f), 0.f, 1.f, text_att, glm::vec3(1., 1., 1.), false, glm::vec2(14., 36.));
+	ECS::Entity* att = createEntityWithoutScript(glm::vec2(0.f, 60.f), 0.f, 1.f, text_att, glm::vec3(1., 1., 1.), false, glm::vec2(12., 32.));
 
 	invoc_script->setInvocRefs(spawn_gobobo, spawn_card, att);
 
@@ -115,7 +115,7 @@ void EntityManager::createInvocation(glm::vec2 position, int coliderId, int atta
 
 	if (!displayName.empty()) {
 		auto* labelEnt = createTextLabelEntity(
-			glm::vec2(0.f, - 42.f),
+			glm::vec2(0.f, - 60.f),
 			0.f,
 			0.35f,           // aquí va a Transform::scale
 			displayName,

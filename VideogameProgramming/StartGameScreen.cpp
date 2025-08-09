@@ -190,7 +190,7 @@ void StartGameScreen::randomizeInvocations(std::vector<std::pair<ECS::Entity*, I
 	std::random_device rd;
 	std::mt19937 g(rd());
 
-	std::shuffle(invocations.begin(), invocations.end(), g);
+	//std::shuffle(invocations.begin(), invocations.end(), g);
 
 	std::vector<std::unique_ptr<PassiveAbility>> passives;
 

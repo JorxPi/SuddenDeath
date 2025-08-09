@@ -54,11 +54,11 @@ void CoinScript::coinFlip() {
 
     if (headOrTails) {
         std::cout << "Heads!" << std::endl;
-        sprite->filepath = "Textures/coin_heads.png";
+        sprite->filepath = "Textures/CARA.png";
     }
     else {
         std::cout << "Tails!" << std::endl;
-        sprite->filepath = "Textures/coin_tails.png";
+        sprite->filepath = "Textures/CRUZ.png";
     }
 }
 

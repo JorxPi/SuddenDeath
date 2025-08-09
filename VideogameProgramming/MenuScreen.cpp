@@ -70,8 +70,8 @@ void MenuScreen::enter() {
 	);
 
 	auto eInvGobobo = entityManager->createEntityWithoutScript(
-		glm::vec2(720.f, 550.f), 0.f, 1.f,
-		"Textures/inv_Gobobo.png", glm::vec3(1.f),
-		false, glm::vec2(122.f, 184.f)
+		glm::vec2(715.f, 545.f), 0.f, 1.f,
+		"Textures/11.png", glm::vec3(1.f),
+		false, glm::vec2(162.f, 245.f)
 	);
 }
